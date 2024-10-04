@@ -1,6 +1,6 @@
 # Demo Website Cypress Testing Project
 
-This project contains automated tests for the Demo Registration Website using Cypress. It aims to ensure the functionality and reliability of key features through comprehensive end-to-end testing.
+This project contains examples of automated tests using Cypress, demonstrating both end-to-end testing and API testing capabilities. It serves as a learning resource and reference for implementing Cypress tests in various scenarios.
 
 ## Features Tested
 
@@ -9,6 +9,7 @@ This project contains automated tests for the Demo Registration Website using Cy
 - User Table Display
 - Pagination
 - Tab Navigation
+- API Endpoints
 
 ## Prerequisites
 
@@ -47,17 +48,27 @@ npm run cypress:open
 
 ## Test Structure
 
-The tests are located in the `cypress/e2e` directory. The test file is `demo.cy.js`, which contains test cases for various features of the demo website.
+The tests are located in the `cypress/e2e` directory. The main test files are:
+
+- `demo.cy.js`: Contains test cases for various UI features of the demo website.
+- `api.cy.js`: Contains API tests using the default Cypress API testing approach.
+- `api-plugin.cy.js`: Contains API tests using the cypress-plugin-api.
 
 ## Configuration
 
 The Cypress configuration is in `cypress.config.js`.
 
-## Continuous Integration
+## API Testing
 
-This project is set up to run tests automatically on push using GitHub Actions. The configuration for this can be found in `.github/workflows/cypress.yml`.
+This project includes two approaches for API testing:
+
+1. Default Cypress API testing (`api.cy.js`)
+2. Testing with cypress-plugin-api (`api-plugin.cy.js`)
+
+The cypress-plugin-api is already installed and configured in this project.
 
 ## Acknowledgments
 
 - Thanks to the Cypress team for providing an excellent testing framework.
+- Appreciation to the creators of cypress-plugin-api for enhancing API testing capabilities.
 - Shoutout to all contributors who help improve this testing suite.
