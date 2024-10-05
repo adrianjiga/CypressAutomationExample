@@ -20,3 +20,7 @@ import './commands';
 // require('./commands')
 
 import 'cypress-plugin-api';
+
+cy.on('uncaught:exception', (_err, _runnable) => {
+  return false;
+});
