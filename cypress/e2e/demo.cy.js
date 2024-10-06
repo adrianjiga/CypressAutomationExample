@@ -1,4 +1,4 @@
-describe('Demo Website', () => {
+describe('Test various UI features', () => {
   beforeEach(() => {
     cy.visit('http://127.0.0.1:5500/');
   });
@@ -18,7 +18,6 @@ describe('Demo Website', () => {
     cy.get('#terms').check();
     cy.get('#register-form').submit();
 
-    // Check if the user appears in the table
     cy.get('#user-table').contains('td', 'John');
   });
 
