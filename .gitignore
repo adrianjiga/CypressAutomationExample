@@ -6,6 +6,9 @@ cypress/videos/
 cypress/screenshots/
 cypress/downloads/
 
+#Reports
+reports
+
 # Cypress configuration files
 cypress.env.json
 
