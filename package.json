@@ -1,12 +1,23 @@
 {
   "name": "cypress-automation-example",
   "version": "1.0.0",
+  "description": "A demo project showcasing Cypress testing capabilities including UI, API, and table interactions.",
   "type": "module",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:ui": "cypress run --env grepTags=@ui",
+    "test:api": "cypress run --env grepTags=@api",
+    "test:webtables": "cypress run --env grepTags=@webTables",
+    "test:all": "cypress run",
     "test:docker:ui": "docker-compose up --build ui-tests",
     "test:docker:api": "docker-compose up --build api-tests",
-    "test:docker:webtables": "docker-compose up --build webtables",
-    "test:docker": "docker-compose up --build && npm run docker:report",
+    "test:docker:webtables": "docker-compose up --build webtables-tests",
+    "test:docker:all": "docker-compose up --build && npm run docker:report",
     "docker:report": "docker-compose up report-generator",
     "docker:clean": "docker-compose down --volumes --remove-orphans",
     "lint": "eslint cypress/e2e/**/*.cy.js cypress/support/**/*.js",
@@ -14,10 +25,24 @@
     "format": "prettier --write \"cypress/{e2e,support}/**/*.js\"",
     "format:check": "prettier --check \"cypress/{e2e,support}/**/*.js\""
   },
-  "keywords": [],
-  "author": "Adrian Jiga",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adrianjiga/CypressAutomationExample"
+  },
+  "keywords": [
+    "cypress",
+    "automation",
+    "testing",
+    "e2e",
+    "api-testing",
+    "ui-testing",
+    "docker"
+  ],
+  "author": {
+    "name": "Adrian Jiga",
+    "email": "jiga.ion.adrian@gmail.com"
+  },
   "license": "ISC",
-  "description": "A demo project to showcase skills and abilities with Cypress.",
   "dependencies": {
     "@cypress/grep": "^4.1.0",
     "cypress": "^13.16.1",
