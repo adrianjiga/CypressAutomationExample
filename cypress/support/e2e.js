@@ -14,13 +14,26 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands';
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-import 'cypress-plugin-api';
+import "cypress-plugin-api";
 
-cy.on('uncaught:exception', (_err, _runnable) => {
-  return false;
-});
+/**
+ * https://www.npmjs.com/package/@cypress/grep
+ *
+ * Imports and registers the Cypress Grep plugin for use in Cypress test runs.
+ *
+ * The `registerCypressGrep` function is imported from the Cypress Grep library,
+ * allowing tests to be filtered and executed based on specified grep patterns.
+ * This is useful for selectively running tests during development or CI processes.
+ *
+ * Usage:
+ * - To filter tests, use the `--env grep="pattern"` flag in your Cypress CLI command.
+ *   Example: `npx cypress run --env grep="login tests"`
+ */
+
+import registerCypressGrep from "@cypress/grep/src/support";
+registerCypressGrep();
