@@ -1,82 +1,155 @@
 # Cypress Automation Example
 
-This project contains examples of automated tests using Cypress, demonstrating both end-to-end testing and API testing capabilities. It serves as a learning resource and reference for implementing Cypress tests in various scenarios.
+This project demonstrates automated testing using Cypress, showcasing both UI and API testing capabilities using the DemoQA website as the application under test.
 
-## Features Tested
+## Overview
 
-- User Registration Form
-- Form Validation
-- User Table Display
-- Pagination
-- Tab Navigation
-- API Endpoints
+The project contains end-to-end tests for:
+- UI interactions with buttons and forms
+- Table operations (search, edit, delete)
+- API testing for a book store service
+- Waiting pattern examples with Cypress docs
 
 ## Prerequisites
 
-Before running the tests, make sure you have the following installed:
+- Node.js (v20.0.0 or higher)
+- npm (v10.0.0 or higher)
+- Docker (if running tests in containers)
 
-- [Node.js](https://nodejs.org/) (v12 or later)
-- [npm](https://www.npmjs.com/) (usually comes with Node.js)
-
-## Installation
-
-1. Clone the Demo Website repository:
-
-   ```
-   git clone https://github.com/adrianjiga/DemoWebsiteForTesting.git
-   ```
-
-2. Open `index.html` file in your favorite web browser.
-
-3. Clone this repository
-
-   ```
-   git clone https://github.com/adrianjiga/CypressAutomationExample.git
-   cd CypressAutomationExample
-   ```
-
-4. Install the dependencies:
-   ```
-   npm install
-   ```
-
-## Running the Tests
-
-To run the tests in headless mode:
+## Project Structure
 
 ```
-npm run test
+cypress/
+├── e2e/                  # Test files
+│   ├── api.cy.js         # Book Store API tests
+│   ├── api-plugin.cy.js  # JSONPlaceholder API example
+│   ├── buttons.cy.js     # Button interaction tests
+│   ├── webTables.cy.js   # Web table operations
+│   ├── registerForm.cy.js # Form submission tests
+│   └── wait-until-example.cy.js
+├── fixtures/             # Test data
+│   └── book.json        
+└── support/             # Support files
+    ├── commands.js      # Custom commands
+    └── e2e.js          # Global configuration
 ```
 
-To open the Cypress Test Runner:
+## Test Categories
 
+### UI Tests (`@ui` tag)
+- Button interactions
+  - Double click
+  - Right click
+  - Dynamic click
+- Registration form
+  - Field validation
+  - Form submission
+  - Error states
+- Cypress docs search with waitUntil
+
+### API Tests (`@api` tag)
+- Book Store API
+  - List all books
+  - Get specific book
+  - Handle invalid ISBN
+- JSONPlaceholder example
+
+### Web Tables Tests (`@webTables` tag)
+- CRUD operations
+  - Search functionality
+  - Edit records
+  - Add new records
+  - Delete records
+- Pagination
+- Rows per page configuration
+
+## Setup and Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/adrianjiga/CypressAutomationExample
+cd CypressAutomationExample
 ```
-npm run cypress:open
+
+2. Install dependencies:
+```bash
+npm install
 ```
 
-## Test Structure
+## Running Tests
 
-The tests are located in the `cypress/e2e` directory. The main test files are:
+### Local Execution
 
-- `demo.cy.js`: Contains test cases for various UI features of the demo website.
-- `api.cy.js`: Contains API tests using the default Cypress API testing approach.
-- `api-plugin.cy.js`: Contains API tests using the cypress-plugin-api.
-- `wait-until-example.cy.js`: Contains tests using waitUntil.
+1. Run UI tests:
+```bash
+npm run test:docker:ui
+```
+
+2. Run API tests:
+```bash
+npm run test:docker:api
+```
+
+3. Run WebTables tests:
+```bash
+npm run test:docker:webtables
+```
+
+4. Run all tests:
+```bash
+npm run test:docker
+```
+
+## Test Reports
+
+Reports are generated using Mochawesome and can be found in:
+- UI tests: `reports/ui/`
+- API tests: `reports/api/`
+- WebTables tests: `reports/webtables/`
+- Combined report: `reports/final/`
+
+## Code Quality Tools
+
+### ESLint Configuration
+- Semi-colons required
+- Double quotes
+- 2-space indentation
+- No unused variables
+- Cypress-specific rules enabled
+
+Run linting:
+```bash
+npm run lint        # Check for issues
+npm run lint:fix    # Fix issues automatically
+```
+
+### Prettier Configuration
+Run formatting:
+```bash
+npm run format         # Format files
+npm run format:check   # Check formatting
+```
+
+## Docker Resources
+
+Each test suite runs in a container with:
+- Base image: cypress/included:13.6.1
+- Memory limits: 2GB
+- Memory reservation: 1GB
 
 ## Configuration
 
-The Cypress configuration is in `cypress.config.js`.
+### Cypress Configuration (cypress.config.js)
+- Viewport: 1920x1080
+- Base URL: https://demoqa.com
+- Retries: 2 attempts
+- Video recording: disabled
+- Grep plugin enabled for test filtering
 
-## API Testing
+## Author
 
-This project includes two approaches for API testing:
+Adrian Jiga
 
-1. Default Cypress API testing (`api.cy.js`)
-2. Testing with cypress-plugin-api (`api-plugin.cy.js`)
+## License
 
-The cypress-plugin-api is already installed and configured in this project.
-
-## Acknowledgments
-
-- Thanks to the Cypress team for providing an excellent testing framework.
-- Appreciation to the creators of cypress-plugin-api and cypress-wait-until for enhancing API testing capabilities and waiting capabilities.
+ISC
