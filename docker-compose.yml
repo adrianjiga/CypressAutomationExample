@@ -1,0 +1,72 @@
+services:
+  ui-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+    command: >
+      npx cypress run
+      --env grepTags=@ui
+      --reporter mochawesome
+      --reporter-options reportDir=reports/ui,overwrite=true,html=true,json=true,reportFilename=report-[name]
+
+  api-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+    command: >
+      npx cypress run
+      --env grepTags=@api
+      --reporter mochawesome
+      --reporter-options reportDir=reports/api,overwrite=true,html=true,json=true
+
+  webtables-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+    command: >
+      npx cypress run
+      --env grepTags=@webTables
+      --reporter mochawesome
+      --reporter-options reportDir=reports/webtables,overwrite=true,html=true,json=true
+
+  report-generator:
+    image: node:20
+    volumes:
+      - .:/app
+    working_dir: /app
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    command: >
+      sh -c "
+        sleep 10 &&
+        mkdir -p reports/final &&
+        npm install -g mochawesome-merge mochawesome-report-generator &&
+        mochawesome-merge 'reports/ui/report-*.json' 'reports/{api,webtables}/mochawesome.json' > reports/final/output.json &&
+        marge reports/final/output.json --reportDir reports/final --inline
+      "
