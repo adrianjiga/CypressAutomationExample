@@ -1,22 +1,22 @@
 describe("WebTables", () => {
   beforeEach(() => {
+    cy.intercept("GET", "/webtables").as("pageLoad");
+
     cy.on("uncaught:exception", (_err, _runnable) => {
       return false;
     });
 
     cy.visit("/webtables");
+    cy.wait("@pageLoad");
   });
 
   it("search for a record", { tags: ["@webTables"] }, () => {
     cy.get("#searchBox").type("Cierra");
     cy.get("#searchBox").should("have.value", "Cierra");
-
     cy.contains('.rt-tbody div[role="row"]', "Cierra").should("be.visible");
-
     cy.get('.rt-tbody div[role="row"]')
       .not(".-padRow")
       .should("have.length", 1);
-
     cy.get("#searchBox").clear();
     cy.get("#searchBox").should("have.value", "");
     cy.get('.rt-tbody div[role="row"]')
@@ -34,7 +34,6 @@ describe("WebTables", () => {
     cy.get("#age").should("be.visible").clear();
     cy.get("#age").type(newAge);
     cy.get("#age").should("have.value", newAge);
-
     cy.get("#department").should("be.visible").clear();
     cy.get("#department").type(newDepartment);
     cy.get("#department").should("have.value", newDepartment);
@@ -64,19 +63,14 @@ describe("WebTables", () => {
 
     cy.get("#firstName").type(adrian.firstName);
     cy.get("#firstName").should("have.value", adrian.firstName);
-
     cy.get("#lastName").type(adrian.lastName);
     cy.get("#lastName").should("have.value", adrian.lastName);
-
     cy.get("#userEmail").type(adrian.email);
     cy.get("#userEmail").should("have.value", adrian.email);
-
     cy.get("#age").type(adrian.age);
     cy.get("#age").should("have.value", adrian.age);
-
     cy.get("#salary").type(adrian.salary);
     cy.get("#salary").should("have.value", adrian.salary);
-
     cy.get("#department").type(adrian.department);
     cy.get("#department").should("have.value", adrian.department);
 
@@ -183,15 +177,12 @@ describe("WebTables", () => {
 
       cy.get('select[aria-label="rows per page"]').select("5 rows");
       cy.get(".-totalPages").should("contain", "2");
-
       cy.get(".-next").click();
       cy.get('.rt-tbody div[role="row"]').should("have.length.at.least", 1);
       cy.contains(".rt-tr-group", "User2").should("be.visible");
-
       cy.get(".-previous").should("not.be.disabled");
       cy.get(".-previous").click();
       cy.contains(".rt-tr-group", "Cierra").should("be.visible");
-
       cy.get(".-next").should("not.be.disabled");
     }
   );
