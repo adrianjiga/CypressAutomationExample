@@ -1,7 +1,19 @@
 describe("DemoQA Book Store API Tests", () => {
   const apiUrl = "https://demoqa.com/BookStore/v1";
+  
+  const bookSchema = {
+    isbn: 'string',
+    title: 'string',
+    subTitle: 'string',
+    author: 'string',
+    publish_date: 'string',
+    publisher: 'string',
+    pages: 'number',
+    description: 'string',
+    website: 'string'
+  };
 
-  it("list all the books", { tags: "@api" }, () => {
+  it("should list all books with correct structure and data", { tags: "@api" }, () => {
     cy.request({
       method: "GET",
       url: `${apiUrl}/Books`,
@@ -10,40 +22,31 @@ describe("DemoQA Book Store API Tests", () => {
       },
     }).then((response) => {
       expect(response.status).to.eq(200);
+      expect(response.headers['content-type']).to.include('application/json');
+      expect(response.body).to.have.property('books');
       expect(response.body.books).to.be.an("array");
       expect(response.body.books.length).to.be.greaterThan(0);
 
       response.body.books.forEach((book) => {
-        expect(book).to.include.all.keys(
-          "isbn",
-          "title",
-          "subTitle",
-          "author",
-          "publish_date",
-          "publisher",
-          "pages",
-          "description",
-          "website"
-        );
+        Object.keys(bookSchema).forEach(key => {
+          expect(book).to.have.property(key);
+          expect(typeof book[key]).to.eq(bookSchema[key]);
+        });
+        expect(book.pages).to.be.greaterThan(0);
+        expect(book.isbn).to.match(/^[0-9-]+$/);
+        expect(new Date(book.publish_date)).to.be.a('date');
       });
 
-      const publishers = new Set(
-        response.body.books.map((book) => book.publisher)
-      );
+      const publishers = new Set(response.body.books.map((book) => book.publisher));
       expect(publishers.size).to.eq(2);
       expect(Array.from(publishers)).to.have.members([
         "O'Reilly Media",
         "No Starch Press",
       ]);
-
-      response.body.books.forEach((book) => {
-        expect(book.pages).to.be.a("number");
-        expect(book.pages).to.be.greaterThan(0);
-      });
     });
   });
 
-  it("fetch a specific book by ISBN", { tags: "@api" }, () => {
+  it("should fetch a specific book by valid ISBN", { tags: "@api" }, () => {
     cy.fixture("book").then((expectedBook) => {
       cy.request({
         method: "GET",
@@ -51,12 +54,17 @@ describe("DemoQA Book Store API Tests", () => {
         qs: { ISBN: expectedBook.isbn },
       }).then((response) => {
         expect(response.status).to.eq(200);
+        expect(response.headers['content-type']).to.include('application/json');
         expect(response.body).to.deep.include(expectedBook);
+        Object.keys(bookSchema).forEach(key => {
+          expect(response.body).to.have.property(key);
+          expect(typeof response.body[key]).to.eq(bookSchema[key]);
+        });
       });
     });
   });
 
-  it("handle invalid ISBN", { tags: "@api" }, () => {
+  it("should handle invalid ISBN with proper error response", { tags: "@api" }, () => {
     cy.request({
       method: "GET",
       url: `${apiUrl}/Book`,
@@ -64,6 +72,8 @@ describe("DemoQA Book Store API Tests", () => {
       failOnStatusCode: false,
     }).then((response) => {
       expect(response.status).to.eq(400);
+      expect(response.body).to.have.property('message');
+      expect(response.body.message).to.be.a('string');
     });
   });
 });
