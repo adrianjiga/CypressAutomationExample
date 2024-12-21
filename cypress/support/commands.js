@@ -25,3 +25,12 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 import "cypress-wait-until";
+
+Cypress.Commands.add('fillRegistrationForm', (userData) => {
+    const fields = ['firstName', 'lastName', 'userEmail', 'age', 'salary', 'department'];
+    fields.forEach(field => {
+      cy.get(`#${field}`).clear();
+      cy.get(`#${field}`).type(userData[field]);
+      cy.get(`#${field}`).should('have.value', userData[field]);
+    });
+  });
