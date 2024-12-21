@@ -82,20 +82,40 @@ npm install
 
 1. Run UI tests:
 ```bash
-npm run test:docker:ui
+npm run test:ui
 ```
 
 2. Run API tests:
 ```bash
-npm run test:docker:api
+npm run test:api
 ```
 
 3. Run WebTables tests:
 ```bash
-npm run test:docker:webtables
+npm run test:webtables
 ```
 
 4. Run all tests:
+```bash
+npm run cypress:run
+```
+
+5. Run UI tests through Docker:
+```bash
+npm run test:docker:ui
+```
+
+6. Run API tests through Docker:
+```bash
+npm run test:docker:api
+```
+
+7. Run WebTables tests through Docker:
+```bash
+npm run test:docker:webtables
+```
+
+8. Run all tests through Docker:
 ```bash
 npm run test:docker
 ```
@@ -133,18 +153,18 @@ npm run format:check   # Check formatting
 ## Docker Resources
 
 Each test suite runs in a container with:
-- Base image: cypress/included:13.6.1
-- Memory limits: 2GB
-- Memory reservation: 1GB
+- Base image: `cypress/included:13.6.1`
+- Memory limits: `2GB`
+- Memory reservation: `1GB`
 
 ## Configuration
 
 ### Cypress Configuration (cypress.config.js)
-- Viewport: 1920x1080
+- Viewport: `1920x1080`
 - Base URL: https://demoqa.com
-- Retries: 2 attempts
-- Video recording: disabled
-- Grep plugin enabled for test filtering
+- Retries: `2` attempts
+- Video recording: `disabled`
+- Grep plugin `enabled` for test filtering
 
 ## Author
 
