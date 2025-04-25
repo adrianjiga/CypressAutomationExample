@@ -5,7 +5,10 @@ export default defineConfig({
   viewportHeight: 1080,
   viewportWidth: 1920,
   video: false,
-  retries: 2,
+  retries: {
+    runMode: 2,
+    openMode: 0,
+  },
   e2e: {
     baseUrl: "https://demoqa.com",
     setupNodeEvents(on, config) {
