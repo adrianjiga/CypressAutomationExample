@@ -1,14 +1,11 @@
 name: Cypress Tests
 
 on:
-  push:
-    branches:
-      - master # Run workflow when code is pushed to master branch
   pull_request:
     types:
-      - closed # Run workflow when a PR is closed
+      - closed
     branches:
-      - master # Only consider PRs targeting master branch
+      - master
 
 jobs:
   cypress-tests:
