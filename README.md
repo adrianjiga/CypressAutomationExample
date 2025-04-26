@@ -148,12 +148,7 @@ npm run docker:clean
 
 ## CI/CD Integration
 
-This project is configured to automatically run Cypress tests in GitHub Actions when pull requests are merged to the master branch. The workflow:
-
-1. Runs tests in parallel for different test groups (ui, api, webtables)
-2. Generates and uploads test artifacts (screenshots/videos) on failure
-3. Creates a combined Mochawesome report
-4. Publishes the report to GitHub Pages
+This project is configured to automatically run Cypress tests in GitHub Actions when pull requests are merged to the master branch.
 
 You can view the workflow configuration in `.github/workflows/cypress-tests.yml`.
 
