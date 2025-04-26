@@ -5,6 +5,7 @@ This project demonstrates automated testing using Cypress, showcasing both UI an
 ## Overview
 
 The project contains end-to-end tests for:
+
 - UI interactions with buttons and forms
 - Table operations (search, edit, delete)
 - API testing for a book store service
@@ -22,21 +23,26 @@ The project contains end-to-end tests for:
 cypress/
 ├── e2e/                  # Test files
 │   ├── api.cy.js         # Book Store API tests
-│   ├── apiPlugin.cy.js  # JSONPlaceholder API example
+│   ├── apiPlugin.cy.js   # JSONPlaceholder API example
 │   ├── buttons.cy.js     # Button interaction tests
 │   ├── webTables.cy.js   # Web table operations
 │   ├── registerForm.cy.js # Form submission tests
-│   └── waitUntilExample.cy.js
+│   └── waitUntilExample.cy.js # Custom wait pattern example
 ├── fixtures/             # Test data
-│   └── book.json        
+│   └── book.json
 └── support/             # Support files
     ├── commands.js      # Custom commands
     └── e2e.js          # Global configuration
+.github/
+├── dependabot.yml       # Automated dependency management
+└── workflows/
+    └── cypress-tests.yml # GitHub Actions CI workflow
 ```
 
 ## Test Categories
 
 ### UI Tests (`@ui` tag)
+
 - Button interactions
   - Double click
   - Right click
@@ -48,6 +54,7 @@ cypress/
 - Cypress docs search with waitUntil
 
 ### API Tests (`@api` tag)
+
 - Book Store API
   - List all books
   - Get specific book
@@ -55,6 +62,7 @@ cypress/
 - JSONPlaceholder example
 
 ### Web Tables Tests (`@webTables` tag)
+
 - CRUD operations
   - Search functionality
   - Edit records
@@ -66,12 +74,14 @@ cypress/
 ## Setup and Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/adrianjiga/CypressAutomationExample
 cd CypressAutomationExample
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
@@ -81,48 +91,84 @@ npm install
 ### Local Execution
 
 1. Run UI tests:
+
 ```bash
 npm run test:ui
 ```
 
 2. Run API tests:
+
 ```bash
 npm run test:api
 ```
 
 3. Run WebTables tests:
+
 ```bash
 npm run test:webtables
 ```
 
 4. Run all tests:
+
 ```bash
 npm run cypress:run
 ```
 
-5. Run UI tests through Docker:
+### Docker Execution
+
+1. Run UI tests through Docker:
+
 ```bash
 npm run test:docker:ui
 ```
 
-6. Run API tests through Docker:
+2. Run API tests through Docker:
+
 ```bash
 npm run test:docker:api
 ```
 
-7. Run WebTables tests through Docker:
+3. Run WebTables tests through Docker:
+
 ```bash
 npm run test:docker:webtables
 ```
 
-8. Run all tests through Docker:
+4. Run all tests through Docker:
+
 ```bash
-npm run test:docker
+npm run test:docker:all
 ```
+
+5. Clean Docker resources:
+
+```bash
+npm run docker:clean
+```
+
+## CI/CD Integration
+
+This project is configured to automatically run Cypress tests in GitHub Actions when pull requests are merged to the master branch. The workflow:
+
+1. Runs tests in parallel for different test groups (ui, api, webtables)
+2. Generates and uploads test artifacts (screenshots/videos) on failure
+3. Creates a combined Mochawesome report
+4. Publishes the report to GitHub Pages
+
+You can view the workflow configuration in `.github/workflows/cypress-tests.yml`.
+
+## Dependency Management
+
+The project uses Dependabot to automatically keep dependencies up-to-date:
+
+- Weekly scans for npm and Docker dependencies
+- Pull requests are created for updates with appropriate prefixes
+- All dependency updates are grouped by ecosystem
 
 ## Test Reports
 
 Reports are generated using Mochawesome and can be found in:
+
 - UI tests: `reports/ui/`
 - API tests: `reports/api/`
 - WebTables tests: `reports/webtables/`
@@ -131,6 +177,7 @@ Reports are generated using Mochawesome and can be found in:
 ## Code Quality Tools
 
 ### ESLint Configuration
+
 - Semi-colons required
 - Double quotes
 - 2-space indentation
@@ -138,13 +185,16 @@ Reports are generated using Mochawesome and can be found in:
 - Cypress-specific rules enabled
 
 Run linting:
+
 ```bash
 npm run lint        # Check for issues
 npm run lint:fix    # Fix issues automatically
 ```
 
 ### Prettier Configuration
+
 Run formatting:
+
 ```bash
 npm run format         # Format files
 npm run format:check   # Check formatting
@@ -153,16 +203,18 @@ npm run format:check   # Check formatting
 ## Docker Resources
 
 Each test suite runs in a container with:
-- Base image: `cypress/included:13.6.1`
+
+- Base image: `cypress/included:14.3.2`
 - Memory limits: `2GB`
 - Memory reservation: `1GB`
 
 ## Configuration
 
 ### Cypress Configuration (cypress.config.js)
+
 - Viewport: `1920x1080`
 - Base URL: https://demoqa.com
-- Retries: `2` attempts
+- Retries: `2` attempts (in run mode)
 - Video recording: `disabled`
 - Grep plugin `enabled` for test filtering
 
