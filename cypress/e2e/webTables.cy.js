@@ -11,12 +11,12 @@ describe("WebTables", () => {
   });
 
   it("search for a record", { tags: ["@webTables"] }, () => {
-    cy.get("#searchBox").type("Cierra");
-    cy.get("#searchBox").should("have.value", "Cierra");
+    cy.searchInTable("Cierra");
     cy.contains('.rt-tbody div[role="row"]', "Cierra").should("be.visible");
     cy.get('.rt-tbody div[role="row"]')
       .not(".-padRow")
       .should("have.length", 1);
+
     cy.get("#searchBox").clear();
     cy.get("#searchBox").should("have.value", "");
     cy.get('.rt-tbody div[role="row"]')
@@ -57,24 +57,20 @@ describe("WebTables", () => {
       department: "Engineering",
     };
 
-    cy.get("#addNewRecordButton").click();
+    cy.waitAndClick("#addNewRecordButton");
     cy.get(".modal-content").should("be.visible");
     cy.get("#registration-form-modal").should("contain", "Registration Form");
 
-    cy.get("#firstName").type(adrian.firstName);
-    cy.get("#firstName").should("have.value", adrian.firstName);
-    cy.get("#lastName").type(adrian.lastName);
-    cy.get("#lastName").should("have.value", adrian.lastName);
-    cy.get("#userEmail").type(adrian.email);
-    cy.get("#userEmail").should("have.value", adrian.email);
-    cy.get("#age").type(adrian.age);
-    cy.get("#age").should("have.value", adrian.age);
-    cy.get("#salary").type(adrian.salary);
-    cy.get("#salary").should("have.value", adrian.salary);
-    cy.get("#department").type(adrian.department);
-    cy.get("#department").should("have.value", adrian.department);
+    cy.fillForm({
+      firstName: adrian.firstName,
+      lastName: adrian.lastName,
+      userEmail: adrian.email,
+      age: adrian.age,
+      salary: adrian.salary,
+      department: adrian.department,
+    });
 
-    cy.get("#submit").click();
+    cy.waitAndClick("#submit");
     cy.get(".modal-content").should("not.exist");
 
     cy.get(".rt-tbody").within(() => {

@@ -8,27 +8,33 @@ describe("Register Form", () => {
   });
 
   it("should submit the practice form with all fields", { tags: "@ui" }, () => {
-    cy.get("#firstName").type("John");
-    cy.get("#lastName").type("Doe");
-    cy.get("#userEmail").type("john@example.com");
+    cy.fillForm({
+      firstName: "John",
+      lastName: "Doe",
+      userEmail: "john@example.com",
+      userNumber: "1234567890",
+      currentAddress: "123 Test Street",
+    });
+
+    // Use gender radio button
     cy.get("#gender-radio-1").check({ force: true });
-    cy.get("#userNumber").type("1234567890");
-    cy.get("#dateOfBirthInput").click();
-    cy.get(".react-datepicker__month-select").select("January");
-    cy.get(".react-datepicker__year-select").select("1990");
-    cy.get("#dateOfBirth div.react-datepicker__day.react-datepicker__day--001")
-      .first()
-      .click();
+
+    // Use the custom date selection command
+    cy.selectDate("#dateOfBirthInput", "January", "1990", "01");
+
     cy.get("#subjectsInput").type("Maths{enter}");
     cy.get("#hobbies-checkbox-1").check({ force: true });
     cy.get("#hobbies-checkbox-2").check({ force: true });
     cy.get("#uploadPicture").selectFile("cypress/fixtures/book.json");
-    cy.get("#currentAddress").type("123 Test Street");
+
+    // Handle dropdowns manually without the custom command
     cy.get("#state").click();
     cy.get("#react-select-3-option-0").click();
     cy.get("#city").click();
     cy.get("#react-select-4-option-0").click();
-    cy.get("#submit").click({ force: true });
+
+    // Submit the form
+    cy.waitAndClick("#submit", { force: true });
 
     cy.get("#example-modal-sizes-title-lg")
       .should("be.visible")
@@ -54,7 +60,7 @@ describe("Register Form", () => {
         .should("have.text", value);
     });
 
-    cy.get("#closeLargeModal").click({ force: true });
+    cy.waitAndClick("#closeLargeModal", { force: true });
   });
 
   it(

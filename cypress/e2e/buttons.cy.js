@@ -6,6 +6,7 @@ describe("Buttons", () => {
 
     cy.visit("/buttons");
   });
+
   it("should interact with double click button", { tags: "@ui" }, () => {
     cy.get("#doubleClickBtn").dblclick();
     cy.get("#doubleClickMessage").should(
@@ -23,7 +24,7 @@ describe("Buttons", () => {
   });
 
   it("should interact with dynamic button", { tags: "@ui" }, () => {
-    cy.get("div.mt-4:nth-child(4) button").click({ force: true });
+    cy.waitAndClick("div.mt-4:nth-child(4) button", { force: true });
     cy.get("#dynamicClickMessage").should(
       "contain",
       "You have done a dynamic click"
