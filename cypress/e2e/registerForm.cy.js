@@ -16,26 +16,17 @@ describe("Register Form", () => {
       currentAddress: "123 Test Street",
     });
 
-    // Use gender radio button
     cy.get("#gender-radio-1").check({ force: true });
-
-    // Use the custom date selection command
     cy.selectDate("#dateOfBirthInput", "January", "1990", "01");
-
     cy.get("#subjectsInput").type("Maths{enter}");
     cy.get("#hobbies-checkbox-1").check({ force: true });
     cy.get("#hobbies-checkbox-2").check({ force: true });
     cy.get("#uploadPicture").selectFile("cypress/fixtures/book.json");
-
-    // Handle dropdowns manually without the custom command
     cy.get("#state").click();
     cy.get("#react-select-3-option-0").click();
     cy.get("#city").click();
     cy.get("#react-select-4-option-0").click();
-
-    // Submit the form
     cy.waitAndClick("#submit", { force: true });
-
     cy.get("#example-modal-sizes-title-lg")
       .should("be.visible")
       .and("contain", "Thanks for submitting the form");
