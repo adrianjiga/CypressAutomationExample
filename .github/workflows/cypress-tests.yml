@@ -1,112 +1,19 @@
 name: Cypress Tests
 
 on:
+  push:
+    branches: [master]
   pull_request:
-    types:
-      - closed # Run workflow when a PR is closed
-    branches:
-      - master # Only consider PRs targeting master branch
+    branches: [master]
 
 jobs:
-  cypress-tests:
-    # Only run this job when the PR is merged (not when closed without merging)
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
+  cypress-run:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        test-group: [ui, api, webtables] # Define test groups to run in parallel
-      fail-fast: false # Continue other tests even if one group fails
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
         with:
-          node-version: "20"
-          cache: "npm"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run Cypress tests
-        run: npm run test:${{ matrix.test-group }}
-
-      - name: Upload screenshots on failure
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: cypress-screenshots-${{ matrix.test-group }}
-          path: cypress/screenshots
-          if-no-files-found: ignore
-
-      - name: Upload test videos
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: cypress-videos-${{ matrix.test-group }}
-          path: cypress/videos
-          if-no-files-found: ignore
-
-  generate-report:
-    needs: cypress-tests
-    runs-on: ubuntu-latest
-    if: always() # Run even if tests fail
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Download all test artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Install report dependencies
-        run: |
-          npm install -g mochawesome-merge mochawesome-report-generator
-
-      - name: Generate combined report
-        run: |
-          mkdir -p reports/{ui,api,webtables,final}
-          cp -R artifacts/cypress-screenshots-*/* cypress/screenshots/ 2>/dev/null || true
-          cp -R artifacts/cypress-videos-*/* cypress/videos/ 2>/dev/null || true
-
-          # Copy any existing reports from artifacts
-          cp -R artifacts/cypress-*/*.json reports/ 2>/dev/null || true
-
-          # Check if any real report files exist
-          REPORT_COUNT=$(find reports -name "*.json" | wc -l)
-
-          if [ $REPORT_COUNT -eq 0 ]; then
-            # No reports found, create a simple valid report
-            CURRENT_TIME=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
-            echo '{"results":[],"stats":{"suites":0,"tests":0,"passes":0,"pending":0,"failures":0,"start":"'"$CURRENT_TIME"'","end":"'"$CURRENT_TIME"'","duration":0}}' > reports/final/output.json
-          else
-            # Merge existing reports
-            mochawesome-merge $(find reports -name "*.json") > reports/final/output.json || echo '{"results":[],"stats":{"suites":0,"tests":0,"passes":0,"pending":0,"failures":0,"start":"'"$CURRENT_TIME"'","end":"'"$CURRENT_TIME"'","duration":0}}' > reports/final/output.json
-          fi
-
-          # Generate HTML report
-          marge reports/final/output.json --reportDir reports/final --inline
-
-      - name: Upload combined report
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-test-report
-          path: reports/final
-
-      - name: Upload report as GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./reports/final
-          destination_dir: reports
+          browser: chrome
