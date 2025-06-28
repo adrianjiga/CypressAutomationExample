@@ -10,8 +10,6 @@ updates:
       npm-dependencies:
         patterns:
           - "*"
-    reviewers:
-      - "adrianjiga"
     commit-message:
       prefix: "npm"
       include: "scope"
@@ -26,8 +24,6 @@ updates:
       docker-dependencies:
         patterns:
           - "*"
-    reviewers:
-      - "adrianjiga"
     commit-message:
       prefix: "docker"
       include: "scope"
