@@ -44,13 +44,13 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@cypress/grep": "^4.1.1",
+    "@cypress/grep": "^5.0.0",
     "cypress": "^15.2.0",
     "cypress-plugin-api": "^2.11.2"
   },
   "devDependencies": {
     "cypress-wait-until": "^3.0.2",
-    "eslint": "^9.35.0",
+    "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^5.1.1",
     "globals": "^16.4.0",
