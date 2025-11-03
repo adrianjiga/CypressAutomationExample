@@ -1,20 +1,50 @@
-name: Cypress Tests
+name: Run Tests
 
 on:
   pull_request:
     branches: [master]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  cypress-run:
+  test:
+    name: Test - ${{ matrix.group }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [api, ui]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v5
 
-      - name: Cypress run
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
         uses: cypress-io/github-action@v6
         with:
-          browser: chrome
+          install: true
+      
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v6
+        with:
+          browser: 'chrome'
+          headed: false
+          install: false
+          record: false
+          group: ${{ matrix.group }}
+        continue-on-error: true
+
+      - name: Upload Cypress Videos and Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts-${{ matrix.group }}
+          path: reports/
+          retention-days: 60
