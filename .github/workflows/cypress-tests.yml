@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   test:
-    name: Test - ${{ matrix.group }}
+    name: Test - ${{ matrix.group.name }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
