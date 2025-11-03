@@ -46,6 +46,6 @@ jobs:
           path: |
             cypress/screenshots/
             cypress/videos/
-            reports/
+            reports/${{ matrix.group.name }}/
           if-no-files-found: ignore
           retention-days: 30
