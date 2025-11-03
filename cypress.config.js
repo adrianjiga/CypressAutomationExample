@@ -4,7 +4,6 @@ import { plugin } from '@cypress/grep/plugin';
 export default defineConfig({
   viewportHeight: 1080,
   viewportWidth: 1920,
-  video: true,
   retries: {
     runMode: 2,
     openMode: 0,
