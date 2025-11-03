@@ -9,15 +9,13 @@ export default defineConfig({
     runMode: 2,
     openMode: 0,
   },
+  env: {
+    grepFilterSpecs: true,
+    grepOmitFiltered: true,
+  },
   e2e: {
     baseUrl: "https://demoqa.com",
     setupNodeEvents(on, config) {
-      // Set env variables before initializing the grep plugin
-      config.env = {
-        ...config.env,
-        grepFilterSpecs: true,
-        grepOmitFiltered: true,
-      };
 
       // Initialize grep plugin with updated config
       plugin(config);
