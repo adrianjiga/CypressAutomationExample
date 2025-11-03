@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-import grepPlugin from "@cypress/grep/src/plugin.js";
+import { plugin } from '@cypress/grep/plugin';
 
 export default defineConfig({
   viewportHeight: 1080,
@@ -9,18 +9,16 @@ export default defineConfig({
     runMode: 2,
     openMode: 0,
   },
+  env: {
+    grepFilterSpecs: true,
+    grepOmitFiltered: true,
+  },
   e2e: {
     baseUrl: "https://demoqa.com",
     setupNodeEvents(on, config) {
-      // Set env variables before initializing the grep plugin
-      config.env = {
-        ...config.env,
-        grepFilterSpecs: true,
-        grepOmitFiltered: true,
-      };
 
       // Initialize grep plugin with updated config
-      grepPlugin(config);
+      plugin(config);
 
       return config;
     },
