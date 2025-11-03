@@ -1,5 +1,5 @@
 import { defineConfig } from "cypress";
-import { plugin as cypressGrepPlugin } from '@cypress/grep/plugin';
+import { plugin } from '@cypress/grep/plugin';
 
 export default defineConfig({
   viewportHeight: 1080,
@@ -20,7 +20,7 @@ export default defineConfig({
       };
 
       // Initialize grep plugin with updated config
-      cypressGrepPlugin(config);
+      plugin(config);
 
       return config;
     },

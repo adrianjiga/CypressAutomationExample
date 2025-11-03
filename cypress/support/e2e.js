@@ -35,5 +35,5 @@ import "cypress-plugin-api";
  *   Example: `npx cypress run --env grep="login tests"`
  */
 
-import { register as registerCypressGrep } from '@cypress/grep';
-registerCypressGrep();
+import { register } from '@cypress/grep';
+register();
