@@ -1,0 +1,41 @@
+name: Run CI
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v5
+            
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '20'
+                  cache: 'npm'
+
+            - name: Install Dependencies
+              run: npm install
+            
+            - name: Run Linter
+              run: npm run lint
+            
+            - name: Format Code
+              run: npm run format:check
+
+            - name: Verify Cypress setup
+              run: npx cypress verify
+
+            - name: Run smoke tests
+              uses: cypress-io/github-action@v6
+              with:
+                  browser: chrome
+                  env: grepTags='@smoke'
+                  publish-summary: true
+            
+            
+
+            
