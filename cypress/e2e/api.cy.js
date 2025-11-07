@@ -47,7 +47,7 @@ describe("DemoQA Book Store API Tests", () => {
 
   it(
     "should list all books with correct structure and data",
-    { tags: "@api" },
+    { tags: ["@api"] },
     () => {
       cy.get("@defaultHeaders").then((headers) => {
         cy.request({
@@ -75,7 +75,7 @@ describe("DemoQA Book Store API Tests", () => {
     }
   );
 
-  it("should fetch a specific book by valid ISBN", { tags: "@api" }, () => {
+  it("should fetch a specific book by valid ISBN", { tags: ["@api"] }, () => {
     cy.fixture("book").then((expectedBook) => {
       cy.get("@defaultHeaders").then((headers) => {
         cy.request({
@@ -97,7 +97,7 @@ describe("DemoQA Book Store API Tests", () => {
 
   it(
     "should handle invalid ISBN with proper error response",
-    { tags: "@api" },
+    { tags: ["@api"] },
     () => {
       cy.get("@defaultHeaders").then((headers) => {
         cy.request({

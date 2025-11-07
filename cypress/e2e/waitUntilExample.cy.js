@@ -1,7 +1,7 @@
 describe("Test Cypress Docs with waitUntil", () => {
   it(
     "Waits for the search button to be visible and clicks it",
-    { tags: "@ui" },
+    { tags: ["@ui"] },
     () => {
       cy.visit("https://docs.cypress.io");
 
