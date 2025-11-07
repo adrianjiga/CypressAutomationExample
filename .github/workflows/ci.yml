@@ -1,4 +1,6 @@
 name: Run CI
+permissions:
+  contents: read
 on:
   pull_request:
     branches: [master]
