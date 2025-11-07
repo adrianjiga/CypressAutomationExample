@@ -57,7 +57,7 @@ describe("DemoQA Book Store API Tests", () => {
         }).then((response) => {
           expect(response.status).to.eq(200);
           expect(response.headers["content-type"]).to.include(
-            "application/json"
+            "application/json",
           );
           expect(response.body).to.have.property("books").and.be.an("array").and
             .not.be.empty;
@@ -68,11 +68,11 @@ describe("DemoQA Book Store API Tests", () => {
             ...new Set(response.body.books.map((book) => book.publisher)),
           ];
           expect(publishers).to.have.members(
-            BOOK_SCHEMA.publisher.allowedValues
+            BOOK_SCHEMA.publisher.allowedValues,
           );
         });
       });
-    }
+    },
   );
 
   it("should fetch a specific book by valid ISBN", { tags: ["@api"] }, () => {
@@ -86,7 +86,7 @@ describe("DemoQA Book Store API Tests", () => {
         }).then((response) => {
           expect(response.status).to.eq(200);
           expect(response.headers["content-type"]).to.include(
-            "application/json"
+            "application/json",
           );
           expect(response.body).to.deep.include(expectedBook);
           validateBookSchema(response.body);
@@ -111,6 +111,6 @@ describe("DemoQA Book Store API Tests", () => {
           expect(response.body).to.have.property("message").and.be.a("string");
         });
       });
-    }
+    },
   );
 });

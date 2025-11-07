@@ -17,7 +17,7 @@ Cypress.Commands.add(
         .should("be.visible")
         .and("contain", modalTitle);
     }
-  }
+  },
 );
 
 // Table interaction commands
@@ -28,7 +28,7 @@ Cypress.Commands.add(
     cy.get("#searchBox").type(searchText);
     cy.get("#searchBox").should("have.value", searchText);
     return cy.get(tableSelector);
-  }
+  },
 );
 
 Cypress.Commands.add("verifyTableRow", (rowSelector, expectedData) => {

@@ -146,11 +146,11 @@ describe("WebTables", () => {
 
     rowsPerPageOptions.forEach((rowsPerPage) => {
       cy.get('select[aria-label="rows per page"]').select(
-        `${rowsPerPage} rows`
+        `${rowsPerPage} rows`,
       );
       cy.get('.rt-tbody div[role="row"]').should(
         "have.length.at.most",
-        rowsPerPage
+        rowsPerPage,
       );
       cy.get(".-totalPages").should("contain", "1");
     });
@@ -180,6 +180,6 @@ describe("WebTables", () => {
       cy.get(".-previous").click();
       cy.contains(".rt-tr-group", "Cierra").should("be.visible");
       cy.get(".-next").should("not.be.disabled");
-    }
+    },
   );
 });
