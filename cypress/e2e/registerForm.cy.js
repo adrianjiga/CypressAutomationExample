@@ -7,7 +7,7 @@ describe("Register Form", () => {
     cy.visit("/automation-practice-form");
   });
 
-  it("should submit the practice form with all fields", { tags: "@ui" }, () => {
+  it("should submit the practice form with all fields", { tags: ["@ui"] }, () => {
     cy.fillForm({
       firstName: "John",
       lastName: "Doe",
@@ -56,7 +56,7 @@ describe("Register Form", () => {
 
   it(
     "should show validation errors for required fields",
-    { tags: "@ui" },
+    { tags: ["@ui"] },
     () => {
       cy.get("#submit").click({ force: true });
       cy.get("#firstName").should(
