@@ -23,9 +23,7 @@ export default defineConfig({
   e2e: {
     baseUrl: "https://demoqa.com",
     setupNodeEvents(on, config) {
-      // Initialize grep plugin with updated config
       plugin(config);
-
       return config;
     },
   },
