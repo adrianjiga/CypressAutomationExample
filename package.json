@@ -45,7 +45,7 @@
   "license": "ISC",
   "dependencies": {
     "@cypress/grep": "^5.0.0",
-    "cypress": "^15.5.0",
+    "cypress": "^15.6.0",
     "cypress-plugin-api": "^2.11.2"
   },
   "devDependencies": {
@@ -56,7 +56,7 @@
     "globals": "^16.5.0",
     "mochawesome": "^7.1.4",
     "mochawesome-merge": "^5.0.0",
-    "mochawesome-report-generator": "^6.3.0",
+    "mochawesome-report-generator": "^6.3.2",
     "prettier": "^3.6.2"
   }
 }
