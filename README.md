@@ -21,22 +21,23 @@ The project contains end-to-end tests for:
 
 ```
 cypress/
-├── e2e/                  # Test files
-│   ├── api.cy.js         # Book Store API tests
-│   ├── apiPlugin.cy.js   # JSONPlaceholder API example
-│   ├── buttons.cy.js     # Button interaction tests
-│   ├── webTables.cy.js   # Web table operations
-│   ├── registerForm.cy.js # Form submission tests
+├── e2e/                       # Test files
+│   ├── api.cy.js              # Book Store API tests
+│   ├── apiPlugin.cy.js        # JSONPlaceholder API example
+│   ├── buttons.cy.js          # Button interaction tests
+│   ├── webTables.cy.js        # Web table operations
+│   ├── registerForm.cy.js     # Form submission tests
 │   └── waitUntilExample.cy.js # Custom wait pattern example
-├── fixtures/             # Test data
+├── fixtures/              # Test data
 │   └── book.json
-└── support/             # Support files
-    ├── commands.js      # Custom commands
-    └── e2e.js          # Global configuration
+└── support/              # Support files
+    ├── commands.js       # Custom commands
+    └── e2e.js            # Global configuration
 .github/
-├── dependabot.yml       # Automated dependency management
+├── dependabot.yml        # Automated dependency management
 └── workflows/
     └── cypress-tests.yml # GitHub Actions CI workflow
+    └── ci.yml            # CI validation workflow
 ```
 
 ## Test Categories
@@ -199,7 +200,7 @@ npm run format:check   # Check formatting
 
 Each test suite runs in a container with:
 
-- Base image: `cypress/included:14.3.2`
+- Base image: `cypress/included:15.6.0`
 - Memory limits: `2GB`
 - Memory reservation: `1GB`
 
