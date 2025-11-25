@@ -11,10 +11,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Repository
-              uses: actions/checkout@v6
+              uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
             
             - name: Setup Node.js
-              uses: actions/setup-node@v6
+              uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
               with:
                   node-version: '22'
                   cache: 'npm'
@@ -32,7 +32,7 @@ jobs:
               run: npx cypress verify
 
             - name: Run smoke tests
-              uses: cypress-io/github-action@v6
+              uses: cypress-io/github-action@7ef72e250a9e564efb4ed4c2433971ada4cc38b4 # v6.10.4
               with:
                   browser: chrome
                   env: grepTags=@smoke
