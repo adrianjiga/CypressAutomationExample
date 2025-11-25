@@ -6,46 +6,46 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+    contents: read
 
 jobs:
-  test:
-    name: Test - ${{ matrix.group.name }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        group: 
-          - name: api
-            tag: '@api'
-          - name: ui
-            tag: '@ui'
-          - name: webtables
-            tag: '@webTables'
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+    test:
+        name: Test - ${{ matrix.group.name }}
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                group:
+                    - name: api
+                      tag: '@api'
+                    - name: ui
+                      tag: '@ui'
+                    - name: webtables
+                      tag: '@webTables'
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
-        with:
-          node-version: '20'
-          cache: 'npm'
+            - name: Setup Node.js
+              uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+              with:
+                  node-version: '20'
+                  cache: 'npm'
 
-      - name: Run ${{ matrix.group.name }} Tests
-        uses: cypress-io/github-action@7ef72e250a9e564efb4ed4c2433971ada4cc38b4 # v6.10.4
-        with:
-          browser: chrome
-          env: grepTags=${{ matrix.group.tag }}
+            - name: Run ${{ matrix.group.name }} Tests
+              uses: cypress-io/github-action@7ef72e250a9e564efb4ed4c2433971ada4cc38b4 # v6.10.4
+              with:
+                  browser: chrome
+                  env: grepTags=${{ matrix.group.tag }}
 
-      - name: Upload Test Artifacts
-        if: always()
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-        with:
-          name: cypress-results-${{ matrix.group.name }}
-          path: |
-            cypress/screenshots/
-            cypress/videos/
-            reports/
-          if-no-files-found: ignore
-          retention-days: 30
+            - name: Upload Test Artifacts
+              if: always()
+              uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+              with:
+                  name: cypress-results-${{ matrix.group.name }}
+                  path: |
+                      cypress/screenshots/
+                      cypress/videos/
+                      reports/
+                  if-no-files-found: ignore
+                  retention-days: 30
