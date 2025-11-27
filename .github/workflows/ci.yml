@@ -37,7 +37,3 @@ jobs:
                   browser: chrome
                   env: grepTags=@smoke
                   publish-summary: true
-            
-            
-
-            
