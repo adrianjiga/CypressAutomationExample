@@ -1,158 +1,88 @@
+import { WebTablesPage } from "../pages";
+import { userFactory } from "../support/factories";
+
 describe("WebTables", () => {
   beforeEach(() => {
-    cy.intercept("GET", "/webtables").as("pageLoad");
-
-    cy.on("uncaught:exception", (_err, _runnable) => {
-      return false;
-    });
-
-    cy.visit("/webtables");
-    cy.wait("@pageLoad");
+    cy.on("uncaught:exception", () => false);
+    WebTablesPage.visit();
   });
 
   it("search for a record", { tags: ["@webTables"] }, () => {
-    cy.searchInTable("Cierra");
-    cy.contains('.rt-tbody div[role="row"]', "Cierra").should("be.visible");
-    cy.get('.rt-tbody div[role="row"]')
-      .not(".-padRow")
-      .should("have.length", 1);
+    WebTablesPage.search("Cierra");
 
-    cy.get("#searchBox").clear();
-    cy.get("#searchBox").should("have.value", "");
-    cy.get('.rt-tbody div[role="row"]')
-      .not(".-padRow")
-      .should("not.have.length.below", 2);
+    cy.contains(WebTablesPage.selectors.tableRow, "Cierra").should(
+      "be.visible"
+    );
+    WebTablesPage.verifyRowCount(1);
+
+    WebTablesPage.clearSearch();
+    WebTablesPage.verifyMinRowCount(2);
   });
 
   it("edit an existing record", { tags: ["@webTables"] }, () => {
-    const newAge = Math.floor(Math.random() * (65 - 18 + 1)) + 18; // random age between 18 and 65
+    const newAge = userFactory.generateAge();
     const newDepartment = "Engineering";
 
-    cy.get("#edit-record-1").should("be.visible").click();
-    cy.get(".modal-content").should("be.visible");
+    WebTablesPage.openEditModal(1)
+      .fillForm({ age: newAge.toString(), department: newDepartment })
+      .submitForm();
 
-    cy.get("#age").should("be.visible").clear();
-    cy.get("#age").type(newAge);
-    cy.get("#age").should("have.value", newAge);
-    cy.get("#department").should("be.visible").clear();
-    cy.get("#department").type(newDepartment);
-    cy.get("#department").should("have.value", newDepartment);
-
-    cy.get("#submit").click();
-    cy.get(".modal-content").should("not.exist");
-
-    cy.contains(".rt-tr-group", "Cierra").within(() => {
-      cy.get(".rt-td").eq(2).should("contain", newAge);
-      cy.get(".rt-td").eq(5).should("contain", newDepartment);
+    cy.contains(WebTablesPage.selectors.tableGroup, "Cierra").within(() => {
+      cy.get(WebTablesPage.selectors.tableCell).eq(2).should("contain", newAge);
+      cy.get(WebTablesPage.selectors.tableCell)
+        .eq(5)
+        .should("contain", newDepartment);
     });
   });
 
   it("add a new record", { tags: ["@webTables"] }, () => {
-    const adrian = {
-      firstName: "Adrian",
-      lastName: "Jiga",
-      email: "jiga.ion.adrian@gmail.com",
-      age: "29",
-      salary: "15000",
-      department: "Engineering",
-    };
+    const newUser = userFactory.generate({ department: "Engineering" });
 
-    cy.waitAndClick("#addNewRecordButton");
-    cy.get(".modal-content").should("be.visible");
-    cy.get("#registration-form-modal").should("contain", "Registration Form");
-
-    cy.fillForm({
-      firstName: adrian.firstName,
-      lastName: adrian.lastName,
-      userEmail: adrian.email,
-      age: adrian.age,
-      salary: adrian.salary,
-      department: adrian.department,
-    });
-
-    cy.waitAndClick("#submit");
-    cy.get(".modal-content").should("not.exist");
-
-    cy.get(".rt-tbody").within(() => {
-      cy.contains(".rt-tr-group", adrian.firstName).within(() => {
-        cy.get(".rt-td").eq(0).should("contain", adrian.firstName);
-        cy.get(".rt-td").eq(1).should("contain", adrian.lastName);
-        cy.get(".rt-td").eq(2).should("contain", adrian.age);
-        cy.get(".rt-td").eq(3).should("contain", adrian.email);
-        cy.get(".rt-td").eq(4).should("contain", adrian.salary);
-        cy.get(".rt-td").eq(5).should("contain", adrian.department);
-        cy.get(".rt-td").eq(6).find('span[title="Edit"]').should("exist");
-        cy.get(".rt-td").eq(6).find('span[title="Delete"]').should("exist");
-      });
-    });
+    WebTablesPage.openAddModal()
+      .fillForm(newUser)
+      .submitForm()
+      .verifyRecordExists(newUser)
+      .verifyRecordActions(newUser.firstName);
   });
 
   it("delete an existing record", { tags: ["@webTables"] }, () => {
-    cy.get('.rt-tbody div[role="row"]')
-      .not(".-padRow")
-      .then(($rows) => {
-        const initialRowCount = $rows.length;
+    WebTablesPage.getVisibleRows().then(($rows) => {
+      const initialRowCount = $rows.length;
 
-        const secondRecord = {
-          firstName: $rows.eq(1).find("div").eq(0).text(),
-          lastName: $rows.eq(1).find("div").eq(1).text(),
-          age: $rows.eq(1).find("div").eq(2).text(),
-          email: $rows.eq(1).find("div").eq(3).text(),
-          salary: $rows.eq(1).find("div").eq(4).text(),
-          department: $rows.eq(1).find("div").eq(5).text(),
-        };
+      // Get second record data before deletion
+      WebTablesPage.getRowData(1).then((secondRecordData) => {
+        // Delete first record
+        WebTablesPage.deleteRecord(1);
 
-        //delete first record
-        cy.get("#delete-record-1").click();
-        cy.get('.rt-tbody div[role="row"]')
-          .not(".-padRow")
-          .should("have.length", initialRowCount - 1);
+        // Verify row count decreased
+        WebTablesPage.getVisibleRows().should(
+          "have.length",
+          initialRowCount - 1
+        );
 
-        //check that the 2nd record moved up to the first row
-        cy.get('.rt-tbody div[role="row"]')
-          .not(".-padRow")
-          .first()
-          .within(($firstRow) => {
-            cy.wrap($firstRow)
-              .find("div")
-              .eq(0)
-              .should("have.text", secondRecord.firstName);
-            cy.wrap($firstRow)
-              .find("div")
-              .eq(1)
-              .should("have.text", secondRecord.lastName);
-            cy.wrap($firstRow)
-              .find("div")
-              .eq(2)
-              .should("have.text", secondRecord.age);
-            cy.wrap($firstRow)
-              .find("div")
-              .eq(3)
-              .should("have.text", secondRecord.email);
-            cy.wrap($firstRow)
-              .find("div")
-              .eq(4)
-              .should("have.text", secondRecord.salary);
-            cy.wrap($firstRow)
-              .find("div")
-              .eq(5)
-              .should("have.text", secondRecord.department);
-          });
+        // Verify second record moved to first position
+        WebTablesPage.getFirstRowData().then((firstRowData) => {
+          expect(firstRowData.firstName).to.equal(secondRecordData.firstName);
+          expect(firstRowData.lastName).to.equal(secondRecordData.lastName);
+          expect(firstRowData.age).to.equal(secondRecordData.age);
+          expect(firstRowData.email).to.equal(secondRecordData.email);
+          expect(firstRowData.salary).to.equal(secondRecordData.salary);
+          expect(firstRowData.department).to.equal(secondRecordData.department);
+        });
       });
+    });
   });
 
   it("change the number of rows displayed", { tags: ["@webTables"] }, () => {
     const rowsPerPageOptions = [5, 10, 20, 25, 50, 100];
 
     rowsPerPageOptions.forEach((rowsPerPage) => {
-      cy.get('select[aria-label="rows per page"]').select(
-        `${rowsPerPage} rows`,
-      );
-      cy.get('.rt-tbody div[role="row"]').should(
+      WebTablesPage.setRowsPerPage(rowsPerPage);
+      cy.get(WebTablesPage.selectors.tableRow).should(
         "have.length.at.most",
-        rowsPerPage,
+        rowsPerPage
       );
-      cy.get(".-totalPages").should("contain", "1");
+      WebTablesPage.verifyTotalPages("1");
     });
   });
 
@@ -160,26 +90,33 @@ describe("WebTables", () => {
     "pagination when more than 5 records exist",
     { tags: ["@webTables"] },
     () => {
+      // Add 3 new records to trigger pagination
       for (let i = 0; i < 3; i++) {
-        cy.get("#addNewRecordButton").click();
-        cy.get("#firstName").type(`User${i}`);
-        cy.get("#lastName").type("Test");
-        cy.get("#userEmail").type(`user${i}@test.com`);
-        cy.get("#age").type("25");
-        cy.get("#salary").type("1000");
-        cy.get("#department").type("Test");
-        cy.get("#submit").click();
+        const user = userFactory.generate({
+          firstName: `User${i}`,
+          lastName: "Test",
+        });
+        WebTablesPage.openAddModal().fillForm(user).submitForm();
       }
 
-      cy.get('select[aria-label="rows per page"]').select("5 rows");
-      cy.get(".-totalPages").should("contain", "2");
-      cy.get(".-next").click();
-      cy.get('.rt-tbody div[role="row"]').should("have.length.at.least", 1);
-      cy.contains(".rt-tr-group", "User2").should("be.visible");
-      cy.get(".-previous").should("not.be.disabled");
-      cy.get(".-previous").click();
-      cy.contains(".rt-tr-group", "Cierra").should("be.visible");
-      cy.get(".-next").should("not.be.disabled");
-    },
+      WebTablesPage.setRowsPerPage(5).verifyTotalPages("2");
+
+      WebTablesPage.goToNextPage();
+      cy.get(WebTablesPage.selectors.tableRow).should(
+        "have.length.at.least",
+        1
+      );
+      cy.contains(WebTablesPage.selectors.tableGroup, "User2").should(
+        "be.visible"
+      );
+
+      WebTablesPage.verifyPreviousEnabled();
+      WebTablesPage.goToPreviousPage();
+
+      cy.contains(WebTablesPage.selectors.tableGroup, "Cierra").should(
+        "be.visible"
+      );
+      WebTablesPage.verifyNextEnabled();
+    }
   );
 });
