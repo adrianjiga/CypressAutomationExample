@@ -10,7 +10,9 @@ describe("WebTables", () => {
   it("search for a record", { tags: ["@webTables"] }, () => {
     WebTablesPage.search("Cierra");
 
-    cy.contains(WebTablesPage.selectors.tableRow, "Cierra").should("be.visible");
+    cy.contains(WebTablesPage.selectors.tableRow, "Cierra").should(
+      "be.visible"
+    );
     WebTablesPage.verifyRowCount(1);
 
     WebTablesPage.clearSearch();
@@ -27,7 +29,9 @@ describe("WebTables", () => {
 
     cy.contains(WebTablesPage.selectors.tableGroup, "Cierra").within(() => {
       cy.get(WebTablesPage.selectors.tableCell).eq(2).should("contain", newAge);
-      cy.get(WebTablesPage.selectors.tableCell).eq(5).should("contain", newDepartment);
+      cy.get(WebTablesPage.selectors.tableCell)
+        .eq(5)
+        .should("contain", newDepartment);
     });
   });
 
@@ -51,7 +55,10 @@ describe("WebTables", () => {
         WebTablesPage.deleteRecord(1);
 
         // Verify row count decreased
-        WebTablesPage.getVisibleRows().should("have.length", initialRowCount - 1);
+        WebTablesPage.getVisibleRows().should(
+          "have.length",
+          initialRowCount - 1
+        );
 
         // Verify second record moved to first position
         WebTablesPage.getFirstRowData().then((firstRowData) => {
@@ -71,31 +78,45 @@ describe("WebTables", () => {
 
     rowsPerPageOptions.forEach((rowsPerPage) => {
       WebTablesPage.setRowsPerPage(rowsPerPage);
-      cy.get(WebTablesPage.selectors.tableRow).should("have.length.at.most", rowsPerPage);
+      cy.get(WebTablesPage.selectors.tableRow).should(
+        "have.length.at.most",
+        rowsPerPage
+      );
       WebTablesPage.verifyTotalPages("1");
     });
   });
 
-  it("pagination when more than 5 records exist", { tags: ["@webTables"] }, () => {
-    // Add 3 new records to trigger pagination
-    for (let i = 0; i < 3; i++) {
-      const user = userFactory.generate({
-        firstName: `User${i}`,
-        lastName: "Test",
-      });
-      WebTablesPage.openAddModal().fillForm(user).submitForm();
+  it(
+    "pagination when more than 5 records exist",
+    { tags: ["@webTables"] },
+    () => {
+      // Add 3 new records to trigger pagination
+      for (let i = 0; i < 3; i++) {
+        const user = userFactory.generate({
+          firstName: `User${i}`,
+          lastName: "Test",
+        });
+        WebTablesPage.openAddModal().fillForm(user).submitForm();
+      }
+
+      WebTablesPage.setRowsPerPage(5).verifyTotalPages("2");
+
+      WebTablesPage.goToNextPage();
+      cy.get(WebTablesPage.selectors.tableRow).should(
+        "have.length.at.least",
+        1
+      );
+      cy.contains(WebTablesPage.selectors.tableGroup, "User2").should(
+        "be.visible"
+      );
+
+      WebTablesPage.verifyPreviousEnabled();
+      WebTablesPage.goToPreviousPage();
+
+      cy.contains(WebTablesPage.selectors.tableGroup, "Cierra").should(
+        "be.visible"
+      );
+      WebTablesPage.verifyNextEnabled();
     }
-
-    WebTablesPage.setRowsPerPage(5).verifyTotalPages("2");
-
-    WebTablesPage.goToNextPage();
-    cy.get(WebTablesPage.selectors.tableRow).should("have.length.at.least", 1);
-    cy.contains(WebTablesPage.selectors.tableGroup, "User2").should("be.visible");
-
-    WebTablesPage.verifyPreviousEnabled();
-    WebTablesPage.goToPreviousPage();
-
-    cy.contains(WebTablesPage.selectors.tableGroup, "Cierra").should("be.visible");
-    WebTablesPage.verifyNextEnabled();
-  });
+  );
 });

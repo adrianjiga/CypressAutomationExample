@@ -79,7 +79,10 @@ export const bookFactory = {
       title: faker.lorem.words(3),
       subTitle: faker.lorem.sentence(),
       author: faker.person.fullName(),
-      publisher: faker.helpers.arrayElement(["O'Reilly Media", "No Starch Press"]),
+      publisher: faker.helpers.arrayElement([
+        "O'Reilly Media",
+        "No Starch Press",
+      ]),
       pages: faker.number.int({ min: 50, max: 1000 }),
       description: faker.lorem.paragraph(),
       website: faker.internet.url(),

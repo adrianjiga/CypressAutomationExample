@@ -49,12 +49,15 @@ Cypress.Commands.add(
  * @param {string} [tableSelector='.rt-tbody'] - Selector for the table body
  * @returns {Cypress.Chainable<JQuery<HTMLElement>>} The table element
  */
-Cypress.Commands.add("searchInTable", (searchText, tableSelector = ".rt-tbody") => {
-  cy.get("#searchBox").clear();
-  cy.get("#searchBox").type(searchText);
-  cy.get("#searchBox").should("have.value", searchText);
-  return cy.get(tableSelector);
-});
+Cypress.Commands.add(
+  "searchInTable",
+  (searchText, tableSelector = ".rt-tbody") => {
+    cy.get("#searchBox").clear();
+    cy.get("#searchBox").type(searchText);
+    cy.get("#searchBox").should("have.value", searchText);
+    return cy.get(tableSelector);
+  }
+);
 
 /**
  * Verify data in a table row by column index
@@ -143,7 +146,9 @@ Cypress.Commands.add("selectDate", (dateInput, month, year, day) => {
   cy.get(dateInput).click();
   cy.get(".react-datepicker__month-select").select(month);
   cy.get(".react-datepicker__year-select").select(year);
-  cy.get(`.react-datepicker__day.react-datepicker__day--0${day}`).first().click();
+  cy.get(`.react-datepicker__day.react-datepicker__day--0${day}`)
+    .first()
+    .click();
 });
 
 /**

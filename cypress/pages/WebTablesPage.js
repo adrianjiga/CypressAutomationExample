@@ -163,10 +163,14 @@ export const WebTablesPage = {
     cy.get(this.selectors.tableBody).within(() => {
       cy.contains(this.selectors.tableGroup, data.firstName).within(() => {
         if (data.firstName) {
-          cy.get(this.selectors.tableCell).eq(0).should("contain", data.firstName);
+          cy.get(this.selectors.tableCell)
+            .eq(0)
+            .should("contain", data.firstName);
         }
         if (data.lastName) {
-          cy.get(this.selectors.tableCell).eq(1).should("contain", data.lastName);
+          cy.get(this.selectors.tableCell)
+            .eq(1)
+            .should("contain", data.lastName);
         }
         if (data.age) {
           cy.get(this.selectors.tableCell).eq(2).should("contain", data.age);
@@ -178,7 +182,9 @@ export const WebTablesPage = {
           cy.get(this.selectors.tableCell).eq(4).should("contain", data.salary);
         }
         if (data.department) {
-          cy.get(this.selectors.tableCell).eq(5).should("contain", data.department);
+          cy.get(this.selectors.tableCell)
+            .eq(5)
+            .should("contain", data.department);
         }
       });
     });
@@ -191,8 +197,14 @@ export const WebTablesPage = {
    */
   verifyRecordActions(identifier) {
     cy.contains(this.selectors.tableGroup, identifier).within(() => {
-      cy.get(this.selectors.tableCell).eq(6).find('span[title="Edit"]').should("exist");
-      cy.get(this.selectors.tableCell).eq(6).find('span[title="Delete"]').should("exist");
+      cy.get(this.selectors.tableCell)
+        .eq(6)
+        .find('span[title="Edit"]')
+        .should("exist");
+      cy.get(this.selectors.tableCell)
+        .eq(6)
+        .find('span[title="Delete"]')
+        .should("exist");
     });
     return this;
   },

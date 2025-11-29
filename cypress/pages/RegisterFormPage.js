@@ -17,7 +17,8 @@ export const RegisterFormPage = {
     dateOfBirthInput: "#dateOfBirthInput",
     monthSelect: ".react-datepicker__month-select",
     yearSelect: ".react-datepicker__year-select",
-    daySelector: (day) => `.react-datepicker__day.react-datepicker__day--0${day}`,
+    daySelector: (day) =>
+      `.react-datepicker__day.react-datepicker__day--0${day}`,
     subjectsInput: "#subjectsInput",
     hobbySports: "#hobbies-checkbox-1",
     hobbyReading: "#hobbies-checkbox-2",
