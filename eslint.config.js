@@ -6,7 +6,11 @@ import cypress from "eslint-plugin-cypress";
 export default [
   js.configs.recommended,
   {
-    files: ["cypress/e2e/**/*.cy.js", "cypress/support/**/*.js"],
+    files: [
+      "cypress/e2e/**/*.cy.js",
+      "cypress/support/**/*.js",
+      "cypress/pages/**/*.js",
+    ],
     languageOptions: {
       parserOptions: {
         sourceType: "module",
@@ -50,6 +54,9 @@ export default [
       "cypress/assertion-before-screenshot": "error",
       "no-multi-spaces": "error",
       "no-trailing-spaces": "error",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "prefer-const": "error",
+      "no-var": "error",
     },
   },
   prettier,
