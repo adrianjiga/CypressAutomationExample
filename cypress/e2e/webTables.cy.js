@@ -49,18 +49,12 @@ describe("WebTables", () => {
     WebTablesPage.getVisibleRows().then(($rows) => {
       const initialRowCount = $rows.length;
 
-      // Get second record data before deletion
       WebTablesPage.getRowData(1).then((secondRecordData) => {
-        // Delete first record
         WebTablesPage.deleteRecord(1);
-
-        // Verify row count decreased
         WebTablesPage.getVisibleRows().should(
           "have.length",
           initialRowCount - 1
         );
-
-        // Verify second record moved to first position
         WebTablesPage.getFirstRowData().then((firstRowData) => {
           expect(firstRowData.firstName).to.equal(secondRecordData.firstName);
           expect(firstRowData.lastName).to.equal(secondRecordData.lastName);
@@ -90,7 +84,6 @@ describe("WebTables", () => {
     "pagination when more than 5 records exist",
     { tags: ["@webTables"] },
     () => {
-      // Add 3 new records to trigger pagination
       for (let i = 0; i < 3; i++) {
         const user = userFactory.generate({
           firstName: `User${i}`,
