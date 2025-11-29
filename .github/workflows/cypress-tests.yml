@@ -2,50 +2,164 @@ name: Run Tests
 
 on:
   schedule:
-    - cron: '0 7 * * 1-5'  # Every Monday to Friday at 07:00 UTC
+    - cron: "0 7 * * 1-5" # Every Monday to Friday at 07:00 UTC
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to run tests against"
+        required: false
+        default: "prod"
+        type: choice
+        options:
+          - prod
+      browser:
+        description: "Browser to run tests in"
+        required: false
+        default: "chrome"
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - edge
+  push:
+    branches:
+      - master
 
 permissions:
-    contents: read
+  contents: read
 
 jobs:
-    test:
-        name: Test - ${{ matrix.group.name }}
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                group:
-                    - name: api
-                      tag: '@api'
-                    - name: ui
-                      tag: '@ui'
-                    - name: webtables
-                      tag: '@webTables'
-        steps:
-            - name: Checkout Repository
-              uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+  test:
+    name: ${{ matrix.group.name }} - ${{ matrix.browser }} - ${{ matrix.viewport }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group:
+          - name: api
+            tag: "@api"
+          - name: ui
+            tag: "@ui"
+          - name: webtables
+            tag: "@webTables"
+        browser: [chrome, firefox]
+        viewport: [desktop]
+        exclude:
+          - group:
+              name: api
+            browser: firefox
+          - group:
+              name: api
+            viewport: mobile
 
-            - name: Setup Node.js
-              uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
-              with:
-                  node-version: '20'
-                  cache: 'npm'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
 
-            - name: Run ${{ matrix.group.name }} Tests
-              uses: cypress-io/github-action@7ef72e250a9e564efb4ed4c2433971ada4cc38b4 # v6.10.4
-              with:
-                  browser: chrome
-                  env: grepTags=${{ matrix.group.tag }}
+      - name: Setup Node.js
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: "20"
+          cache: "npm"
 
-            - name: Upload Test Artifacts
-              if: always()
-              uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
-              with:
-                  name: cypress-results-${{ matrix.group.name }}
-                  path: |
-                      cypress/screenshots/
-                      cypress/videos/
-                      reports/
-                  if-no-files-found: ignore
-                  retention-days: 30
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run ${{ matrix.group.name }} Tests
+        uses: cypress-io/github-action@7ef72e250a9e564efb4ed4c2433971ada4cc38b4 # v6.10.4
+        with:
+          browser: ${{ github.event.inputs.browser || matrix.browser }}
+          install: false
+          env: >-
+            grepTags=${{ matrix.group.tag }},
+            environment=${{ github.event.inputs.environment || 'prod' }},
+            viewport=${{ matrix.viewport }}
+
+      - name: Upload Test Artifacts
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: cypress-results-${{ matrix.group.name }}-${{ matrix.browser }}-${{ matrix.viewport }}
+          path: |
+            cypress/screenshots/
+            cypress/videos/
+            reports/
+          if-no-files-found: ignore
+          retention-days: 30
+
+  # Responsive testing job for UI tests
+  responsive-tests:
+    name: Responsive - ${{ matrix.viewport }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        viewport: [mobile, tablet]
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run UI Tests - ${{ matrix.viewport }}
+        uses: cypress-io/github-action@7ef72e250a9e564efb4ed4c2433971ada4cc38b4 # v6.10.4
+        with:
+          browser: chrome
+          env: >-
+            grepTags=@ui,
+            viewport=${{ matrix.viewport }}
+
+      - name: Upload Responsive Test Artifacts
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: cypress-results-responsive-${{ matrix.viewport }}
+          path: |
+            cypress/screenshots/
+            cypress/videos/
+            reports/
+          if-no-files-found: ignore
+          retention-days: 30
+
+  # Merge and publish reports
+  merge-reports:
+    name: Merge Test Reports
+    needs: [test, responsive-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
+        with:
+          node-version: "20"
+
+      - name: Download All Artifacts
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        with:
+          path: all-results
+
+      - name: Merge Reports
+        run: |
+          npm install -g mochawesome-merge mochawesome-report-generator
+          mkdir -p reports/final
+          find all-results -name "*.json" -path "*/reports/*" | head -20 | xargs mochawesome-merge > reports/final/merged.json || true
+          marge reports/final/merged.json --reportDir reports/final --inline || true
+
+      - name: Upload Final Report
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: final-test-report
+          path: reports/final/
+          retention-days: 30
