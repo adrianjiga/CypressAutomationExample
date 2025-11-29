@@ -1,90 +1,49 @@
+import { RegisterFormPage } from "../pages";
+import { userFactory } from "../support/factories";
+
 describe("Register Form", () => {
   beforeEach(() => {
-    cy.on("uncaught:exception", (_err, _runnable) => {
-      return false;
-    });
-
-    cy.visit("/automation-practice-form");
+    cy.on("uncaught:exception", () => false);
+    RegisterFormPage.visit();
   });
 
-  it(
-    "should submit the practice form with all fields",
-    { tags: ["@ui"] },
-    () => {
-      cy.fillForm({
-        firstName: "John",
-        lastName: "Doe",
-        userEmail: "john@example.com",
-        userNumber: "1234567890",
-        currentAddress: "123 Test Street",
-      });
+  it("should submit the practice form with all fields", { tags: ["@ui"] }, () => {
+    const testUser = userFactory.generateFormUser();
 
-      cy.get("#gender-radio-1").check({ force: true });
-      cy.selectDate("#dateOfBirthInput", "January", "1990", "01");
-      cy.get("#subjectsInput").type("Maths{enter}");
-      cy.get("#hobbies-checkbox-1").check({ force: true });
-      cy.get("#hobbies-checkbox-2").check({ force: true });
-      cy.get("#uploadPicture").selectFile("cypress/fixtures/book.json");
-      cy.get("#state").click();
-      cy.get("#react-select-3-option-0").click();
-      cy.get("#city").click();
-      cy.get("#react-select-4-option-0").click();
-      cy.waitAndClick("#submit", { force: true });
-      cy.get("#example-modal-sizes-title-lg")
-        .should("be.visible")
-        .and("contain", "Thanks for submitting the form");
+    RegisterFormPage.fillCompleteForm({
+      firstName: testUser.firstName,
+      lastName: testUser.lastName,
+      email: testUser.email,
+      mobile: testUser.mobile,
+      address: testUser.address,
+      gender: "male",
+      dateOfBirth: { month: "January", year: "1990", day: "01" },
+      subjects: ["Maths"],
+      hobbies: ["sports", "reading"],
+      picture: "cypress/fixtures/book.json",
+      state: 0,
+      city: 0,
+    });
 
-      const expectedData = {
-        "Student Name": "John Doe",
-        "Student Email": "john@example.com",
-        Gender: "Male",
-        Mobile: "1234567890",
-        "Date of Birth": "01 January,1990",
-        Subjects: "Maths",
-        Hobbies: "Sports, Reading",
-        Picture: "book.json",
-        Address: "123 Test Street",
-        "State and City": "NCR Delhi",
-      };
+    RegisterFormPage.submit().verifySubmissionSuccess();
 
-      Object.entries(expectedData).forEach(([label, value]) => {
-        cy.get("table tbody tr")
-          .contains("td", label)
-          .next("td")
-          .should("have.text", value);
-      });
+    const expectedData = {
+      "Student Name": `${testUser.firstName} ${testUser.lastName}`,
+      "Student Email": testUser.email,
+      Gender: "Male",
+      Mobile: testUser.mobile,
+      "Date of Birth": "01 January,1990",
+      Subjects: "Maths",
+      Hobbies: "Sports, Reading",
+      Picture: "book.json",
+      Address: testUser.address,
+      "State and City": "NCR Delhi",
+    };
 
-      cy.waitAndClick("#closeLargeModal", { force: true });
-    },
-  );
+    RegisterFormPage.verifySubmittedData(expectedData).closeModal();
+  });
 
-  it(
-    "should show validation errors for required fields",
-    { tags: ["@ui"] },
-    () => {
-      cy.get("#submit").click({ force: true });
-      cy.get("#firstName").should(
-        "have.css",
-        "border-color",
-        "rgb(220, 53, 69)",
-      );
-      cy.get("#lastName").should(
-        "have.css",
-        "border-color",
-        "rgb(220, 53, 69)",
-      );
-      for (let i = 1; i < 3; i++) {
-        cy.get(`label[for="gender-radio-${i}"]`).should(
-          "have.css",
-          "border-color",
-          "rgb(220, 53, 69)",
-        );
-      }
-      cy.get("#userNumber").should(
-        "have.css",
-        "border-color",
-        "rgb(220, 53, 69)",
-      );
-    },
-  );
+  it("should show validation errors for required fields", { tags: ["@ui"] }, () => {
+    RegisterFormPage.submit().verifyRequiredFieldErrors();
+  });
 });
