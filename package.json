@@ -1,7 +1,7 @@
 {
   "name": "cypress-automation-example",
-  "version": "1.0.0",
-  "description": "A demo project showcasing Cypress testing capabilities including UI, API, and table interactions.",
+  "version": "2.0.0",
+  "description": "A demo project showcasing Cypress testing capabilities including UI, API, and table interactions with modern patterns.",
   "type": "module",
   "engines": {
     "node": ">=20.0.0",
@@ -13,17 +13,31 @@
     "test:ui": "cypress run --env grepTags=@ui",
     "test:api": "cypress run --env grepTags=@api",
     "test:webtables": "cypress run --env grepTags=@webTables",
+    "test:smoke": "cypress run --env grepTags=@smoke",
     "test:all": "cypress run",
+    "test:env:prod": "cypress run --env environment=prod",
+    "test:viewport:mobile": "cypress run --env viewport=mobile,grepTags=@ui",
+    "test:viewport:tablet": "cypress run --env viewport=tablet,grepTags=@ui",
+    "test:viewport:desktop": "cypress run --env viewport=desktop",
+    "test:browser:chrome": "cypress run --browser chrome",
+    "test:browser:firefox": "cypress run --browser firefox",
+    "test:browser:edge": "cypress run --browser edge",
     "test:docker:ui": "docker compose up --build ui-tests",
     "test:docker:api": "docker compose up --build api-tests",
     "test:docker:webtables": "docker compose up --build webtables-tests",
     "test:docker:all": "docker compose up --build && npm run docker:report",
     "docker:report": "docker compose up report-generator",
     "docker:clean": "docker compose down --volumes --remove-orphans",
-    "lint": "eslint cypress/e2e/**/*.cy.js cypress/support/**/*.js",
-    "lint:fix": "eslint cypress/e2e/**/*.cy.js cypress/support/**/*.js --fix",
-    "format": "prettier --write \"cypress/{e2e,support}/**/*.js\"",
-    "format:check": "prettier --check \"cypress/{e2e,support}/**/*.js\""
+    "lint": "eslint cypress/e2e/**/*.cy.js cypress/support/**/*.js cypress/pages/**/*.js",
+    "lint:fix": "eslint cypress/e2e/**/*.cy.js cypress/support/**/*.js cypress/pages/**/*.js --fix",
+    "format": "prettier --write \"cypress/{e2e,support,pages}/**/*.js\"",
+    "format:check": "prettier --check \"cypress/{e2e,support,pages}/**/*.js\"",
+    "report:merge": "mochawesome-merge 'reports/**/*.json' > reports/merged.json",
+    "report:generate": "marge reports/merged.json --reportDir reports/final --inline",
+    "report:full": "npm run report:merge && npm run report:generate",
+    "clean": "rm -rf reports cypress/videos cypress/screenshots node_modules/.cache",
+    "clean:reports": "rm -rf reports",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -36,7 +50,9 @@
     "e2e",
     "api-testing",
     "ui-testing",
-    "docker"
+    "docker",
+    "page-object-model",
+    "test-data-factory"
   ],
   "author": {
     "name": "Adrian Jiga",
@@ -45,6 +61,7 @@
   "license": "ISC",
   "dependencies": {
     "@cypress/grep": "^5.0.0",
+    "@faker-js/faker": "^10.1.0",
     "cypress": "^15.7.0",
     "cypress-plugin-api": "^2.11.2"
   },
@@ -55,8 +72,9 @@
     "eslint-plugin-cypress": "^5.2.0",
     "globals": "^16.5.0",
     "mochawesome": "^7.1.4",
-    "mochawesome-merge": "^5.0.0",
+    "mochawesome-merge": "^5.1.0",
     "mochawesome-report-generator": "^6.3.2",
-    "prettier": "^3.6.2"
+    "prettier": "^3.7.2",
+    "typescript": "^5.9.3"
   }
 }
