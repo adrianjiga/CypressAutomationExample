@@ -66,7 +66,7 @@ jobs:
         run: npm ci
 
       - name: Run ${{ matrix.group.name }} Tests
-        uses: cypress-io/github-action@7ef72e250a9e564efb4ed4c2433971ada4cc38b4 # v6.10.4
+        uses: cypress-io/github-action@2ad32e649e4db26c07674ebae31a297601dbcbaf # v6.10.8
         with:
           browser: ${{ github.event.inputs.browser || matrix.browser }}
           install: false
@@ -77,7 +77,7 @@ jobs:
 
       - name: Upload Test Artifacts
         if: always()
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: cypress-results-${{ matrix.group.name }}-${{ matrix.browser }}-${{ matrix.viewport }}
           path: |
@@ -110,7 +110,7 @@ jobs:
         run: npm ci
 
       - name: Run UI Tests - ${{ matrix.viewport }}
-        uses: cypress-io/github-action@7ef72e250a9e564efb4ed4c2433971ada4cc38b4 # v6.10.4
+        uses: cypress-io/github-action@2ad32e649e4db26c07674ebae31a297601dbcbaf # v6.10.8
         with:
           browser: chrome
           env: >-
@@ -119,7 +119,7 @@ jobs:
 
       - name: Upload Responsive Test Artifacts
         if: always()
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: cypress-results-responsive-${{ matrix.viewport }}
           path: |
@@ -146,7 +146,7 @@ jobs:
           node-version: "20"
 
       - name: Download All Artifacts
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           path: all-results
 
@@ -158,7 +158,7 @@ jobs:
           marge reports/final/merged.json --reportDir reports/final --inline || true
 
       - name: Upload Final Report
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: final-test-report
           path: reports/final/
