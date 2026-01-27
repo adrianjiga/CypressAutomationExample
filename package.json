@@ -60,7 +60,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "@cypress/grep": "^5.0.1",
+    "@cypress/grep": "^5.1.0",
     "@faker-js/faker": "^10.2.0",
     "cypress": "^15.9.0",
     "cypress-plugin-api": "^2.11.2"
@@ -70,11 +70,11 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^5.2.1",
-    "globals": "^17.0.0",
+    "globals": "^17.1.0",
     "mochawesome": "^7.1.4",
     "mochawesome-merge": "^5.1.0",
     "mochawesome-report-generator": "^6.3.2",
-    "prettier": "^3.8.0",
+    "prettier": "^3.8.1",
     "typescript": "^5.9.3"
   }
 }
