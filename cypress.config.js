@@ -5,8 +5,7 @@ import fs from "fs";
 
 const environments = {
   prod: {
-    baseUrl: "https://demoqa.com",
-    apiUrl: "https://demoqa.com",
+    baseUrl: "https://adrianjiga.github.io",
   },
 };
 
@@ -42,7 +41,7 @@ export default defineConfig({
     apiTimeout: 30000,
   },
   e2e: {
-    baseUrl: "https://demoqa.com",
+    baseUrl: "https://adrianjiga.github.io",
 
     setupNodeEvents(on, config) {
       plugin(config);
@@ -52,7 +51,6 @@ export default defineConfig({
 
       if (envConfig) {
         config.baseUrl = envConfig.baseUrl;
-        config.env.apiUrl = envConfig.apiUrl;
         console.log(`Running tests against: ${envName} (${config.baseUrl})`);
       }
 

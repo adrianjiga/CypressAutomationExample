@@ -3,15 +3,15 @@
  * @see https://demoqa.com/buttons
  */
 export const ButtonsPage = {
-  url: "/buttons",
+  url: "/qa/helpers/buttons",
 
   selectors: {
-    doubleClickButton: "#doubleClickBtn",
-    rightClickButton: "#rightClickBtn",
-    dynamicClickButton: "div.mt-4:nth-child(4) button",
-    doubleClickMessage: "#doubleClickMessage",
-    rightClickMessage: "#rightClickMessage",
-    dynamicClickMessage: "#dynamicClickMessage",
+    doubleClickButton: '[data-cy="double-click-btn"]',
+    rightClickButton: '[data-cy="right-click-btn"]',
+    dynamicClickButton: '[data-cy="dynamic-click-btn"]',
+    doubleClickMessage: '[data-cy="double-click-message"]',
+    rightClickMessage: '[data-cy="right-click-message"]',
+    dynamicClickMessage: '[data-cy="dynamic-click-message"]',
   },
 
   messages: {
