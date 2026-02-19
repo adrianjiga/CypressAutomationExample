@@ -16,6 +16,7 @@ const viewports = {
 };
 
 export default defineConfig({
+  allowCypressEnv: false,
   viewportHeight: 1080,
   viewportWidth: 1920,
   retries: {
@@ -33,12 +34,14 @@ export default defineConfig({
     reportFilename: "[status]_[datetime]-[name]-report",
     timestamp: "yyyy-mm-dd_HH-MM-ss",
   },
-  env: {
+  expose: {
     grepFilterSpecs: true,
     grepOmitFiltered: true,
-    environment: "prod",
+    environment: process.env.TEST_ENVIRONMENT || "prod",
     viewports: viewports,
     apiTimeout: 30000,
+    grepTags: process.env.GREP_TAGS,
+    viewport: process.env.TEST_VIEWPORT,
   },
   e2e: {
     baseUrl: "https://adrianjiga.github.io",
@@ -46,7 +49,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       plugin(config);
 
-      const envName = config.env.environment || "prod";
+      const envName = (config.expose && config.expose.environment) || "prod";
       const envConfig = environments[envName];
 
       if (envConfig) {
@@ -54,7 +57,7 @@ export default defineConfig({
         console.log(`Running tests against: ${envName} (${config.baseUrl})`);
       }
 
-      const viewportName = config.env.viewport;
+      const viewportName = config.expose && config.expose.viewport;
       if (viewportName && viewports[viewportName]) {
         config.viewportWidth = viewports[viewportName].width;
         config.viewportHeight = viewports[viewportName].height;
@@ -69,18 +72,6 @@ export default defineConfig({
           } catch (err) {
             console.warn(`Could not delete video: ${err.message}`);
           }
-        }
-      });
-
-      on("after:run", (results) => {
-        if (results) {
-          console.log("\n========== Test Run Summary ==========");
-          console.log(`Total: ${results.totalTests}`);
-          console.log(`Passed: ${results.totalPassed}`);
-          console.log(`Failed: ${results.totalFailed}`);
-          console.log(`Skipped: ${results.totalSkipped}`);
-          console.log(`Duration: ${(results.totalDuration / 1000).toFixed(2)}s`);
-          console.log("=======================================\n");
         }
       });
 

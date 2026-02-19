@@ -14,7 +14,7 @@ import "./commands";
 
 // Import test data factories (makes them available globally if needed)
 import * as factories from "./factories";
-Cypress.env("factories", factories);
+Cypress.expose("factories", factories);
 
 // Third-party plugins
 import "cypress-plugin-api";
@@ -76,8 +76,8 @@ afterEach(function () {
 
 // Apply viewport from environment if specified
 before(() => {
-  const viewportName = Cypress.env("viewport");
-  const viewports = Cypress.env("viewports");
+  const viewportName = Cypress.expose("viewport");
+  const viewports = Cypress.expose("viewports");
 
   if (viewportName && viewports && viewports[viewportName]) {
     const { width, height } = viewports[viewportName];
