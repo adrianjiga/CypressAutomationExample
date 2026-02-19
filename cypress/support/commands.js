@@ -30,7 +30,7 @@ Cypress.Commands.add(
     cy.fillForm(formData);
     cy.get(`#${submitButtonId}`).click({ force: true });
     if (modalTitle) {
-      cy.get("#example-modal-sizes-title-lg")
+      cy.get('[data-cy="modal-title"]')
         .should("be.visible")
         .and("contain", modalTitle);
     }
@@ -134,7 +134,7 @@ Cypress.Commands.add("waitAndClick", (selector, options = {}) => {
 });
 
 /**
- * Select a date from the react-datepicker component
+ * Select a date from the custom datepicker component
  * @example
  * cy.selectDate('#dateInput', 'January', '1990', '15')
  * @param {string} dateInput - Selector for the date input
@@ -144,23 +144,21 @@ Cypress.Commands.add("waitAndClick", (selector, options = {}) => {
  */
 Cypress.Commands.add("selectDate", (dateInput, month, year, day) => {
   cy.get(dateInput).click();
-  cy.get(".react-datepicker__month-select").select(month);
-  cy.get(".react-datepicker__year-select").select(year);
-  cy.get(`.react-datepicker__day.react-datepicker__day--0${day}`)
-    .first()
-    .click();
+  cy.get("[data-cy='month-select']").select(month);
+  cy.get("[data-cy='year-select']").select(year);
+  cy.get(`[data-cy="day-${day}"]`).first().click();
 });
 
 /**
- * Select an option from a react-select dropdown
+ * Select an option from a custom dropdown component
  * @example
- * cy.selectReactOption('#state', 0) // Select first option
+ * cy.selectDropdownOption('#state', 0) // Select first option
  * @param {string} dropdownSelector - Selector for the dropdown container
  * @param {number} optionIndex - Index of the option to select (0-based)
  */
-Cypress.Commands.add("selectReactOption", (dropdownSelector, optionIndex) => {
+Cypress.Commands.add("selectDropdownOption", (dropdownSelector, optionIndex) => {
   cy.get(dropdownSelector).click();
-  cy.get(`[id^="react-select"][id$="-option-${optionIndex}"]`).click();
+  cy.get(`[id$="-option-${optionIndex}"]`).click();
 });
 
 // ============================================================
