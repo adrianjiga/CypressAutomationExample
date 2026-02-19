@@ -62,8 +62,7 @@
   "dependencies": {
     "@cypress/grep": "^6.0.0",
     "@faker-js/faker": "^10.3.0",
-    "cypress": "^15.10.0",
-    "cypress-plugin-api": "^2.11.2"
+    "cypress": "^15.10.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
