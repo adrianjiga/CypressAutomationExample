@@ -72,18 +72,6 @@ export default defineConfig({
         }
       });
 
-      on("after:run", (results) => {
-        if (results) {
-          console.log("\n========== Test Run Summary ==========");
-          console.log(`Total: ${results.totalTests}`);
-          console.log(`Passed: ${results.totalPassed}`);
-          console.log(`Failed: ${results.totalFailed}`);
-          console.log(`Skipped: ${results.totalSkipped}`);
-          console.log(`Duration: ${(results.totalDuration / 1000).toFixed(2)}s`);
-          console.log("=======================================\n");
-        }
-      });
-
       return config;
     },
 
