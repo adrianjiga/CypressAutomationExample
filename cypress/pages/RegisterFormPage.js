@@ -172,7 +172,7 @@ export const RegisterFormPage = {
    * Close the confirmation modal
    */
   closeModal() {
-    cy.waitAndClick(this.selectors.closeModalButton, { force: true });
+    cy.get(this.selectors.closeModalButton).click({ force: true });
     return this;
   },
 
