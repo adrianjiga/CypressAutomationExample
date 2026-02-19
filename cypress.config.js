@@ -16,6 +16,7 @@ const viewports = {
 };
 
 export default defineConfig({
+  allowCypressEnv: false,
   viewportHeight: 1080,
   viewportWidth: 1920,
   retries: {
