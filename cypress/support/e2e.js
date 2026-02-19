@@ -17,7 +17,6 @@ import * as factories from "./factories";
 Cypress.expose("factories", factories);
 
 // Third-party plugins
-import "cypress-plugin-api";
 import "cypress-wait-until";
 
 // Cypress Grep plugin for test filtering

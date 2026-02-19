@@ -197,10 +197,5 @@ declare namespace Cypress {
       }
     ): Chainable<boolean>;
 
-    /**
-     * Make API request with enhanced UI (from cypress-plugin-api)
-     * @param options - Request options
-     */
-    api(options: Partial<Cypress.RequestOptions>): Chainable<Cypress.Response<unknown>>;
   }
 }
