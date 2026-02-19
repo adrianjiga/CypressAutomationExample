@@ -66,6 +66,7 @@
     "cypress-plugin-api": "^2.11.2"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "cypress-wait-until": "^3.0.2",
     "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
