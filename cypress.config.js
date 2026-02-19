@@ -33,12 +33,14 @@ export default defineConfig({
     reportFilename: "[status]_[datetime]-[name]-report",
     timestamp: "yyyy-mm-dd_HH-MM-ss",
   },
-  env: {
+  expose: {
     grepFilterSpecs: true,
     grepOmitFiltered: true,
-    environment: "prod",
+    environment: process.env.TEST_ENVIRONMENT || "prod",
     viewports: viewports,
     apiTimeout: 30000,
+    grepTags: process.env.GREP_TAGS,
+    viewport: process.env.TEST_VIEWPORT,
   },
   e2e: {
     baseUrl: "https://adrianjiga.github.io",
@@ -46,7 +48,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       plugin(config);
 
-      const envName = config.env.environment || "prod";
+      const envName = (config.expose && config.expose.environment) || "prod";
       const envConfig = environments[envName];
 
       if (envConfig) {
@@ -54,7 +56,7 @@ export default defineConfig({
         console.log(`Running tests against: ${envName} (${config.baseUrl})`);
       }
 
-      const viewportName = config.env.viewport;
+      const viewportName = config.expose && config.expose.viewport;
       if (viewportName && viewports[viewportName]) {
         config.viewportWidth = viewports[viewportName].width;
         config.viewportHeight = viewports[viewportName].height;

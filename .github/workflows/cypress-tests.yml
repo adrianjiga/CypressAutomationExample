@@ -70,10 +70,10 @@ jobs:
         with:
           browser: ${{ github.event.inputs.browser || matrix.browser }}
           install: false
-          env: >-
-            grepTags=${{ matrix.group.tag }},
-            environment=${{ github.event.inputs.environment || 'prod' }},
-            viewport=${{ matrix.viewport }}
+        env:
+          GREP_TAGS: ${{ matrix.group.tag }}
+          TEST_ENVIRONMENT: ${{ github.event.inputs.environment || 'prod' }}
+          TEST_VIEWPORT: ${{ matrix.viewport }}
 
       - name: Upload Test Artifacts
         if: always()
@@ -113,9 +113,10 @@ jobs:
         uses: cypress-io/github-action@84d178e4bbce871e23f2ffa3085898cde0e4f0ec # v7.1.2
         with:
           browser: chrome
-          env: >-
-            grepTags=@ui,
-            viewport=${{ matrix.viewport }}
+          install: false
+        env:
+          GREP_TAGS: "@ui"
+          TEST_VIEWPORT: ${{ matrix.viewport }}
 
       - name: Upload Responsive Test Artifacts
         if: always()

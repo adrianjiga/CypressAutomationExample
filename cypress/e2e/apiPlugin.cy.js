@@ -1,5 +1,5 @@
 describe("API Testing with cypress-plugin-api", () => {
-  it("fetches todo item successfully", { tags: "@api" }, () => {
+  it("fetches todo item successfully", { tags: ["@api"] }, () => {
     cy.api({
       method: "GET",
       url: "https://jsonplaceholder.typicode.com/todos/1",

@@ -13,7 +13,7 @@ services:
           memory: 1G
     command: >
       npx cypress run
-      --env grepTags=@ui
+      --expose grepTags=@ui
       --reporter mochawesome
       --reporter-options reportDir=reports/ui,overwrite=true,html=true,json=true,reportFilename=report-[name]
 
@@ -31,7 +31,7 @@ services:
           memory: 1G
     command: >
       npx cypress run
-      --env grepTags=@api
+      --expose grepTags=@api
       --reporter mochawesome
       --reporter-options reportDir=reports/api,overwrite=true,html=true,json=true
 
@@ -49,7 +49,7 @@ services:
           memory: 1G
     command: >
       npx cypress run
-      --env grepTags=@webTables
+      --expose grepTags=@webTables
       --reporter mochawesome
       --reporter-options reportDir=reports/webtables,overwrite=true,html=true,json=true
 
