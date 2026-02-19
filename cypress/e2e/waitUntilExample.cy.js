@@ -5,6 +5,13 @@ describe("Test Cypress Docs with waitUntil", () => {
     () => {
       cy.visit("https://docs.cypress.io");
 
+      cy.get('button:contains("Search")', { timeout: 10000 });
+      cy.get("body").then(($body) => {
+        if ($body.find(".osano-cm-accept-all").length) {
+          cy.get(".osano-cm-accept-all").click();
+        }
+      });
+
       cy.waitUntil(
         () =>
           cy
