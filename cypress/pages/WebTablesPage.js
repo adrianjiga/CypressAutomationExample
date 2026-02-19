@@ -3,38 +3,38 @@
  * @see https://demoqa.com/webtables
  */
 export const WebTablesPage = {
-  url: "/webtables",
+  url: "/qa/helpers/webtables",
 
   selectors: {
-    searchBox: "#searchBox",
-    addNewRecordButton: "#addNewRecordButton",
-    tableBody: ".rt-tbody",
-    tableRow: '.rt-tbody div[role="row"]',
-    tableRowActive: '.rt-tbody div[role="row"]:not(.-padRow)',
-    tableCell: ".rt-td",
-    tableGroup: ".rt-tr-group",
-    modal: ".modal-content",
-    modalTitle: "#registration-form-modal",
-    firstName: "#firstName",
-    lastName: "#lastName",
-    email: "#userEmail",
-    age: "#age",
-    salary: "#salary",
-    department: "#department",
-    submitButton: "#submit",
-    editRecord: (id) => `#edit-record-${id}`,
-    deleteRecord: (id) => `#delete-record-${id}`,
-    rowsPerPageSelect: 'select[aria-label="rows per page"]',
-    totalPages: ".-totalPages",
-    nextButton: ".-next",
-    previousButton: ".-previous",
+    searchBox: '[data-cy="search-box"]',
+    addNewRecordButton: '[data-cy="add-record-btn"]',
+    tableBody: '[data-cy="table-body"]',
+    tableRow: '[data-cy="table-body"] tr',
+    tableRowActive: '[data-cy="table-body"] tr',
+    tableCell: "td",
+    tableGroup: '[data-cy="table-body"] tr',
+    modal: '[data-cy="registration-modal"]',
+    modalTitle: '[data-cy="modal-title"]',
+    firstName: '[data-cy="modal-first-name"]',
+    lastName: '[data-cy="modal-last-name"]',
+    email: '[data-cy="modal-email"]',
+    age: '[data-cy="modal-age"]',
+    salary: '[data-cy="modal-salary"]',
+    department: '[data-cy="modal-department"]',
+    submitButton: '[data-cy="modal-submit-btn"]',
+    editRecord: (id) => `[data-cy="edit-btn-${id}"]`,
+    deleteRecord: (id) => `[data-cy="delete-btn-${id}"]`,
+    rowsPerPageSelect: '[data-cy="rows-per-page-select"]',
+    totalPages: '[data-cy="total-pages"]',
+    nextButton: '[data-cy="next-page-btn"]',
+    previousButton: '[data-cy="prev-page-btn"]',
   },
 
   /**
    * Navigate to the Web Tables page
    */
   visit() {
-    cy.intercept("GET", "/webtables").as("pageLoad");
+    cy.intercept("GET", "/qa/helpers/webtables").as("pageLoad");
     cy.visit(this.url);
     cy.wait("@pageLoad");
     return this;
@@ -160,33 +160,29 @@ export const WebTablesPage = {
    * @param {Object} data - Expected data in the row
    */
   verifyRecordExists(data) {
-    cy.get(this.selectors.tableBody).within(() => {
-      cy.contains(this.selectors.tableGroup, data.firstName).within(() => {
-        if (data.firstName) {
-          cy.get(this.selectors.tableCell)
-            .eq(0)
-            .should("contain", data.firstName);
-        }
-        if (data.lastName) {
-          cy.get(this.selectors.tableCell)
-            .eq(1)
-            .should("contain", data.lastName);
-        }
-        if (data.age) {
-          cy.get(this.selectors.tableCell).eq(2).should("contain", data.age);
-        }
-        if (data.email) {
-          cy.get(this.selectors.tableCell).eq(3).should("contain", data.email);
-        }
-        if (data.salary) {
-          cy.get(this.selectors.tableCell).eq(4).should("contain", data.salary);
-        }
-        if (data.department) {
-          cy.get(this.selectors.tableCell)
-            .eq(5)
-            .should("contain", data.department);
-        }
-      });
+    cy.contains(this.selectors.tableGroup, data.firstName).within(() => {
+      if (data.firstName) {
+        cy.get(this.selectors.tableCell)
+          .eq(0)
+          .should("contain", data.firstName);
+      }
+      if (data.lastName) {
+        cy.get(this.selectors.tableCell).eq(1).should("contain", data.lastName);
+      }
+      if (data.age) {
+        cy.get(this.selectors.tableCell).eq(2).should("contain", data.age);
+      }
+      if (data.email) {
+        cy.get(this.selectors.tableCell).eq(3).should("contain", data.email);
+      }
+      if (data.salary) {
+        cy.get(this.selectors.tableCell).eq(4).should("contain", data.salary);
+      }
+      if (data.department) {
+        cy.get(this.selectors.tableCell)
+          .eq(5)
+          .should("contain", data.department);
+      }
     });
     return this;
   },
@@ -199,11 +195,11 @@ export const WebTablesPage = {
     cy.contains(this.selectors.tableGroup, identifier).within(() => {
       cy.get(this.selectors.tableCell)
         .eq(6)
-        .find('span[title="Edit"]')
+        .find('[data-cy^="edit-btn-"]')
         .should("exist");
       cy.get(this.selectors.tableCell)
         .eq(6)
-        .find('span[title="Delete"]')
+        .find('[data-cy^="delete-btn-"]')
         .should("exist");
     });
     return this;
@@ -268,12 +264,12 @@ export const WebTablesPage = {
       .first()
       .then(($row) => {
         return {
-          firstName: $row.find("div").eq(0).text(),
-          lastName: $row.find("div").eq(1).text(),
-          age: $row.find("div").eq(2).text(),
-          email: $row.find("div").eq(3).text(),
-          salary: $row.find("div").eq(4).text(),
-          department: $row.find("div").eq(5).text(),
+          firstName: $row.find("td").eq(0).text(),
+          lastName: $row.find("td").eq(1).text(),
+          age: $row.find("td").eq(2).text(),
+          email: $row.find("td").eq(3).text(),
+          salary: $row.find("td").eq(4).text(),
+          department: $row.find("td").eq(5).text(),
         };
       });
   },
@@ -288,12 +284,12 @@ export const WebTablesPage = {
       .eq(index)
       .then(($row) => {
         return {
-          firstName: $row.find("div").eq(0).text(),
-          lastName: $row.find("div").eq(1).text(),
-          age: $row.find("div").eq(2).text(),
-          email: $row.find("div").eq(3).text(),
-          salary: $row.find("div").eq(4).text(),
-          department: $row.find("div").eq(5).text(),
+          firstName: $row.find("td").eq(0).text(),
+          lastName: $row.find("td").eq(1).text(),
+          age: $row.find("td").eq(2).text(),
+          email: $row.find("td").eq(3).text(),
+          salary: $row.find("td").eq(4).text(),
+          department: $row.find("td").eq(5).text(),
         };
       });
   },

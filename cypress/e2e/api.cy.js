@@ -1,116 +1,136 @@
-describe("DemoQA Book Store API Tests", () => {
-  const API_CONFIG = {
-    baseUrl: "https://demoqa.com/BookStore/v1",
-    endpoints: {
-      books: "/Books",
-      book: "/Book",
-    },
-  };
+describe("JSONPlaceholder API Tests", () => {
+  const BASE_URL = "https://jsonplaceholder.typicode.com";
 
-  const BOOK_SCHEMA = {
-    isbn: { type: "string", pattern: /^[0-9-]+$/ },
+  const POST_SCHEMA = {
+    id: { type: "number" },
+    userId: { type: "number" },
     title: { type: "string" },
-    subTitle: { type: "string" },
-    author: { type: "string" },
-    publish_date: { type: "string", isDate: true },
-    publisher: {
-      type: "string",
-      allowedValues: ["O'Reilly Media", "No Starch Press"],
-    },
-    pages: { type: "number", min: 1 },
-    description: { type: "string" },
-    website: { type: "string" },
+    body: { type: "string" },
   };
 
-  const validateBookSchema = (book) => {
-    Object.entries(BOOK_SCHEMA).forEach(([key, rules]) => {
-      expect(book).to.have.property(key);
-      expect(typeof book[key]).to.eq(rules.type);
+  const COMMENT_SCHEMA = {
+    postId: { type: "number" },
+    id: { type: "number" },
+    name: { type: "string" },
+    email: { type: "string" },
+    body: { type: "string" },
+  };
 
-      if (rules.pattern) {
-        expect(book[key]).to.match(rules.pattern);
-      }
-      if (rules.isDate) {
-        expect(new Date(book[key])).to.be.a("date");
-      }
-      if (rules.min) {
-        expect(book[key]).to.be.greaterThan(rules.min - 1);
-      }
+  const validateSchema = (obj, schema) => {
+    Object.entries(schema).forEach(([key, rules]) => {
+      expect(obj).to.have.property(key);
+      expect(typeof obj[key]).to.eq(rules.type);
     });
   };
 
   beforeEach(() => {
-    cy.wrap({
-      accept: "application/json",
-    }).as("defaultHeaders");
+    cy.wrap({ accept: "application/json" }).as("defaultHeaders");
   });
 
-  it(
-    "should list all books with correct structure and data",
-    { tags: ["@api"] },
-    () => {
-      cy.get("@defaultHeaders").then((headers) => {
-        cy.request({
-          method: "GET",
-          url: `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.books}`,
-          headers,
-        }).then((response) => {
+  it("should list all posts with correct structure", { tags: ["@api"] }, () => {
+    cy.get("@defaultHeaders").then((headers) => {
+      cy.request({ method: "GET", url: `${BASE_URL}/posts`, headers }).then(
+        (response) => {
           expect(response.status).to.eq(200);
           expect(response.headers["content-type"]).to.include(
             "application/json"
           );
-          expect(response.body).to.have.property("books").and.be.an("array").and
-            .not.be.empty;
+          expect(response.body).to.be.an("array").and.not.be.empty;
+          expect(response.body).to.have.length(100);
+          response.body.forEach((post) => validateSchema(post, POST_SCHEMA));
+        }
+      );
+    });
+  });
 
-          response.body.books.forEach(validateBookSchema);
-
-          const publishers = [
-            ...new Set(response.body.books.map((book) => book.publisher)),
-          ];
-          expect(publishers).to.have.members(
-            BOOK_SCHEMA.publisher.allowedValues
-          );
+  it(
+    "should fetch a specific post by ID and match fixture",
+    { tags: ["@api"] },
+    () => {
+      cy.fixture("post").then((expectedPost) => {
+        cy.get("@defaultHeaders").then((headers) => {
+          cy.request({
+            method: "GET",
+            url: `${BASE_URL}/posts/${expectedPost.id}`,
+            headers,
+          }).then((response) => {
+            expect(response.status).to.eq(200);
+            expect(response.headers["content-type"]).to.include(
+              "application/json"
+            );
+            expect(response.body).to.deep.equal(expectedPost);
+            validateSchema(response.body, POST_SCHEMA);
+          });
         });
       });
     }
   );
 
-  it("should fetch a specific book by valid ISBN", { tags: ["@api"] }, () => {
-    cy.fixture("book").then((expectedBook) => {
+  it(
+    "should filter comments by postId query parameter",
+    { tags: ["@api"] },
+    () => {
+      const targetPostId = 1;
       cy.get("@defaultHeaders").then((headers) => {
         cy.request({
           method: "GET",
-          url: `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.book}`,
-          qs: { ISBN: expectedBook.isbn },
+          url: `${BASE_URL}/comments`,
+          qs: { postId: targetPostId },
           headers,
         }).then((response) => {
           expect(response.status).to.eq(200);
-          expect(response.headers["content-type"]).to.include(
-            "application/json"
-          );
-          expect(response.body).to.deep.include(expectedBook);
-          validateBookSchema(response.body);
+          expect(response.body).to.be.an("array").and.not.be.empty;
+          response.body.forEach((comment) => {
+            validateSchema(comment, COMMENT_SCHEMA);
+            expect(comment.postId).to.eq(targetPostId);
+          });
         });
+      });
+    }
+  );
+
+  it("should return 404 for a non-existent post", { tags: ["@api"] }, () => {
+    cy.get("@defaultHeaders").then((headers) => {
+      cy.request({
+        method: "GET",
+        url: `${BASE_URL}/posts/999`,
+        headers,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(404);
       });
     });
   });
 
   it(
-    "should handle invalid ISBN with proper error response",
+    "should create a new post and return 201 with echoed body",
     { tags: ["@api"] },
     () => {
+      const newPost = { title: "test title", body: "test body", userId: 1 };
       cy.get("@defaultHeaders").then((headers) => {
         cy.request({
-          method: "GET",
-          url: `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.book}`,
-          qs: { ISBN: "invalid-isbn" },
-          headers,
-          failOnStatusCode: false,
+          method: "POST",
+          url: `${BASE_URL}/posts`,
+          body: newPost,
+          headers: { ...headers, "Content-Type": "application/json" },
         }).then((response) => {
-          expect(response.status).to.eq(400);
-          expect(response.body).to.have.property("message").and.be.a("string");
+          expect(response.status).to.eq(201);
+          expect(response.body).to.include(newPost);
+          expect(response.body).to.have.property("id").and.be.a("number");
         });
       });
     }
   );
+
+  it("should delete a post and return 200", { tags: ["@api"] }, () => {
+    cy.get("@defaultHeaders").then((headers) => {
+      cy.request({
+        method: "DELETE",
+        url: `${BASE_URL}/posts/1`,
+        headers,
+      }).then((response) => {
+        expect(response.status).to.eq(200);
+      });
+    });
+  });
 });
