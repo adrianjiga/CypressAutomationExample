@@ -162,7 +162,9 @@ export const WebTablesPage = {
   verifyRecordExists(data) {
     cy.contains(this.selectors.tableGroup, data.firstName).within(() => {
       if (data.firstName) {
-        cy.get(this.selectors.tableCell).eq(0).should("contain", data.firstName);
+        cy.get(this.selectors.tableCell)
+          .eq(0)
+          .should("contain", data.firstName);
       }
       if (data.lastName) {
         cy.get(this.selectors.tableCell).eq(1).should("contain", data.lastName);
@@ -177,7 +179,9 @@ export const WebTablesPage = {
         cy.get(this.selectors.tableCell).eq(4).should("contain", data.salary);
       }
       if (data.department) {
-        cy.get(this.selectors.tableCell).eq(5).should("contain", data.department);
+        cy.get(this.selectors.tableCell)
+          .eq(5)
+          .should("contain", data.department);
       }
     });
     return this;

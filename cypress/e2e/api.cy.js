@@ -2,18 +2,18 @@ describe("JSONPlaceholder API Tests", () => {
   const BASE_URL = "https://jsonplaceholder.typicode.com";
 
   const POST_SCHEMA = {
-    id:     { type: "number" },
+    id: { type: "number" },
     userId: { type: "number" },
-    title:  { type: "string" },
-    body:   { type: "string" },
+    title: { type: "string" },
+    body: { type: "string" },
   };
 
   const COMMENT_SCHEMA = {
     postId: { type: "number" },
-    id:     { type: "number" },
-    name:   { type: "string" },
-    email:  { type: "string" },
-    body:   { type: "string" },
+    id: { type: "number" },
+    name: { type: "string" },
+    email: { type: "string" },
+    body: { type: "string" },
   };
 
   const validateSchema = (obj, schema) => {
@@ -27,23 +27,21 @@ describe("JSONPlaceholder API Tests", () => {
     cy.wrap({ accept: "application/json" }).as("defaultHeaders");
   });
 
-  it(
-    "should list all posts with correct structure",
-    { tags: ["@api"] },
-    () => {
-      cy.get("@defaultHeaders").then((headers) => {
-        cy.request({ method: "GET", url: `${BASE_URL}/posts`, headers }).then(
-          (response) => {
-            expect(response.status).to.eq(200);
-            expect(response.headers["content-type"]).to.include("application/json");
-            expect(response.body).to.be.an("array").and.not.be.empty;
-            expect(response.body).to.have.length(100);
-            response.body.forEach((post) => validateSchema(post, POST_SCHEMA));
-          }
-        );
-      });
-    }
-  );
+  it("should list all posts with correct structure", { tags: ["@api"] }, () => {
+    cy.get("@defaultHeaders").then((headers) => {
+      cy.request({ method: "GET", url: `${BASE_URL}/posts`, headers }).then(
+        (response) => {
+          expect(response.status).to.eq(200);
+          expect(response.headers["content-type"]).to.include(
+            "application/json"
+          );
+          expect(response.body).to.be.an("array").and.not.be.empty;
+          expect(response.body).to.have.length(100);
+          response.body.forEach((post) => validateSchema(post, POST_SCHEMA));
+        }
+      );
+    });
+  });
 
   it(
     "should fetch a specific post by ID and match fixture",
@@ -57,7 +55,9 @@ describe("JSONPlaceholder API Tests", () => {
             headers,
           }).then((response) => {
             expect(response.status).to.eq(200);
-            expect(response.headers["content-type"]).to.include("application/json");
+            expect(response.headers["content-type"]).to.include(
+              "application/json"
+            );
             expect(response.body).to.deep.equal(expectedPost);
             validateSchema(response.body, POST_SCHEMA);
           });
@@ -89,22 +89,18 @@ describe("JSONPlaceholder API Tests", () => {
     }
   );
 
-  it(
-    "should return 404 for a non-existent post",
-    { tags: ["@api"] },
-    () => {
-      cy.get("@defaultHeaders").then((headers) => {
-        cy.request({
-          method: "GET",
-          url: `${BASE_URL}/posts/999`,
-          headers,
-          failOnStatusCode: false,
-        }).then((response) => {
-          expect(response.status).to.eq(404);
-        });
+  it("should return 404 for a non-existent post", { tags: ["@api"] }, () => {
+    cy.get("@defaultHeaders").then((headers) => {
+      cy.request({
+        method: "GET",
+        url: `${BASE_URL}/posts/999`,
+        headers,
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.eq(404);
       });
-    }
-  );
+    });
+  });
 
   it(
     "should create a new post and return 201 with echoed body",
@@ -126,19 +122,15 @@ describe("JSONPlaceholder API Tests", () => {
     }
   );
 
-  it(
-    "should delete a post and return 200",
-    { tags: ["@api"] },
-    () => {
-      cy.get("@defaultHeaders").then((headers) => {
-        cy.request({
-          method: "DELETE",
-          url: `${BASE_URL}/posts/1`,
-          headers,
-        }).then((response) => {
-          expect(response.status).to.eq(200);
-        });
+  it("should delete a post and return 200", { tags: ["@api"] }, () => {
+    cy.get("@defaultHeaders").then((headers) => {
+      cy.request({
+        method: "DELETE",
+        url: `${BASE_URL}/posts/1`,
+        headers,
+      }).then((response) => {
+        expect(response.status).to.eq(200);
       });
-    }
-  );
+    });
+  });
 });

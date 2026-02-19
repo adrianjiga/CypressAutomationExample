@@ -156,10 +156,13 @@ Cypress.Commands.add("selectDate", (dateInput, month, year, day) => {
  * @param {string} dropdownSelector - Selector for the dropdown container
  * @param {number} optionIndex - Index of the option to select (0-based)
  */
-Cypress.Commands.add("selectDropdownOption", (dropdownSelector, optionIndex) => {
-  cy.get(dropdownSelector).click();
-  cy.get(`[id$="-option-${optionIndex}"]`).click();
-});
+Cypress.Commands.add(
+  "selectDropdownOption",
+  (dropdownSelector, optionIndex) => {
+    cy.get(dropdownSelector).click();
+    cy.get(`[id$="-option-${optionIndex}"]`).click();
+  }
+);
 
 // ============================================================
 // ASSERTION COMMANDS
