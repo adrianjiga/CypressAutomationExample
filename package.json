@@ -62,14 +62,14 @@
   "dependencies": {
     "@cypress/grep": "^6.0.0",
     "@faker-js/faker": "^10.3.0",
-    "cypress": "^15.11.0"
+    "cypress": "^15.12.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "cypress-wait-until": "^3.0.2",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-cypress": "^6.1.0",
+    "eslint-plugin-cypress": "^6.2.0",
     "globals": "^17.4.0",
     "mochawesome": "^7.1.4",
     "mochawesome-merge": "^5.1.1",
