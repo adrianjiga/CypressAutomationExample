@@ -67,7 +67,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "cypress-wait-until": "^3.0.2",
-    "eslint": "^10.0.3",
+    "eslint": "^10.1.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^6.2.0",
     "globals": "^17.4.0",
@@ -75,6 +75,6 @@
     "mochawesome-merge": "^5.1.1",
     "mochawesome-report-generator": "^6.3.2",
     "prettier": "^3.8.1",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   }
 }
