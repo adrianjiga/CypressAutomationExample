@@ -69,7 +69,7 @@
     "cypress-wait-until": "^3.0.2",
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-cypress": "^6.4.0",
+    "eslint-plugin-cypress": "^6.4.1",
     "globals": "^17.6.0",
     "mochawesome": "^7.1.4",
     "mochawesome-merge": "^5.1.1",
