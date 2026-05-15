@@ -20,21 +20,27 @@ describe("JSONPlaceholder API Tests", () => {
     cy.wrap({ accept: "application/json" }).as("defaultHeaders");
   });
 
-  it("should list all posts with correct structure", { tags: ["@api"] }, () => {
-    cy.get("@defaultHeaders").then((headers) => {
-      cy.request({ method: "GET", url: `${BASE_URL}/posts`, headers }).then(
-        (response) => {
-          expect(response.status).to.eq(200);
-          expect(response.headers["content-type"]).to.include(
-            "application/json"
-          );
-          expect(response.body).to.be.an("array").and.not.be.empty;
-          expect(response.body).to.have.length(100);
-          response.body.forEach((post) => cy.validateSchema(post, POST_SCHEMA));
-        }
-      );
-    });
-  });
+  it(
+    "should list all posts with correct structure",
+    { tags: ["@api", "@smoke"] },
+    () => {
+      cy.get("@defaultHeaders").then((headers) => {
+        cy.request({ method: "GET", url: `${BASE_URL}/posts`, headers }).then(
+          (response) => {
+            expect(response.status).to.eq(200);
+            expect(response.headers["content-type"]).to.include(
+              "application/json"
+            );
+            expect(response.body).to.be.an("array").and.not.be.empty;
+            expect(response.body).to.have.length(100);
+            response.body.forEach((post) =>
+              cy.validateSchema(post, POST_SCHEMA)
+            );
+          }
+        );
+      });
+    }
+  );
 
   it(
     "should fetch a specific post by ID and match fixture",

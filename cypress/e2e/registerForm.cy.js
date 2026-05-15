@@ -8,7 +8,7 @@ describe("Register Form", () => {
 
   it(
     "should submit the practice form with all fields",
-    { tags: ["@ui"] },
+    { tags: ["@ui", "@smoke"] },
     () => {
       const testUser = userFactory.generateFormUser();
 

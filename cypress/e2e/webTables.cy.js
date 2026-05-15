@@ -32,7 +32,7 @@ describe("WebTables", () => {
     });
   });
 
-  it("add a new record", { tags: ["@webTables"] }, () => {
+  it("add a new record", { tags: ["@webTables", "@smoke"] }, () => {
     const newUser = userFactory.generate({ department: "Engineering" });
 
     WebTablesPage.openAddModal()
