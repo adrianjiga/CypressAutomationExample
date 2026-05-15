@@ -15,7 +15,6 @@
     "test:webtables": "cypress run --expose grepTags=@webTables",
     "test:smoke": "cypress run --expose grepTags=@smoke",
     "test:all": "cypress run",
-    "test:env:prod": "cypress run --expose environment=prod",
     "test:viewport:mobile": "cypress run --expose grepTags=@ui,viewport=mobile",
     "test:viewport:tablet": "cypress run --expose grepTags=@ui,viewport=tablet",
     "test:viewport:desktop": "cypress run --expose viewport=desktop",
