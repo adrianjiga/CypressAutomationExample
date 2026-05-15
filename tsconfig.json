@@ -15,11 +15,10 @@
     "noEmit": true,
     "allowJs": true,
     "checkJs": true,
-    "baseUrl": ".",
     "paths": {
-      "@pages/*": ["cypress/pages/*"],
-      "@support/*": ["cypress/support/*"],
-      "@fixtures/*": ["cypress/fixtures/*"]
+      "@pages/*": ["./cypress/pages/*"],
+      "@support/*": ["./cypress/support/*"],
+      "@fixtures/*": ["./cypress/fixtures/*"]
     }
   },
   "include": [
