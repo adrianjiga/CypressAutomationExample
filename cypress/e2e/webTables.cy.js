@@ -3,7 +3,6 @@ import { userFactory } from "../support/factories";
 
 describe("WebTables", () => {
   beforeEach(() => {
-    cy.on("uncaught:exception", () => false);
     WebTablesPage.visit();
   });
 

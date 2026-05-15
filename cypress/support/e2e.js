@@ -24,21 +24,6 @@ import { register } from "@cypress/grep";
 register();
 
 // ============================================================
-// GLOBAL CONFIGURATION
-// ============================================================
-
-// Disable uncaught exception failures for third-party site errors
-// This is necessary because DemoQA has JavaScript errors we can't control
-Cypress.on("uncaught:exception", (err) => {
-  // Log the error for debugging purposes
-  console.warn("Uncaught exception:", err.message);
-
-  // Return false to prevent the test from failing
-  // Note: In a real application you control, you'd want to be more selective
-  return false;
-});
-
-// ============================================================
 // CUSTOM TEST LOGGING
 // ============================================================
 
