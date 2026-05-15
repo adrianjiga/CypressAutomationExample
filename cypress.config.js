@@ -32,7 +32,6 @@ export default defineConfig({
     grepFilterSpecs: true,
     grepOmitFiltered: true,
     viewports: viewports,
-    apiTimeout: 30000,
   },
   e2e: {
     baseUrl: "https://adrianjiga.github.io",
