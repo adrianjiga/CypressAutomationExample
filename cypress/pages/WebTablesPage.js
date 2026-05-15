@@ -1,6 +1,6 @@
 /**
- * Page Object for DemoQA Web Tables page
- * @see https://demoqa.com/webtables
+ * Page Object for the Web Tables helper page
+ * @see https://adrianjiga.github.io/qa/helpers/webtables
  */
 export const WebTablesPage = {
   url: "/qa/helpers/webtables",

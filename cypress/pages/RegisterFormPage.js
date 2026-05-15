@@ -1,6 +1,6 @@
 /**
- * Page Object for DemoQA Practice Form page
- * @see https://demoqa.com/automation-practice-form
+ * Page Object for the Practice Form helper page
+ * @see https://adrianjiga.github.io/qa/helpers/automation-practice-form
  */
 export const RegisterFormPage = {
   url: "/qa/helpers/automation-practice-form",
