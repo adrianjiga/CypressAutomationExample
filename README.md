@@ -1,6 +1,6 @@
 # Cypress Automation Example
 
-A production-ready Cypress testing framework demonstrating UI, API, and table interaction testing patterns using the DemoQA website. Features Page Object Model architecture, test data factories, multi-browser support, responsive testing, and CI/CD integration.
+A production-ready Cypress testing framework demonstrating UI, API, and table interaction testing patterns against self-hosted helper pages at [adrianjiga.github.io/qa/helpers](https://adrianjiga.github.io/qa/helpers). Features Page Object Model architecture, test data factories, multi-browser support, responsive testing, and CI/CD integration.
 
 ## Features
 
@@ -33,14 +33,14 @@ npm install
 ```
 ├── cypress/
 │   ├── e2e/                          # Test specifications
-│   │   ├── api.cy.js                 # Book Store API tests
-│   │   ├── apiPlugin.cy.js           # API plugin demonstration
+│   │   ├── api.cy.js                 # JSONPlaceholder API tests
 │   │   ├── buttons.cy.js             # Button interaction tests
 │   │   ├── registerForm.cy.js        # Form validation tests
 │   │   ├── waitUntilExample.cy.js    # Custom wait patterns
 │   │   └── webTables.cy.js           # Table CRUD operations
 │   ├── fixtures/                     # Test data files
-│   │   └── book.json
+│   │   ├── book.json
+│   │   └── post.json
 │   ├── pages/                        # Page Object Models
 │   │   ├── ButtonsPage.js
 │   │   ├── RegisterFormPage.js
@@ -132,8 +132,7 @@ npm run docker:clean
 
 | Test File | Coverage |
 |-----------|----------|
-| `api.cy.js` | Book Store API - list books, fetch by ISBN, error handling |
-| `apiPlugin.cy.js` | JSONPlaceholder API demonstration |
+| `api.cy.js` | JSONPlaceholder API - list posts, fetch by ID, filter comments, error handling, create, delete |
 
 ### Web Tables Tests (`@webTables`)
 
@@ -184,16 +183,10 @@ const users = userFactory.generateBatch(5);
 - `cy.fillForm(formData)` - Fill multiple fields by ID
 - `cy.submitFormAndVerify(formData, buttonId, modalTitle)` - Submit and verify
 
-### Table Operations
-- `cy.searchInTable(text)` - Search table content
-- `cy.verifyTableRow(selector, expectedData)` - Validate row data
-- `cy.tableAction(identifier, 'edit'|'delete')` - Row actions
-- `cy.getTableRowCount()` - Count visible rows
-
 ### UI Interactions
 - `cy.waitAndClick(selector, options)` - Wait for visibility then click
 - `cy.selectDate(input, month, year, day)` - Date picker selection
-- `cy.selectReactOption(dropdown, index)` - React-select handling
+- `cy.selectDropdownOption(dropdown, index)` - Custom dropdown selection
 
 ### Assertions
 - `cy.verifyCssProperty(selector, property, value)` - CSS validation
@@ -205,16 +198,14 @@ const users = userFactory.generateBatch(5);
 
 ## Configuration
 
-### Environment Configuration
+### Base URL
+
+The helper pages live at `https://adrianjiga.github.io` and are wired in `cypress.config.js`:
 
 ```javascript
-// cypress.config.js
-const environments = {
-  prod: {
-    baseUrl: "https://demoqa.com",
-    apiUrl: "https://demoqa.com",
-  },
-};
+e2e: {
+  baseUrl: "https://adrianjiga.github.io",
+}
 ```
 
 ### Viewport Presets
@@ -273,12 +264,7 @@ npm run report:full
 
 ### Report Locations
 
-| Suite | Directory |
-|-------|-----------|
-| UI | `reports/ui/` |
-| API | `reports/api/` |
-| WebTables | `reports/webtables/` |
-| Combined | `reports/final/` |
+Per-spec mochawesome JSON/HTML reports are written to `reports/` (filename pattern: `[status]_[datetime]-[name]-report`). Running `npm run report:full` merges them into `reports/final/`.
 
 ## Code Quality
 
@@ -305,7 +291,7 @@ npm run typecheck     # Run TypeScript checks
 ## Docker Configuration
 
 Each test container runs with:
-- Base image: `cypress/included:15.7.0`
+- Base image: `cypress/included:15.14.2`
 - Memory limit: 2GB
 - Memory reservation: 1GB
 
