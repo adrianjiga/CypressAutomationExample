@@ -3,14 +3,7 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "types": ["cypress"],
-    "baseUrl": ".",
-    "paths": {
-      "@pages/*": ["cypress/pages/*"],
-      "@pages": ["cypress/pages/index.js"],
-      "@support/*": ["cypress/support/*"],
-      "@fixtures/*": ["cypress/fixtures/*"]
-    }
+    "types": ["cypress"]
   },
   "include": [
     "cypress/**/*.js",

@@ -3,16 +3,13 @@ import { userFactory } from "../support/factories";
 
 describe("WebTables", () => {
   beforeEach(() => {
-    cy.on("uncaught:exception", () => false);
     WebTablesPage.visit();
   });
 
   it("search for a record", { tags: ["@webTables"] }, () => {
     WebTablesPage.search("Cierra");
 
-    cy.contains(WebTablesPage.selectors.tableRow, "Cierra").should(
-      "be.visible"
-    );
+    cy.contains(WebTablesPage.selectors.rows, "Cierra").should("be.visible");
     WebTablesPage.verifyRowCount(1);
 
     WebTablesPage.clearSearch();
@@ -27,7 +24,7 @@ describe("WebTables", () => {
       .fillForm({ age: newAge.toString(), department: newDepartment })
       .submitForm();
 
-    cy.contains(WebTablesPage.selectors.tableGroup, "Cierra").within(() => {
+    cy.contains(WebTablesPage.selectors.rows, "Cierra").within(() => {
       cy.get(WebTablesPage.selectors.tableCell).eq(2).should("contain", newAge);
       cy.get(WebTablesPage.selectors.tableCell)
         .eq(5)
@@ -35,7 +32,7 @@ describe("WebTables", () => {
     });
   });
 
-  it("add a new record", { tags: ["@webTables"] }, () => {
+  it("add a new record", { tags: ["@webTables", "@smoke"] }, () => {
     const newUser = userFactory.generate({ department: "Engineering" });
 
     WebTablesPage.openAddModal()
@@ -72,7 +69,7 @@ describe("WebTables", () => {
 
     rowsPerPageOptions.forEach((rowsPerPage) => {
       WebTablesPage.setRowsPerPage(rowsPerPage);
-      cy.get(WebTablesPage.selectors.tableRow).should(
+      cy.get(WebTablesPage.selectors.rows).should(
         "have.length.at.most",
         rowsPerPage
       );
@@ -95,20 +92,13 @@ describe("WebTables", () => {
       WebTablesPage.setRowsPerPage(5).verifyTotalPages("2");
 
       WebTablesPage.goToNextPage();
-      cy.get(WebTablesPage.selectors.tableRow).should(
-        "have.length.at.least",
-        1
-      );
-      cy.contains(WebTablesPage.selectors.tableGroup, "User2").should(
-        "be.visible"
-      );
+      cy.get(WebTablesPage.selectors.rows).should("have.length.at.least", 1);
+      cy.contains(WebTablesPage.selectors.rows, "User2").should("be.visible");
 
       WebTablesPage.verifyPreviousEnabled();
       WebTablesPage.goToPreviousPage();
 
-      cy.contains(WebTablesPage.selectors.tableGroup, "Cierra").should(
-        "be.visible"
-      );
+      cy.contains(WebTablesPage.selectors.rows, "Cierra").should("be.visible");
       WebTablesPage.verifyNextEnabled();
     }
   );

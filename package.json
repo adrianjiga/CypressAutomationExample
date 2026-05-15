@@ -15,7 +15,6 @@
     "test:webtables": "cypress run --expose grepTags=@webTables",
     "test:smoke": "cypress run --expose grepTags=@smoke",
     "test:all": "cypress run",
-    "test:env:prod": "cypress run --expose environment=prod",
     "test:viewport:mobile": "cypress run --expose grepTags=@ui,viewport=mobile",
     "test:viewport:tablet": "cypress run --expose grepTags=@ui,viewport=tablet",
     "test:viewport:desktop": "cypress run --expose viewport=desktop",
@@ -25,8 +24,7 @@
     "test:docker:ui": "docker compose up --build ui-tests",
     "test:docker:api": "docker compose up --build api-tests",
     "test:docker:webtables": "docker compose up --build webtables-tests",
-    "test:docker:all": "docker compose up --build && npm run docker:report",
-    "docker:report": "docker compose up report-generator",
+    "test:docker:all": "docker compose up --build cypress-tests && npm run report:full",
     "docker:clean": "docker compose down --volumes --remove-orphans",
     "lint": "eslint cypress/e2e/**/*.cy.js cypress/support/**/*.js cypress/pages/**/*.js",
     "lint:fix": "eslint cypress/e2e/**/*.cy.js cypress/support/**/*.js cypress/pages/**/*.js --fix",
@@ -58,11 +56,15 @@
     "name": "Adrian Jiga",
     "email": "jiga.ion.adrian@gmail.com"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@cypress/grep": "^6.0.0",
     "@faker-js/faker": "^10.4.0",
     "cypress": "^15.14.2"
+  },
+  "overrides": {
+    "diff": ">=8.0.3",
+    "serialize-javascript": ">=7.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

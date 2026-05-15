@@ -2,46 +2,45 @@ describe("JSONPlaceholder API Tests", () => {
   const BASE_URL = "https://jsonplaceholder.typicode.com";
 
   const POST_SCHEMA = {
-    id: { type: "number" },
-    userId: { type: "number" },
-    title: { type: "string" },
-    body: { type: "string" },
+    id: "number",
+    userId: "number",
+    title: "string",
+    body: "string",
   };
 
   const COMMENT_SCHEMA = {
-    postId: { type: "number" },
-    id: { type: "number" },
-    name: { type: "string" },
-    email: { type: "string" },
-    body: { type: "string" },
-  };
-
-  const validateSchema = (obj, schema) => {
-    Object.entries(schema).forEach(([key, rules]) => {
-      expect(obj).to.have.property(key);
-      expect(typeof obj[key]).to.eq(rules.type);
-    });
+    postId: "number",
+    id: "number",
+    name: "string",
+    email: "string",
+    body: "string",
   };
 
   beforeEach(() => {
     cy.wrap({ accept: "application/json" }).as("defaultHeaders");
   });
 
-  it("should list all posts with correct structure", { tags: ["@api"] }, () => {
-    cy.get("@defaultHeaders").then((headers) => {
-      cy.request({ method: "GET", url: `${BASE_URL}/posts`, headers }).then(
-        (response) => {
-          expect(response.status).to.eq(200);
-          expect(response.headers["content-type"]).to.include(
-            "application/json"
-          );
-          expect(response.body).to.be.an("array").and.not.be.empty;
-          expect(response.body).to.have.length(100);
-          response.body.forEach((post) => validateSchema(post, POST_SCHEMA));
-        }
-      );
-    });
-  });
+  it(
+    "should list all posts with correct structure",
+    { tags: ["@api", "@smoke"] },
+    () => {
+      cy.get("@defaultHeaders").then((headers) => {
+        cy.request({ method: "GET", url: `${BASE_URL}/posts`, headers }).then(
+          (response) => {
+            expect(response.status).to.eq(200);
+            expect(response.headers["content-type"]).to.include(
+              "application/json"
+            );
+            expect(response.body).to.be.an("array").and.not.be.empty;
+            expect(response.body).to.have.length(100);
+            response.body.forEach((post) =>
+              cy.validateSchema(post, POST_SCHEMA)
+            );
+          }
+        );
+      });
+    }
+  );
 
   it(
     "should fetch a specific post by ID and match fixture",
@@ -59,7 +58,7 @@ describe("JSONPlaceholder API Tests", () => {
               "application/json"
             );
             expect(response.body).to.deep.equal(expectedPost);
-            validateSchema(response.body, POST_SCHEMA);
+            cy.validateSchema(response.body, POST_SCHEMA);
           });
         });
       });
@@ -81,7 +80,7 @@ describe("JSONPlaceholder API Tests", () => {
           expect(response.status).to.eq(200);
           expect(response.body).to.be.an("array").and.not.be.empty;
           response.body.forEach((comment) => {
-            validateSchema(comment, COMMENT_SCHEMA);
+            cy.validateSchema(comment, COMMENT_SCHEMA);
             expect(comment.postId).to.eq(targetPostId);
           });
         });

@@ -2,7 +2,6 @@ import { ButtonsPage } from "../pages";
 
 describe("Buttons", () => {
   beforeEach(() => {
-    cy.on("uncaught:exception", () => false);
     ButtonsPage.visit();
   });
 

@@ -3,13 +3,12 @@ import { userFactory } from "../support/factories";
 
 describe("Register Form", () => {
   beforeEach(() => {
-    cy.on("uncaught:exception", () => false);
     RegisterFormPage.visit();
   });
 
   it(
     "should submit the practice form with all fields",
-    { tags: ["@ui"] },
+    { tags: ["@ui", "@smoke"] },
     () => {
       const testUser = userFactory.generateFormUser();
 

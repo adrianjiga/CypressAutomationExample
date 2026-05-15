@@ -26,43 +26,6 @@ declare namespace Cypress {
     ): Chainable<void>;
 
     // ============================================================
-    // TABLE INTERACTION COMMANDS
-    // ============================================================
-
-    /**
-     * Search for text in a table using the search box
-     * @param searchText - Text to search for
-     * @param tableSelector - Selector for the table body (default: '.rt-tbody')
-     */
-    searchInTable(
-      searchText: string,
-      tableSelector?: string
-    ): Chainable<JQuery<HTMLElement>>;
-
-    /**
-     * Verify data in a table row by column index
-     * @param rowSelector - Selector for the table row
-     * @param expectedData - Column index to expected value mapping
-     */
-    verifyTableRow(
-      rowSelector: string,
-      expectedData: Record<string, string>
-    ): Chainable<void>;
-
-    /**
-     * Perform an action (edit/delete) on a table row
-     * @param rowIdentifier - Text to identify the row
-     * @param action - Action to perform ('edit' or 'delete')
-     */
-    tableAction(rowIdentifier: string, action?: "edit" | "delete"): Chainable<void>;
-
-    /**
-     * Get the count of visible (non-empty) rows in a table
-     * @param tableSelector - Table body selector (default: '.rt-tbody')
-     */
-    getTableRowCount(tableSelector?: string): Chainable<number>;
-
-    // ============================================================
     // UI INTERACTION COMMANDS
     // ============================================================
 
@@ -91,11 +54,11 @@ declare namespace Cypress {
     ): Chainable<void>;
 
     /**
-     * Select an option from a react-select dropdown
+     * Select an option from a custom dropdown component
      * @param dropdownSelector - Selector for the dropdown container
      * @param optionIndex - Index of the option to select (0-based)
      */
-    selectReactOption(
+    selectDropdownOption(
       dropdownSelector: string,
       optionIndex: number
     ): Chainable<void>;
@@ -169,11 +132,6 @@ declare namespace Cypress {
       name: string,
       options?: Partial<Cypress.ScreenshotOptions>
     ): Chainable<void>;
-
-    /**
-     * Preserve cookies/localStorage between tests
-     */
-    preserveSession(): Chainable<void>;
 
     // ============================================================
     // THIRD-PARTY PLUGIN COMMANDS

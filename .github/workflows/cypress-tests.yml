@@ -70,10 +70,7 @@ jobs:
         with:
           browser: ${{ github.event.inputs.browser || matrix.browser }}
           install: false
-        env:
-          GREP_TAGS: ${{ matrix.group.tag }}
-          TEST_ENVIRONMENT: ${{ github.event.inputs.environment || 'prod' }}
-          TEST_VIEWPORT: ${{ matrix.viewport }}
+          expose: grepTags=${{ matrix.group.tag }},viewport=${{ matrix.viewport }}
 
       - name: Upload Test Artifacts
         if: always()
@@ -114,9 +111,7 @@ jobs:
         with:
           browser: chrome
           install: false
-        env:
-          GREP_TAGS: "@ui"
-          TEST_VIEWPORT: ${{ matrix.viewport }}
+          expose: grepTags=@ui,viewport=${{ matrix.viewport }}
 
       - name: Upload Responsive Test Artifacts
         if: always()

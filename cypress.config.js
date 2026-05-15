@@ -3,12 +3,6 @@ import { defineConfig } from "cypress";
 import { plugin } from "@cypress/grep/plugin";
 import fs from "fs";
 
-const environments = {
-  prod: {
-    baseUrl: "https://adrianjiga.github.io",
-  },
-};
-
 const viewports = {
   mobile: { width: 375, height: 667 },
   tablet: { width: 768, height: 1024 },
@@ -37,25 +31,13 @@ export default defineConfig({
   expose: {
     grepFilterSpecs: true,
     grepOmitFiltered: true,
-    environment: process.env.TEST_ENVIRONMENT || "prod",
     viewports: viewports,
-    apiTimeout: 30000,
-    grepTags: process.env.GREP_TAGS,
-    viewport: process.env.TEST_VIEWPORT,
   },
   e2e: {
     baseUrl: "https://adrianjiga.github.io",
 
     setupNodeEvents(on, config) {
       plugin(config);
-
-      const envName = (config.expose && config.expose.environment) || "prod";
-      const envConfig = environments[envName];
-
-      if (envConfig) {
-        config.baseUrl = envConfig.baseUrl;
-        console.log(`Running tests against: ${envName} (${config.baseUrl})`);
-      }
 
       const viewportName = config.expose && config.expose.viewport;
       if (viewportName && viewports[viewportName]) {

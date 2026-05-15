@@ -1,6 +1,6 @@
 /**
- * Page Object for DemoQA Buttons page
- * @see https://demoqa.com/buttons
+ * Page Object for the Buttons helper page
+ * @see https://adrianjiga.github.io/qa/helpers/buttons
  */
 export const ButtonsPage = {
   url: "/qa/helpers/buttons",

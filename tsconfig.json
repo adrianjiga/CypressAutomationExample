@@ -14,13 +14,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "allowJs": true,
-    "checkJs": false,
-    "baseUrl": ".",
-    "paths": {
-      "@pages/*": ["cypress/pages/*"],
-      "@support/*": ["cypress/support/*"],
-      "@fixtures/*": ["cypress/fixtures/*"]
-    }
+    "checkJs": true
   },
   "include": [
     "cypress/**/*.js",
