@@ -54,11 +54,11 @@ declare namespace Cypress {
     ): Chainable<void>;
 
     /**
-     * Select an option from a react-select dropdown
+     * Select an option from a custom dropdown component
      * @param dropdownSelector - Selector for the dropdown container
      * @param optionIndex - Index of the option to select (0-based)
      */
-    selectReactOption(
+    selectDropdownOption(
       dropdownSelector: string,
       optionIndex: number
     ): Chainable<void>;
