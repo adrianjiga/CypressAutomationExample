@@ -9,10 +9,8 @@ export const WebTablesPage = {
     searchBox: '[data-cy="search-box"]',
     addNewRecordButton: '[data-cy="add-record-btn"]',
     tableBody: '[data-cy="table-body"]',
-    tableRow: '[data-cy="table-body"] tr',
-    tableRowActive: '[data-cy="table-body"] tr',
+    rows: '[data-cy="table-body"] tr',
     tableCell: "td",
-    tableGroup: '[data-cy="table-body"] tr',
     modal: '[data-cy="registration-modal"]',
     modalTitle: '[data-cy="modal-title"]',
     firstName: '[data-cy="modal-first-name"]',
@@ -64,7 +62,7 @@ export const WebTablesPage = {
    * Get all visible (non-empty) rows
    */
   getVisibleRows() {
-    return cy.get(this.selectors.tableRowActive);
+    return cy.get(this.selectors.rows);
   },
 
   /**
@@ -160,7 +158,7 @@ export const WebTablesPage = {
    * @param {Object} data - Expected data in the row
    */
   verifyRecordExists(data) {
-    cy.contains(this.selectors.tableGroup, data.firstName).within(() => {
+    cy.contains(this.selectors.rows, data.firstName).within(() => {
       if (data.firstName) {
         cy.get(this.selectors.tableCell)
           .eq(0)
@@ -192,7 +190,7 @@ export const WebTablesPage = {
    * @param {string} identifier - Text to identify the row
    */
   verifyRecordActions(identifier) {
-    cy.contains(this.selectors.tableGroup, identifier).within(() => {
+    cy.contains(this.selectors.rows, identifier).within(() => {
       cy.get(this.selectors.tableCell)
         .eq(6)
         .find('[data-cy^="edit-btn-"]')
