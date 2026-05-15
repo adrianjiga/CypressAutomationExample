@@ -9,9 +9,7 @@ describe("WebTables", () => {
   it("search for a record", { tags: ["@webTables"] }, () => {
     WebTablesPage.search("Cierra");
 
-    cy.contains(WebTablesPage.selectors.rows, "Cierra").should(
-      "be.visible"
-    );
+    cy.contains(WebTablesPage.selectors.rows, "Cierra").should("be.visible");
     WebTablesPage.verifyRowCount(1);
 
     WebTablesPage.clearSearch();
@@ -94,20 +92,13 @@ describe("WebTables", () => {
       WebTablesPage.setRowsPerPage(5).verifyTotalPages("2");
 
       WebTablesPage.goToNextPage();
-      cy.get(WebTablesPage.selectors.rows).should(
-        "have.length.at.least",
-        1
-      );
-      cy.contains(WebTablesPage.selectors.rows, "User2").should(
-        "be.visible"
-      );
+      cy.get(WebTablesPage.selectors.rows).should("have.length.at.least", 1);
+      cy.contains(WebTablesPage.selectors.rows, "User2").should("be.visible");
 
       WebTablesPage.verifyPreviousEnabled();
       WebTablesPage.goToPreviousPage();
 
-      cy.contains(WebTablesPage.selectors.rows, "Cierra").should(
-        "be.visible"
-      );
+      cy.contains(WebTablesPage.selectors.rows, "Cierra").should("be.visible");
       WebTablesPage.verifyNextEnabled();
     }
   );
