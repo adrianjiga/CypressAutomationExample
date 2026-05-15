@@ -1,72 +1,32 @@
+x-cypress-service: &cypress-service
+  build:
+    context: .
+    dockerfile: Dockerfile
+  volumes:
+    - .:/app
+    - /app/node_modules
+  deploy:
+    resources:
+      limits:
+        memory: 2G
+      reservations:
+        memory: 1G
+  environment:
+    - CI=true
+
 services:
+  cypress-tests:
+    <<: *cypress-service
+    command: npx cypress run
+
   ui-tests:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/app
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-        reservations:
-          memory: 1G
-    command: >
-      npx cypress run
-      --expose grepTags=@ui
-      --reporter mochawesome
-      --reporter-options reportDir=reports/ui,overwrite=true,html=true,json=true,reportFilename=report-[name]
+    <<: *cypress-service
+    command: sh -c "GREP_TAGS=@ui npx cypress run"
 
   api-tests:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/app
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-        reservations:
-          memory: 1G
-    command: >
-      npx cypress run
-      --expose grepTags=@api
-      --reporter mochawesome
-      --reporter-options reportDir=reports/api,overwrite=true,html=true,json=true
+    <<: *cypress-service
+    command: sh -c "GREP_TAGS=@api npx cypress run"
 
   webtables-tests:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/app
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-        reservations:
-          memory: 1G
-    command: >
-      npx cypress run
-      --expose grepTags=@webTables
-      --reporter mochawesome
-      --reporter-options reportDir=reports/webtables,overwrite=true,html=true,json=true
-
-  report-generator:
-    image: node:20
-    volumes:
-      - .:/app
-    working_dir: /app
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-    command: >
-      sh -c "
-        sleep 10 &&
-        mkdir -p reports/final &&
-        npm install -g mochawesome-merge mochawesome-report-generator &&
-        mochawesome-merge 'reports/ui/report-*.json' 'reports/{api,webtables}/mochawesome.json' > reports/final/output.json &&
-        marge reports/final/output.json --reportDir reports/final --inline
-      "
+    <<: *cypress-service
+    command: sh -c "GREP_TAGS=@webTables npx cypress run"
