@@ -160,6 +160,10 @@ describe("Buttons", () => {
 });
 ```
 
+### Convention: object literals, not classes
+
+Page objects are exported as plain object literals rather than ES6 classes. This is deliberate. Cypress tests typically work with a single instance per page — there is no `new ButtonsPage()` lifecycle to model, and the chainable methods (`return this`) work identically on a singleton. The companion Playwright project in this portfolio uses classes because Playwright passes a fresh `page` fixture into each test, which fits a constructor-per-test shape; Cypress does not.
+
 ## Test Data Factories
 
 Generate dynamic test data with Faker.js:
