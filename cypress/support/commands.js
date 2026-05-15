@@ -38,76 +38,6 @@ Cypress.Commands.add(
 );
 
 // ============================================================
-// TABLE INTERACTION COMMANDS
-// ============================================================
-
-/**
- * Search for text in a table using the search box
- * @example
- * cy.searchInTable('John').should('contain', 'John')
- * @param {string} searchText - Text to search for
- * @param {string} [tableSelector='.rt-tbody'] - Selector for the table body
- * @returns {Cypress.Chainable<JQuery<HTMLElement>>} The table element
- */
-Cypress.Commands.add(
-  "searchInTable",
-  (searchText, tableSelector = ".rt-tbody") => {
-    cy.get("#searchBox").clear();
-    cy.get("#searchBox").type(searchText);
-    cy.get("#searchBox").should("have.value", searchText);
-    return cy.get(tableSelector);
-  }
-);
-
-/**
- * Verify data in a table row by column index
- * @example
- * cy.verifyTableRow('.rt-tr-group:first', { 0: 'John', 1: 'Doe', 2: '30' })
- * @param {string} rowSelector - Selector for the table row
- * @param {Object.<string, string>} expectedData - Column index to expected value mapping
- */
-Cypress.Commands.add("verifyTableRow", (rowSelector, expectedData) => {
-  cy.get(rowSelector).within(() => {
-    Object.entries(expectedData).forEach(([columnIndex, value]) => {
-      cy.get(".rt-td").eq(parseInt(columnIndex)).should("contain", value);
-    });
-  });
-});
-
-/**
- * Perform an action (edit/delete) on a table row
- * @example
- * cy.tableAction('John Doe', 'edit')
- * cy.tableAction('Jane Smith', 'delete')
- * @param {string} rowIdentifier - Text to identify the row
- * @param {'edit'|'delete'} [action='edit'] - Action to perform
- */
-Cypress.Commands.add("tableAction", (rowIdentifier, action = "edit") => {
-  const actionMap = {
-    edit: "Edit",
-    delete: "Delete",
-  };
-
-  cy.contains(".rt-tr-group", rowIdentifier)
-    .find(`span[title="${actionMap[action]}"]`)
-    .click();
-});
-
-/**
- * Get the count of visible (non-empty) rows in a table
- * @example
- * cy.getTableRowCount().should('eq', 5)
- * @param {string} [tableSelector='.rt-tbody'] - Table body selector
- * @returns {Cypress.Chainable<number>} Row count
- */
-Cypress.Commands.add("getTableRowCount", (tableSelector = ".rt-tbody") => {
-  return cy
-    .get(`${tableSelector} div[role="row"]`)
-    .not(".-padRow")
-    .its("length");
-});
-
-// ============================================================
 // UI INTERACTION COMMANDS
 // ============================================================
 
@@ -268,17 +198,4 @@ Cypress.Commands.add("takeScreenshot", (name, options = {}) => {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   // eslint-disable-next-line cypress/assertion-before-screenshot
   cy.screenshot(`${name}_${timestamp}`, options);
-});
-
-/**
- * Preserve cookies/localStorage between tests (useful for login state)
- * @example
- * cy.preserveSession()
- */
-Cypress.Commands.add("preserveSession", () => {
-  cy.getCookies().then((cookies) => {
-    cookies.forEach((cookie) => {
-      cy.setCookie(cookie.name, cookie.value);
-    });
-  });
 });
