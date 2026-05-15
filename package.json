@@ -56,7 +56,7 @@
     "name": "Adrian Jiga",
     "email": "jiga.ion.adrian@gmail.com"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@cypress/grep": "^6.0.0",
     "@faker-js/faker": "^10.4.0",
