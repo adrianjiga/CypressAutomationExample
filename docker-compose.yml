@@ -21,12 +21,12 @@ services:
 
   ui-tests:
     <<: *cypress-service
-    command: sh -c "GREP_TAGS=@ui npx cypress run"
+    command: npx cypress run --expose grepTags=@ui
 
   api-tests:
     <<: *cypress-service
-    command: sh -c "GREP_TAGS=@api npx cypress run"
+    command: npx cypress run --expose grepTags=@api
 
   webtables-tests:
     <<: *cypress-service
-    command: sh -c "GREP_TAGS=@webTables npx cypress run"
+    command: npx cypress run --expose grepTags=@webTables

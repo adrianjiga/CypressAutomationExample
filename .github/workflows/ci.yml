@@ -37,8 +37,7 @@ jobs:
                   browser: chrome
                   publish-summary: true
                   install: false
-              env:
-                  GREP_TAGS: "@smoke"
+                  expose: grepTags=@smoke
             
             
 

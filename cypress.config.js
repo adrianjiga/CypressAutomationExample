@@ -33,8 +33,6 @@ export default defineConfig({
     grepOmitFiltered: true,
     viewports: viewports,
     apiTimeout: 30000,
-    grepTags: process.env.GREP_TAGS,
-    viewport: process.env.TEST_VIEWPORT,
   },
   e2e: {
     baseUrl: "https://adrianjiga.github.io",
