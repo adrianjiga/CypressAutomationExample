@@ -58,7 +58,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@cypress/grep": "^6.0.1",
+    "@cypress/grep": "^6.0.2",
     "@faker-js/faker": "^10.4.0",
     "cypress": "^15.16.0"
   },
