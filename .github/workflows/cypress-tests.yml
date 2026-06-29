@@ -66,7 +66,7 @@ jobs:
         run: npm ci
 
       - name: Run ${{ matrix.group.name }} Tests
-        uses: cypress-io/github-action@948d67d3074f1bbb6379c8bdbb04e95d2f8e593f # v7.4.0
+        uses: cypress-io/github-action@fa4a118725a8f001170d49631ea89e5d66fee626 # v7.4.1
         with:
           browser: ${{ github.event.inputs.browser || matrix.browser }}
           install: false
@@ -107,7 +107,7 @@ jobs:
         run: npm ci
 
       - name: Run UI Tests - ${{ matrix.viewport }}
-        uses: cypress-io/github-action@948d67d3074f1bbb6379c8bdbb04e95d2f8e593f # v7.4.0
+        uses: cypress-io/github-action@fa4a118725a8f001170d49631ea89e5d66fee626 # v7.4.1
         with:
           browser: chrome
           install: false
