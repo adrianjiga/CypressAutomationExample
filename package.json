@@ -68,6 +68,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.0",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "cypress-wait-until": "^3.0.2",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",

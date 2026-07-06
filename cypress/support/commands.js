@@ -1,41 +1,16 @@
 import "cypress-wait-until";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
+import postSchema from "../fixtures/schemas/post-schema.json";
+import postsArraySchema from "../fixtures/schemas/posts-array-schema.json";
+import commentSchema from "../fixtures/schemas/comment-schema.json";
+import commentsArraySchema from "../fixtures/schemas/comments-array-schema.json";
 
-// ============================================================
-// FORM HANDLING COMMANDS
-// ============================================================
-
-/**
- * Fill multiple form fields by their IDs
- * @example
- * cy.fillForm({ firstName: 'John', lastName: 'Doe', email: 'john@example.com' })
- * @param {Object.<string, string>} formData - Key-value pairs where key is field ID (without #)
- */
-Cypress.Commands.add("fillForm", (formData) => {
-  Object.entries(formData).forEach(([field, value]) => {
-    cy.get(`#${field}`).type(value);
-  });
-});
-
-/**
- * Fill and submit a form, optionally verifying a success modal
- * @example
- * cy.submitFormAndVerify({ name: 'Test' }, 'submit', 'Success!')
- * @param {Object.<string, string>} formData - Form field data
- * @param {string} [submitButtonId='submit'] - ID of the submit button
- * @param {string} [modalTitle] - Expected modal title text (optional)
- */
-Cypress.Commands.add(
-  "submitFormAndVerify",
-  (formData, submitButtonId = "submit", modalTitle) => {
-    cy.fillForm(formData);
-    cy.get(`#${submitButtonId}`).click({ force: true });
-    if (modalTitle) {
-      cy.get('[data-cy="modal-title"]')
-        .should("be.visible")
-        .and("contain", modalTitle);
-    }
-  }
-);
+// Single Ajv instance with every schema registered by $id, so array schemas can
+// $ref their item schema (e.g. "posts-array" → "post") and specs can validate by id.
+const ajv = new Ajv({ allErrors: true });
+addFormats(ajv);
+ajv.addSchema([postSchema, postsArraySchema, commentSchema, commentsArraySchema]);
 
 // ============================================================
 // UI INTERACTION COMMANDS
@@ -78,21 +53,6 @@ Cypress.Commands.add("selectDate", (dateInput, month, year, day) => {
   cy.get("[data-cy='year-select']").select(year);
   cy.get(`[data-cy="day-${day}"]`).first().click();
 });
-
-/**
- * Select an option from a custom dropdown component
- * @example
- * cy.selectDropdownOption('#state', 0) // Select first option
- * @param {string} dropdownSelector - Selector for the dropdown container
- * @param {number} optionIndex - Index of the option to select (0-based)
- */
-Cypress.Commands.add(
-  "selectDropdownOption",
-  (dropdownSelector, optionIndex) => {
-    cy.get(dropdownSelector).click();
-    cy.get(`[id$="-option-${optionIndex}"]`).click();
-  }
-);
 
 // ============================================================
 // ASSERTION COMMANDS
@@ -153,17 +113,26 @@ Cypress.Commands.add("apiRequest", (method, url, options = {}) => {
 });
 
 /**
- * Validate response against a schema
+ * Validate data against a registered JSON Schema (draft-07) using Ajv.
+ * Accepts a schema $id string (preferred, e.g. "post") or a raw schema object.
+ * Reports every violation at once (paths + messages), not just the first.
  * @example
- * cy.validateSchema(response.body, { name: 'string', age: 'number' })
- * @param {Object} data - Data to validate
- * @param {Object.<string, string>} schema - Property name to type mapping
+ * cy.validateSchema(response.body, "posts-array")
+ * cy.validateSchema(response.body, "post")
+ * @param {unknown} data - Data to validate
+ * @param {string|object} schema - Registered schema $id, or a schema object
  */
 Cypress.Commands.add("validateSchema", (data, schema) => {
-  Object.entries(schema).forEach(([key, type]) => {
-    expect(data).to.have.property(key);
-    expect(typeof data[key]).to.eq(type);
-  });
+  const validate =
+    typeof schema === "string" ? ajv.getSchema(schema) : ajv.compile(schema);
+  if (!validate) {
+    throw new Error(`No JSON schema registered with id "${schema}".`);
+  }
+  const valid = validate(data);
+  const errors = (validate.errors || [])
+    .map((e) => `${e.instancePath || "(root)"} ${e.message}`)
+    .join("; ");
+  expect(valid, errors || "response matches JSON schema").to.eq(true);
 });
 
 // ============================================================
