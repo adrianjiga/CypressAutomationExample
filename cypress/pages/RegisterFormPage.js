@@ -99,10 +99,7 @@ export const RegisterFormPage = {
    * @param {string} day - Day with leading zero (e.g., "01")
    */
   selectDateOfBirth(month, year, day) {
-    cy.get(this.selectors.dateOfBirthInput).click();
-    cy.get(this.selectors.monthSelect).select(month);
-    cy.get(this.selectors.yearSelect).select(year);
-    cy.get(this.selectors.daySelector(day)).first().click();
+    cy.selectDate(this.selectors.dateOfBirthInput, month, year, day);
     return this;
   },
 
@@ -205,7 +202,7 @@ export const RegisterFormPage = {
    * @param {string} selector - Field selector
    */
   verifyFieldValidationError(selector) {
-    cy.get(selector).should("have.css", "border-color", this.validationColor);
+    cy.verifyValidationError(selector, this.validationColor);
     return this;
   },
 
@@ -219,8 +216,8 @@ export const RegisterFormPage = {
 
     // Gender radio labels
     for (let i = 1; i <= 3; i++) {
-      cy.get(this.selectors.genderLabel(i)).should(
-        "have.css",
+      cy.verifyCssProperty(
+        this.selectors.genderLabel(i),
         "border-color",
         this.validationColor
       );
