@@ -47,19 +47,4 @@ export const userFactory = {
   generateAge(min = 18, max = 65) {
     return faker.number.int({ min, max });
   },
-
-  /**
-   * Generate a batch of users
-   * @param {number} count - Number of users to generate
-   * @param {Object} commonOverrides - Overrides to apply to all users
-   * @returns {Array<Object>} Array of user objects
-   */
-  generateBatch(count, commonOverrides = {}) {
-    return Array.from({ length: count }, (_, index) =>
-      this.generate({
-        ...commonOverrides,
-        firstName: `User${index}`,
-      })
-    );
-  },
 };

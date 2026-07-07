@@ -3,29 +3,6 @@
 declare namespace Cypress {
   interface Chainable {
     // ============================================================
-    // FORM HANDLING COMMANDS
-    // ============================================================
-
-    /**
-     * Fill multiple form fields by their IDs
-     * @param formData - Key-value pairs where key is field ID (without #)
-     * @example cy.fillForm({ firstName: 'John', lastName: 'Doe' })
-     */
-    fillForm(formData: Record<string, string>): Chainable<void>;
-
-    /**
-     * Fill and submit a form, optionally verifying a success modal
-     * @param formData - Form field data
-     * @param submitButtonId - ID of the submit button (default: 'submit')
-     * @param modalTitle - Expected modal title text (optional)
-     */
-    submitFormAndVerify(
-      formData: Record<string, string>,
-      submitButtonId?: string,
-      modalTitle?: string
-    ): Chainable<void>;
-
-    // ============================================================
     // UI INTERACTION COMMANDS
     // ============================================================
 
@@ -51,16 +28,6 @@ declare namespace Cypress {
       month: string,
       year: string,
       day: string
-    ): Chainable<void>;
-
-    /**
-     * Select an option from a custom dropdown component
-     * @param dropdownSelector - Selector for the dropdown container
-     * @param optionIndex - Index of the option to select (0-based)
-     */
-    selectDropdownOption(
-      dropdownSelector: string,
-      optionIndex: number
     ): Chainable<void>;
 
     // ============================================================
@@ -100,16 +67,17 @@ declare namespace Cypress {
       method: string,
       url: string,
       options?: Partial<Cypress.RequestOptions>
-    ): Chainable<Cypress.Response<unknown>>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): Chainable<Cypress.Response<any>>;
 
     /**
-     * Validate response against a schema
-     * @param data - Data to validate
-     * @param schema - Property name to type mapping
+     * Validate data against a registered JSON Schema (draft-07) via Ajv.
+     * @param data - Data to validate (object or array)
+     * @param schema - Registered schema $id (e.g. "post"), or a raw schema object
      */
     validateSchema(
-      data: Record<string, unknown>,
-      schema: Record<string, string>
+      data: unknown,
+      schema: string | Record<string, unknown>
     ): Chainable<void>;
 
     // ============================================================
