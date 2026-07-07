@@ -10,7 +10,12 @@ import commentsArraySchema from "../fixtures/schemas/comments-array-schema.json"
 // $ref their item schema (e.g. "posts-array" → "post") and specs can validate by id.
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv);
-ajv.addSchema([postSchema, postsArraySchema, commentSchema, commentsArraySchema]);
+ajv.addSchema([
+  postSchema,
+  postsArraySchema,
+  commentSchema,
+  commentsArraySchema,
+]);
 
 // ============================================================
 // UI INTERACTION COMMANDS
