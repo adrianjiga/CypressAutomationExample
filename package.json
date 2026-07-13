@@ -60,7 +60,7 @@
   "dependencies": {
     "@cypress/grep": "^6.0.2",
     "@faker-js/faker": "^10.5.0",
-    "cypress": "^15.18.0"
+    "cypress": "^15.18.1"
   },
   "overrides": {
     "diff": ">=8.0.3",
@@ -68,18 +68,18 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^22.20.0",
+    "@types/node": "^26.1.1",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "cypress-wait-until": "^3.0.2",
-    "eslint": "^10.6.0",
+    "eslint": "^10.7.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-cypress": "^6.4.2",
     "globals": "^17.6.0",
     "mochawesome": "^7.1.4",
     "mochawesome-merge": "^5.1.1",
     "mochawesome-report-generator": "^6.3.2",
-    "prettier": "^3.9.4",
-    "typescript": "^6.0.3"
+    "prettier": "^3.9.5",
+    "typescript": "^7.0.2"
   }
 }
