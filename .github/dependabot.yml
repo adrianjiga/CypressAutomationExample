@@ -10,6 +10,12 @@ updates:
       npm-dependencies:
         patterns:
           - "*"
+    ignore:
+      # 15.19.0 ships @babel/preset-typescript without a package.json, so the
+      # bundled preprocessor cannot resolve it and every spec dies at 0ms.
+      # Remove once a fixed release is out. See PR #162.
+      - dependency-name: "cypress"
+        versions: ["15.19.0"]
     commit-message:
       prefix: "npm"
       include: "scope"
