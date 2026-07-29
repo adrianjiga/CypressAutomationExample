@@ -30,7 +30,7 @@
     "lint:fix": "eslint cypress/e2e/**/*.cy.js cypress/support/**/*.js cypress/pages/**/*.js --fix",
     "format": "prettier --write \"cypress/{e2e,support,pages}/**/*.js\"",
     "format:check": "prettier --check \"cypress/{e2e,support,pages}/**/*.js\"",
-    "report:merge": "mochawesome-merge 'reports/**/*.json' > reports/merged.json",
+    "report:merge": "mochawesome-merge 'reports/*-report.json' -o reports/merged.json",
     "report:generate": "marge reports/merged.json --reportDir reports/final --inline",
     "report:full": "npm run report:merge && npm run report:generate",
     "clean": "rm -rf reports cypress/videos cypress/screenshots node_modules/.cache",
