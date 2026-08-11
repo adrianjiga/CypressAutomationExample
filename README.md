@@ -334,7 +334,8 @@ npm run typecheck     # Run TypeScript checks
 ## Docker Configuration
 
 Each test container runs with:
-- Base image: `cypress/included:15.18.1`
+- Base image: `cypress/included` — the tag is declared in the [`Dockerfile`](Dockerfile) and
+  deliberately not repeated here, because a version written in two places drifts
 - Memory limit: 2GB
 - Memory reservation: 1GB
 
