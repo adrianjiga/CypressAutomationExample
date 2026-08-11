@@ -23,8 +23,8 @@ describe("Register Form", () => {
         subjects: ["Maths"],
         hobbies: ["sports", "reading"],
         picture: "cypress/fixtures/book.json",
-        state: 0,
-        city: 0,
+        state: "germany",
+        city: "berlin",
       });
 
       RegisterFormPage.submit().verifySubmissionSuccess();

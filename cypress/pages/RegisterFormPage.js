@@ -32,9 +32,9 @@ export const RegisterFormPage = {
     uploadPicture: '[data-cy="upload-picture"]',
     currentAddress: '[data-cy="address-input"]',
     stateDropdown: '[data-cy="state-dropdown"]',
-    stateOption: (index) => `#state-option-${index}`,
+    stateOption: (country) => `[data-cy="state-option-${country}"]`,
     cityDropdown: '[data-cy="city-dropdown"]',
-    cityOption: (index) => `#city-option-${index}`,
+    cityOption: (city) => `[data-cy="city-option-${city}"]`,
     submitButton: '[data-cy="submit-btn"]',
     closeModalButton: '[data-cy="close-modal-btn"]',
     modalTitle: '[data-cy="modal-title"]',
@@ -138,22 +138,32 @@ export const RegisterFormPage = {
   },
 
   /**
-   * Select state from dropdown
-   * @param {number} optionIndex - Index of the state option (0-based)
+   * Select a country from the custom dropdown.
+   *
+   * Addressed by name rather than position: the old `#state-option-N` ids encoded an
+   * ordering the spec had to know but never stated, so `selectState(0)` silently meant
+   * Germany.
+   *
+   * @param {'germany'|'france'|'spain'|'italy'|'netherlands'} country
    */
-  selectState(optionIndex = 0) {
+  selectState(country = "germany") {
     cy.get(this.selectors.stateDropdown).click();
-    cy.get(this.selectors.stateOption(optionIndex)).click();
+    cy.get(this.selectors.stateOption(country)).click();
     return this;
   },
 
   /**
-   * Select city from dropdown
-   * @param {number} optionIndex - Index of the city option (0-based)
+   * Select a city from the custom dropdown. Cities are populated by the chosen country, so
+   * this must run after {@link selectState}.
+   *
+   * Lower-cased and hyphenated, matching how the page builds the attribute, so "Frankfurt"
+   * is `frankfurt`.
+   *
+   * @param {string} city - e.g. "berlin"
    */
-  selectCity(optionIndex = 0) {
+  selectCity(city = "berlin") {
     cy.get(this.selectors.cityDropdown).click();
-    cy.get(this.selectors.cityOption(optionIndex)).click();
+    cy.get(this.selectors.cityOption(city)).click();
     return this;
   },
 
