@@ -30,6 +30,13 @@ updates:
       docker-dependencies:
         patterns:
           - "*"
+    ignore:
+      # Mirror of the npm ignore above. The Dockerfile tag and the npm dependency
+      # are two pins of the same Cypress version and must stay equal, so a version
+      # blocked for npm has to be blocked here too — otherwise the docker ecosystem
+      # bumps the image past a version npm is still held back from.
+      - dependency-name: "cypress/included"
+        versions: ["15.19.0"]
     commit-message:
       prefix: "docker"
       include: "scope"
