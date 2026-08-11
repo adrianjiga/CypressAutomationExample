@@ -39,8 +39,13 @@ npm install
 │   │   ├── waitUntilExample.cy.js    # Custom wait patterns
 │   │   └── webTables.cy.js           # Table CRUD operations
 │   ├── fixtures/                     # Test data files
-│   │   ├── book.json
-│   │   └── post.json
+│   │   ├── book.json                 # Upload payload for the register form
+│   │   ├── post.json                 # Expected body for the get-by-id API test
+│   │   └── schemas/                  # Ajv JSON Schemas (draft-07), keyed by $id
+│   │       ├── comment-schema.json
+│   │       ├── comments-array-schema.json
+│   │       ├── post-schema.json
+│   │       └── posts-array-schema.json
 │   ├── pages/                        # Page Object Models
 │   │   ├── ButtonsPage.js
 │   │   ├── RegisterFormPage.js
@@ -63,6 +68,9 @@ npm install
 ├── eslint.config.js                  # ESLint configuration
 ├── jsconfig.json                     # JavaScript/IDE configuration
 ├── tsconfig.json                     # TypeScript configuration
+├── .nvmrc                            # Node version pin (22), matches CI
+├── .prettierrc
+├── LICENSE
 └── package.json
 ```
 
@@ -134,6 +142,19 @@ npm run docker:clean
 |-----------|----------|
 | `api.cy.js` | JSONPlaceholder API - list posts, fetch by ID, filter comments, error handling, create, delete |
 
+Responses are validated against JSON Schema (draft-07) with Ajv. Every schema in
+`cypress/fixtures/schemas/` carries an `$id`, and all of them are registered against a single
+Ajv instance in `commands.js`. That is what lets an array schema `$ref` its item schema
+(`posts-array` → `post`) instead of duplicating the item shape, and lets specs validate by
+name rather than by import:
+
+```javascript
+cy.validateSchema(response.body, "posts-array");
+```
+
+Ajv runs with `allErrors: true`, so a failing assertion reports every violation with its
+JSON path — not just the first one it hits.
+
 ### Web Tables Tests (`@webTables`)
 
 | Test File | Coverage |
@@ -174,31 +195,40 @@ import { userFactory } from "../support/factories";
 const user = userFactory.generate();
 // { firstName, lastName, email, age, salary, department }
 
+const engineer = userFactory.generate({ department: "Engineering" });
+// Same shape, with the given fields overridden
+
 const formUser = userFactory.generateFormUser();
 // { firstName, lastName, email, mobile, address }
 
-const users = userFactory.generateBatch(5);
-// Array of 5 user objects
+const age = userFactory.generateAge();
+// Random integer in [18, 65]
 ```
 
 ## Custom Commands
 
-### Form Handling
-- `cy.fillForm(formData)` - Fill multiple fields by ID
-- `cy.submitFormAndVerify(formData, buttonId, modalTitle)` - Submit and verify
+Defined in `cypress/support/commands.js`, typed in `cypress/support/index.d.ts`.
 
 ### UI Interactions
 - `cy.waitAndClick(selector, options)` - Wait for visibility then click
 - `cy.selectDate(input, month, year, day)` - Date picker selection
-- `cy.selectDropdownOption(dropdown, index)` - Custom dropdown selection
 
 ### Assertions
 - `cy.verifyCssProperty(selector, property, value)` - CSS validation
-- `cy.verifyValidationError(selector)` - Form error styling
+- `cy.verifyValidationError(selector, errorColor?)` - Form error styling
 
 ### API Helpers
-- `cy.apiRequest(method, url, options)` - Request with default headers
-- `cy.validateSchema(data, schema)` - Response schema validation
+- `cy.apiRequest(method, url, options)` - Request with default headers, `failOnStatusCode: false`
+- `cy.validateSchema(data, schema)` - Ajv draft-07 validation, reporting every violation at once
+
+### Utilities
+- `cy.logMessage(message, data?)` - Log to both the Cypress runner and the console
+- `cy.takeScreenshot(name, options?)` - Timestamped screenshot
+
+Form-filling is **not** a custom command. Each page object owns its own form logic
+(`RegisterFormPage.fillCompleteForm()`, `WebTablesPage.fillForm()`) because the two forms
+have different field sets and different validation semantics — a shared `fillForm` command
+collapsed into a lowest-common-denominator helper that neither page could use cleanly.
 
 ## Configuration
 
@@ -239,16 +269,25 @@ Runs on every PR to master:
 
 - **Schedule**: Monday-Friday at 07:00 UTC
 - **Triggers**: Push to master, manual dispatch
-- **Matrix**: 
-  - Groups: API, UI, WebTables
-  - Browsers: Chrome, Firefox
-  - Viewports: Desktop, Mobile, Tablet
+
+Three jobs:
+
+| Job | Shape |
+|-----|-------|
+| `test` | Groups (`@api`, `@ui`, `@webTables`) × Browsers (Chrome, Firefox) at the desktop viewport. `@api` is skipped on Firefox — the suite makes no browser-specific assertions, so a second engine buys nothing. |
+| `responsive-tests` | `@ui` only, on Chrome, at the mobile and tablet viewports. Separate from the main matrix so viewport coverage doesn't multiply against the browser axis. |
+| `merge-reports` | Runs after both (`if: always()`), downloads every shard's artifacts and merges the mochawesome JSON into a single HTML report. |
+
+All `actions/*` references are pinned to full commit SHAs with a trailing `# vX.Y.Z` comment.
+SHAs are immutable, so a compromised tag cannot silently re-point at different code.
+Dependabot recognises the pattern and bumps the SHA and the comment together.
 
 ### Artifacts
 
 Test artifacts are retained for 30 days:
 - Screenshots (on failure)
-- Videos (on failure only)
+- Videos — recorded for every spec, then deleted for passing specs by the `after:spec`
+  hook in `cypress.config.js`, so only failures survive
 - Mochawesome reports
 
 ## Reports
@@ -305,6 +344,13 @@ Dependabot monitors and updates:
 - npm packages (weekly, Mondays)
 - Docker images (weekly, Mondays)
 - GitHub Actions (weekly, Mondays)
+
+Updates are grouped per ecosystem, so a week's bumps arrive as one PR rather than six.
+
+**Held-back versions** are recorded in `.github/dependabot.yml` with the reason inline.
+Currently: `cypress@15.19.0`, which ships `@babel/preset-typescript` without a
+`package.json`, so the bundled preprocessor cannot resolve it and every spec dies at 0ms
+(see PR #162). Remove the entry once a fixed release is out.
 
 ## Cleanup
 
