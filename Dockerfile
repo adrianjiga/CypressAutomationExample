@@ -7,7 +7,7 @@
 #
 # Dependabot bumps this tag and the npm dependency on the same weekly schedule, but
 # they arrive as separate PRs — merge them together, never one alone.
-FROM cypress/included:15.18.1
+FROM cypress/included:15.20.1
 
 WORKDIR /app
 
