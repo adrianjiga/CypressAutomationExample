@@ -60,7 +60,7 @@
   "dependencies": {
     "@cypress/grep": "^6.0.2",
     "@faker-js/faker": "^10.5.0",
-    "cypress": "^15.18.1"
+    "cypress": "^15.20.1"
   },
   "overrides": {
     "diff": ">=8.0.3",
