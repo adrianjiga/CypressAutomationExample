@@ -25,7 +25,7 @@ ajv.addSchema([
  * Wait for an element to be visible and then click it
  * Useful for elements that may take time to appear or need force clicking
  * @example
- * cy.waitAndClick('#submit')
+ * cy.waitAndClick('[data-cy="submit-btn"]')
  * cy.waitAndClick('.modal-button', { force: true, timeout: 15000 })
  * @param {string} selector - Element selector
  * @param {Object} [options={}] - Click options
@@ -46,7 +46,7 @@ Cypress.Commands.add("waitAndClick", (selector, options = {}) => {
 /**
  * Select a date from the custom datepicker component
  * @example
- * cy.selectDate('#dateInput', 'January', '1990', '15')
+ * cy.selectDate('[data-cy="date-of-birth-input"]', 'January', '1990', '15')
  * @param {string} dateInput - Selector for the date input
  * @param {string} month - Month name (e.g., 'January')
  * @param {string} year - Year (e.g., '1990')
@@ -66,7 +66,7 @@ Cypress.Commands.add("selectDate", (dateInput, month, year, day) => {
 /**
  * Verify an element has a specific CSS property value
  * @example
- * cy.verifyCssProperty('#input', 'border-color', 'rgb(220, 53, 69)')
+ * cy.verifyCssProperty('[data-cy="first-name-input"]', 'border-color', 'rgb(220, 53, 69)')
  * @param {string} selector - Element selector
  * @param {string} property - CSS property name
  * @param {string} value - Expected CSS value
@@ -78,7 +78,7 @@ Cypress.Commands.add("verifyCssProperty", (selector, property, value) => {
 /**
  * Verify an input field has validation error styling
  * @example
- * cy.verifyValidationError('#email')
+ * cy.verifyValidationError('[data-cy="email-input"]')
  * @param {string} selector - Input selector
  * @param {string} [errorColor='rgb(220, 53, 69)'] - Expected error border color
  */
