@@ -334,9 +334,27 @@ npm run typecheck     # Run TypeScript checks
 ## Docker Configuration
 
 Each test container runs with:
-- Base image: `cypress/included:15.14.2`
+- Base image: `cypress/included:15.18.1`
 - Memory limit: 2GB
 - Memory reservation: 1GB
+
+### The image tag and the npm dependency are one pin, not two
+
+`cypress/included:X` ships a pre-downloaded Cypress binary for X in the image's binary
+cache. The Dockerfile then runs `npm ci`, which installs whatever `package-lock.json`
+resolves. **These must be the same version.** If they diverge, the npm package looks for a
+binary that isn't in the cache and the container dies before a single spec runs.
+
+Dependabot watches both, on the same weekly schedule, but raises them as separate PRs —
+merge them together. Any version held back in the npm `ignore` list must be held back in
+the docker one too; `.github/dependabot.yml` keeps the two entries adjacent and cross-
+referenced for that reason.
+
+The six-line Dockerfile is deliberate. `docker-compose.yml` bind-mounts the working tree
+over `/app` and declares a per-service `command:`, so under compose the `COPY . .` and
+`CMD` are redundant — they exist so that a plain `docker build` + `docker run` also works.
+The anonymous `/app/node_modules` volume is what stops the bind mount from shadowing the
+container's installed dependencies.
 
 ## Dependency Management
 
