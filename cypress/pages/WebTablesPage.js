@@ -6,26 +6,26 @@ export const WebTablesPage = {
   url: "/qa/helpers/webtables",
 
   selectors: {
-    searchBox: '[data-cy="search-box"]',
-    addNewRecordButton: '[data-cy="add-record-btn"]',
-    tableBody: '[data-cy="table-body"]',
-    rows: '[data-cy="table-body"] tr',
+    searchBox: '[data-cy="searchBox"]',
+    addNewRecordButton: '[data-cy="addRecordBtn"]',
+    tableBody: '[data-cy="tableBody"]',
+    rows: '[data-cy="tableBody"] tr',
     tableCell: "td",
-    modal: '[data-cy="registration-modal"]',
-    modalTitle: '[data-cy="modal-title"]',
-    firstName: '[data-cy="modal-first-name"]',
-    lastName: '[data-cy="modal-last-name"]',
-    email: '[data-cy="modal-email"]',
-    age: '[data-cy="modal-age"]',
-    salary: '[data-cy="modal-salary"]',
-    department: '[data-cy="modal-department"]',
-    submitButton: '[data-cy="modal-submit-btn"]',
-    editRecord: (id) => `[data-cy="edit-btn-${id}"]`,
-    deleteRecord: (id) => `[data-cy="delete-btn-${id}"]`,
-    rowsPerPageSelect: '[data-cy="rows-per-page-select"]',
-    totalPages: '[data-cy="total-pages"]',
-    nextButton: '[data-cy="next-page-btn"]',
-    previousButton: '[data-cy="prev-page-btn"]',
+    modal: '[data-cy="registrationModal"]',
+    modalTitle: '[data-cy="modalTitle"]',
+    firstName: '[data-cy="modalFirstName"]',
+    lastName: '[data-cy="modalLastName"]',
+    email: '[data-cy="modalEmail"]',
+    age: '[data-cy="modalAge"]',
+    salary: '[data-cy="modalSalary"]',
+    department: '[data-cy="modalDepartment"]',
+    submitButton: '[data-cy="modalSubmitBtn"]',
+    editRecord: (id) => `[data-cy="editBtn${id}"]`,
+    deleteRecord: (id) => `[data-cy="deleteBtn${id}"]`,
+    rowsPerPageSelect: '[data-cy="rowsPerPageSelect"]',
+    totalPages: '[data-cy="totalPages"]',
+    nextButton: '[data-cy="nextPageBtn"]',
+    previousButton: '[data-cy="prevPageBtn"]',
   },
 
   /**
@@ -193,11 +193,11 @@ export const WebTablesPage = {
     cy.contains(this.selectors.rows, identifier).within(() => {
       cy.get(this.selectors.tableCell)
         .eq(6)
-        .find('[data-cy^="edit-btn-"]')
+        .find('[data-cy^="editBtn"]')
         .should("exist");
       cy.get(this.selectors.tableCell)
         .eq(6)
-        .find('[data-cy^="delete-btn-"]')
+        .find('[data-cy^="deleteBtn"]')
         .should("exist");
     });
     return this;
