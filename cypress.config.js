@@ -2,12 +2,26 @@
 import { defineConfig } from "cypress";
 import { plugin } from "@cypress/grep/plugin";
 import fs from "fs";
+import { createRequire } from "node:module";
 
 const viewports = {
   mobile: { width: 375, height: 667 },
   tablet: { width: 768, height: 1024 },
   desktop: { width: 1920, height: 1080 },
 };
+
+/**
+ * Absolute path to the WebQualityAnalyzer browser bundle, resolved here in Node because a
+ * spec runs in the browser and has no module resolution of its own. Letting npm decide where
+ * the package lives means a hoisted or nested install both work — hardcoding
+ * `node_modules/webqualityanalyzer/...` would break the moment the tree changes shape.
+ *
+ * `require.resolve` does not exist in an ES module and this project is `"type": "module"`,
+ * hence `createRequire`.
+ */
+const wqaBundlePath = createRequire(import.meta.url).resolve(
+  "webqualityanalyzer/wqa.js"
+);
 
 export default defineConfig({
   allowCypressEnv: false,
@@ -32,6 +46,7 @@ export default defineConfig({
     grepFilterSpecs: true,
     grepOmitFiltered: true,
     viewports: viewports,
+    wqaBundlePath,
   },
   e2e: {
     baseUrl: "https://adrianjiga.github.io",

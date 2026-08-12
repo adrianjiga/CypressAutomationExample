@@ -42,6 +42,8 @@ jobs:
             tag: "@ui"
           - name: webtables
             tag: "@webTables"
+          - name: a11y
+            tag: "@a11y"
         browser: [chrome, firefox]
         viewport: [desktop]
         exclude:
@@ -51,6 +53,11 @@ jobs:
           - group:
               name: api
             viewport: mobile
+          # The accessibility audit reads the DOM, not the rendering, so a second engine
+          # re-runs identical logic against an identical tree and adds no signal.
+          - group:
+              name: a11y
+            browser: firefox
 
     steps:
       - name: Checkout Repository

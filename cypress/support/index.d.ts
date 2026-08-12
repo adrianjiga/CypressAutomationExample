@@ -51,7 +51,24 @@ declare namespace Cypress {
      * @param selector - Input selector
      * @param errorColor - Expected error border color (default: 'rgb(220, 53, 69)')
      */
-    verifyValidationError(selector: string, errorColor?: string): Chainable<void>;
+    verifyValidationError(
+      selector: string,
+      errorColor?: string
+    ): Chainable<void>;
+
+    // ============================================================
+    // ACCESSIBILITY COMMANDS
+    // ============================================================
+
+    /**
+     * Inject the WebQualityAnalyzer bundle into the page under test and yield its
+     * accessibility findings. SEO and performance analysis are disabled.
+     *
+     * Pair with `expectAccessibilityBaseline` from `cypress/support/accessibility`.
+     */
+    auditAccessibility(): Chainable<
+      import("webqualityanalyzer").CategoryResult
+    >;
 
     // ============================================================
     // API HELPER COMMANDS
@@ -89,7 +106,10 @@ declare namespace Cypress {
      * @param message - Message to log
      * @param data - Optional data to include
      */
-    logMessage(message: string, data?: Record<string, unknown>): Chainable<void>;
+    logMessage(
+      message: string,
+      data?: Record<string, unknown>
+    ): Chainable<void>;
 
     /**
      * Take a screenshot with a descriptive name
@@ -122,6 +142,5 @@ declare namespace Cypress {
         log?: boolean;
       }
     ): Chainable<boolean>;
-
   }
 }

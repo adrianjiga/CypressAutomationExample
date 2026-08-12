@@ -9,6 +9,7 @@ A production-ready Cypress testing framework demonstrating UI, API, and table in
 - **Multi-Browser Testing** - Chrome, Firefox, and Edge support
 - **Responsive Testing** - Mobile, tablet, and desktop viewport configurations
 - **API Testing** - RESTful API validation with schema verification
+- **Accessibility Testing** - Per-page audits with two-way baselines, powered by WebQualityAnalyzer
 - **Docker Support** - Containerized test execution
 - **CI/CD Ready** - GitHub Actions workflows for automated testing
 - **Mochawesome Reports** - HTML test reports with screenshots and videos
@@ -33,6 +34,7 @@ npm install
 ```
 ├── cypress/
 │   ├── e2e/                          # Test specifications
+│   │   ├── accessibility.cy.js       # Per-page accessibility baselines
 │   │   ├── api.cy.js                 # JSONPlaceholder API tests
 │   │   ├── buttons.cy.js             # Button interaction tests
 │   │   ├── registerForm.cy.js        # Form validation tests
@@ -52,6 +54,7 @@ npm install
 │   │   ├── WebTablesPage.js
 │   │   └── index.js
 │   └── support/
+│       ├── accessibility.js          # Analyzer injection + two-way baseline assertion
 │       ├── commands.js               # Custom Cypress commands
 │       ├── e2e.js                    # Global configuration
 │       ├── factories.js              # Test data factories
@@ -93,6 +96,7 @@ npm run test:ui           # UI tests (@ui)
 npm run test:api          # API tests (@api)
 npm run test:webtables    # Table tests (@webTables)
 npm run test:smoke        # Smoke tests (@smoke)
+npm run test:a11y         # Accessibility tests (@a11y)
 ```
 
 ### Browser Selection
@@ -161,6 +165,28 @@ JSON path — not just the first one it hits.
 |-----------|----------|
 | `webTables.cy.js` | Search, edit, add, delete records, pagination, rows per page |
 
+### Accessibility Tests (`@a11y`)
+
+| Test File | Coverage |
+|-----------|----------|
+| `accessibility.cy.js` | Buttons, Web Tables, Register Form, and the Register Form's submitted state |
+
+Auditing is powered by [WebQualityAnalyzer](https://github.com/adrianjiga/WebQualityAnalyzer)
+— the same engine that drives its browser extension, published as a browser bundle for exactly
+this use. `cy.auditAccessibility()` injects it into the page under test and yields the
+accessibility findings; SEO and performance analysis are disabled, because they audit the
+*page* rather than the behaviour under test.
+
+**The baseline is two-way, and the second direction is the point.** A new issue fails, and a
+baseline entry that *stops occurring* also fails. Without the second check a baseline is just
+a suppression list: it only ever grows, and nothing tells you an entry went stale. With it,
+fixing a page forces the baseline to shrink. All four baselines are currently empty, so these
+pages are held at zero.
+
+The submitted-state test exists because auditing only the initial render misses whatever a
+page reveals at runtime — the confirmation modal is hidden until submit, and a heading-
+hierarchy defect once lived there.
+
 ## Page Objects
 
 The framework uses Page Object Model for maintainable test code:
@@ -216,6 +242,11 @@ Defined in `cypress/support/commands.js`, typed in `cypress/support/index.d.ts`.
 ### Assertions
 - `cy.verifyCssProperty(selector, property, value)` - CSS validation
 - `cy.verifyValidationError(selector, errorColor?)` - Form error styling
+
+### Accessibility
+- `cy.auditAccessibility()` - Inject WebQualityAnalyzer and yield the page's accessibility findings.
+  Registered in `cypress/support/accessibility.js`, which also exports
+  `expectAccessibilityBaseline(issues, baseline)`
 
 ### API Helpers
 - `cy.apiRequest(method, url, options)` - Request with default headers, `failOnStatusCode: false`
@@ -274,7 +305,7 @@ Three jobs:
 
 | Job | Shape |
 |-----|-------|
-| `test` | Groups (`@api`, `@ui`, `@webTables`) × Browsers (Chrome, Firefox) at the desktop viewport. `@api` is skipped on Firefox — the suite makes no browser-specific assertions, so a second engine buys nothing. |
+| `test` | Groups (`@api`, `@ui`, `@webTables`, `@a11y`) × Browsers (Chrome, Firefox) at the desktop viewport. `@api` is skipped on Firefox — the suite makes no browser-specific assertions, so a second engine buys nothing. `@a11y` is skipped for the same reason: the audit reads the DOM, not the rendering. |
 | `responsive-tests` | `@ui` only, on Chrome, at the mobile and tablet viewports. Separate from the main matrix so viewport coverage doesn't multiply against the browser axis. |
 | `merge-reports` | Runs after both (`if: always()`), downloads every shard's artifacts and merges the mochawesome JSON into a single HTML report. |
 
