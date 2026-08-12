@@ -35,7 +35,8 @@
     "report:full": "npm run report:merge && npm run report:generate",
     "clean": "rm -rf reports cypress/videos cypress/screenshots node_modules/.cache",
     "clean:reports": "rm -rf reports",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:a11y": "cypress run --expose grepTags=@a11y"
   },
   "repository": {
     "type": "git",
@@ -81,6 +82,7 @@
     "mochawesome-merge": "^5.1.1",
     "mochawesome-report-generator": "^6.3.2",
     "prettier": "^3.9.6",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "webqualityanalyzer": "github:adrianjiga/WebQualityAnalyzer"
   }
 }
