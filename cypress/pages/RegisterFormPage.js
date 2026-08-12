@@ -6,39 +6,40 @@ export const RegisterFormPage = {
   url: "/qa/helpers/automation-practice-form",
 
   selectors: {
-    firstName: '[data-cy="first-name-input"]',
-    lastName: '[data-cy="last-name-input"]',
-    email: '[data-cy="email-input"]',
-    mobile: '[data-cy="mobile-input"]',
-    genderMale: '[data-cy="gender-male"]',
-    genderFemale: '[data-cy="gender-female"]',
-    genderOther: '[data-cy="gender-other"]',
+    firstName: '[data-cy="firstNameInput"]',
+    lastName: '[data-cy="lastNameInput"]',
+    email: '[data-cy="emailInput"]',
+    mobile: '[data-cy="mobileInput"]',
+    genderMale: '[data-cy="genderMale"]',
+    genderFemale: '[data-cy="genderFemale"]',
+    genderOther: '[data-cy="genderOther"]',
     genderLabel: (id) => {
       const map = {
-        1: '[data-cy="gender-male-label"]',
-        2: '[data-cy="gender-female-label"]',
-        3: '[data-cy="gender-other-label"]',
+        1: '[data-cy="genderMaleLabel"]',
+        2: '[data-cy="genderFemaleLabel"]',
+        3: '[data-cy="genderOtherLabel"]',
       };
       return map[id];
     },
-    dateOfBirthInput: '[data-cy="date-of-birth-input"]',
-    monthSelect: '[data-cy="month-select"]',
-    yearSelect: '[data-cy="year-select"]',
-    daySelector: (day) => `[data-cy="day-${day}"]`,
-    subjectsInput: '[data-cy="subjects-input"]',
-    hobbySports: '[data-cy="hobby-sports"]',
-    hobbyReading: '[data-cy="hobby-reading"]',
-    hobbyMusic: '[data-cy="hobby-music"]',
-    uploadPicture: '[data-cy="upload-picture"]',
-    currentAddress: '[data-cy="address-input"]',
-    stateDropdown: '[data-cy="state-dropdown"]',
-    stateOption: (country) => `[data-cy="state-option-${country}"]`,
-    cityDropdown: '[data-cy="city-dropdown"]',
-    cityOption: (city) => `[data-cy="city-option-${city}"]`,
-    submitButton: '[data-cy="submit-btn"]',
-    closeModalButton: '[data-cy="close-modal-btn"]',
-    modalTitle: '[data-cy="modal-title"]',
-    resultTable: '[data-cy="result-table"] tbody tr',
+    dateOfBirthInput: '[data-cy="dateOfBirthInput"]',
+    monthSelect: '[data-cy="monthSelect"]',
+    yearSelect: '[data-cy="yearSelect"]',
+    daySelector: (day) => `[data-cy="day${day}"]`,
+    subjectsInput: '[data-cy="subjectsInput"]',
+    hobbySports: '[data-cy="hobbySports"]',
+    hobbyReading: '[data-cy="hobbyReading"]',
+    hobbyMusic: '[data-cy="hobbyMusic"]',
+    uploadPicture: '[data-cy="uploadPicture"]',
+    currentAddress: '[data-cy="addressInput"]',
+    stateDropdown: '[data-cy="stateDropdown"]',
+    stateOption: (country) =>
+      `[data-cy="stateOption${country.replace(/\s+/g, "")}"]`,
+    cityDropdown: '[data-cy="cityDropdown"]',
+    cityOption: (city) => `[data-cy="cityOption${city.replace(/\s+/g, "")}"]`,
+    submitButton: '[data-cy="submitBtn"]',
+    closeModalButton: '[data-cy="closeModalBtn"]',
+    modalTitle: '[data-cy="modalTitle"]',
+    resultTable: '[data-cy="resultTable"] tbody tr',
   },
 
   messages: {
@@ -144,9 +145,9 @@ export const RegisterFormPage = {
    * ordering the spec had to know but never stated, so `selectState(0)` silently meant
    * Germany.
    *
-   * @param {'germany'|'france'|'spain'|'italy'|'netherlands'} country
+   * @param {'Germany'|'France'|'Spain'|'Italy'|'Netherlands'} country - the visible name
    */
-  selectState(country = "germany") {
+  selectState(country = "Germany") {
     cy.get(this.selectors.stateDropdown).click();
     cy.get(this.selectors.stateOption(country)).click();
     return this;
@@ -159,9 +160,9 @@ export const RegisterFormPage = {
    * Lower-cased and hyphenated, matching how the page builds the attribute, so "Frankfurt"
    * is `frankfurt`.
    *
-   * @param {string} city - e.g. "berlin"
+   * @param {string} city - the visible name, e.g. "Berlin"
    */
-  selectCity(city = "berlin") {
+  selectCity(city = "Berlin") {
     cy.get(this.selectors.cityDropdown).click();
     cy.get(this.selectors.cityOption(city)).click();
     return this;

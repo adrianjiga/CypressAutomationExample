@@ -6,12 +6,12 @@ export const ButtonsPage = {
   url: "/qa/helpers/buttons",
 
   selectors: {
-    doubleClickButton: '[data-cy="double-click-btn"]',
-    rightClickButton: '[data-cy="right-click-btn"]',
-    dynamicClickButton: '[data-cy="dynamic-click-btn"]',
-    doubleClickMessage: '[data-cy="double-click-message"]',
-    rightClickMessage: '[data-cy="right-click-message"]',
-    dynamicClickMessage: '[data-cy="dynamic-click-message"]',
+    doubleClickButton: '[data-cy="doubleClickBtn"]',
+    rightClickButton: '[data-cy="rightClickBtn"]',
+    dynamicClickButton: '[data-cy="dynamicClickBtn"]',
+    doubleClickMessage: '[data-cy="doubleClickMessage"]',
+    rightClickMessage: '[data-cy="rightClickMessage"]',
+    dynamicClickMessage: '[data-cy="dynamicClickMessage"]',
   },
 
   messages: {
