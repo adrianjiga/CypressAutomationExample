@@ -10,7 +10,7 @@ describe("JSONPlaceholder API Tests", () => {
         expect(response.headers["content-type"]).to.include("application/json");
         expect(response.body).to.be.an("array").and.not.be.empty;
         expect(response.body).to.have.length(100);
-        cy.validateSchema(response.body, "posts-array");
+        cy.validateSchema(response.body, "postsArray");
       });
     }
   );
@@ -44,7 +44,7 @@ describe("JSONPlaceholder API Tests", () => {
       }).then((response) => {
         expect(response.status).to.eq(200);
         expect(response.body).to.be.an("array").and.not.be.empty;
-        cy.validateSchema(response.body, "comments-array");
+        cy.validateSchema(response.body, "commentsArray");
         response.body.forEach((comment) => {
           expect(comment.postId).to.eq(targetPostId);
         });

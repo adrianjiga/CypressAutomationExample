@@ -1,13 +1,13 @@
 import "cypress-wait-until";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
-import postSchema from "../fixtures/schemas/post-schema.json";
-import postsArraySchema from "../fixtures/schemas/posts-array-schema.json";
-import commentSchema from "../fixtures/schemas/comment-schema.json";
-import commentsArraySchema from "../fixtures/schemas/comments-array-schema.json";
+import postSchema from "../fixtures/schemas/postSchema.json";
+import postsArraySchema from "../fixtures/schemas/postsArraySchema.json";
+import commentSchema from "../fixtures/schemas/commentSchema.json";
+import commentsArraySchema from "../fixtures/schemas/commentsArraySchema.json";
 
 // Single Ajv instance with every schema registered by $id, so array schemas can
-// $ref their item schema (e.g. "posts-array" → "post") and specs can validate by id.
+// $ref their item schema (e.g. "postsArray" → "post") and specs can validate by id.
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv);
 ajv.addSchema([
@@ -122,7 +122,7 @@ Cypress.Commands.add("apiRequest", (method, url, options = {}) => {
  * Accepts a schema $id string (preferred, e.g. "post") or a raw schema object.
  * Reports every violation at once (paths + messages), not just the first.
  * @example
- * cy.validateSchema(response.body, "posts-array")
+ * cy.validateSchema(response.body, "postsArray")
  * cy.validateSchema(response.body, "post")
  * @param {unknown} data - Data to validate
  * @param {string|object} schema - Registered schema $id, or a schema object
