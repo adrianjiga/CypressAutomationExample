@@ -15,18 +15,18 @@ x-cypress-service: &cypress-service
     - CI=true
 
 services:
-  cypress-tests:
+  cypressTests:
     <<: *cypress-service
     command: npx cypress run
 
-  ui-tests:
+  uiTests:
     <<: *cypress-service
     command: npx cypress run --expose grepTags=@ui
 
-  api-tests:
+  apiTests:
     <<: *cypress-service
     command: npx cypress run --expose grepTags=@api
 
-  webtables-tests:
+  webtablesTests:
     <<: *cypress-service
     command: npx cypress run --expose grepTags=@webTables
