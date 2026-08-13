@@ -83,7 +83,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: cypress-results-${{ matrix.group.name }}-${{ matrix.browser }}-${{ matrix.viewport }}
+          name: cypressResults-${{ matrix.group.name }}-${{ matrix.browser }}-${{ matrix.viewport }}
           path: |
             cypress/screenshots/
             cypress/videos/
@@ -92,7 +92,7 @@ jobs:
           retention-days: 30
 
   # Responsive testing job for UI tests
-  responsive-tests:
+  responsiveTests:
     name: Responsive - ${{ matrix.viewport }}
     runs-on: ubuntu-latest
     strategy:
@@ -124,7 +124,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: cypress-results-responsive-${{ matrix.viewport }}
+          name: cypressResultsResponsive-${{ matrix.viewport }}
           path: |
             cypress/screenshots/
             cypress/videos/
@@ -133,9 +133,9 @@ jobs:
           retention-days: 30
 
   # Merge and publish reports
-  merge-reports:
+  mergeReports:
     name: Merge Test Reports
-    needs: [test, responsive-tests]
+    needs: [test, responsiveTests]
     if: always()
     runs-on: ubuntu-latest
     
@@ -151,18 +151,18 @@ jobs:
       - name: Download All Artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          path: all-results
+          path: allResults
 
       - name: Merge Reports
         run: |
           npm install -g mochawesome-merge mochawesome-report-generator
           mkdir -p reports/final
-          find all-results -name "*.json" -path "*/reports/*" | head -20 | xargs mochawesome-merge > reports/final/merged.json || true
+          find allResults -name "*.json" -path "*/reports/*" | head -20 | xargs mochawesome-merge > reports/final/merged.json || true
           marge reports/final/merged.json --reportDir reports/final --inline || true
 
       - name: Upload Final Report
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: final-test-report
+          name: finalTestReport
           path: reports/final/
           retention-days: 30
