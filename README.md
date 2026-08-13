@@ -44,10 +44,10 @@ npm install
 │   │   ├── book.json                 # Upload payload for the register form
 │   │   ├── post.json                 # Expected body for the get-by-id API test
 │   │   └── schemas/                  # Ajv JSON Schemas (draft-07), keyed by $id
-│   │       ├── comment-schema.json
-│   │       ├── comments-array-schema.json
-│   │       ├── post-schema.json
-│   │       └── posts-array-schema.json
+│   │       ├── commentSchema.json
+│   │       ├── commentsArraySchema.json
+│   │       ├── postSchema.json
+│   │       └── postsArraySchema.json
 │   ├── pages/                        # Page Object Models
 │   │   ├── ButtonsPage.js
 │   │   ├── RegisterFormPage.js
@@ -62,11 +62,11 @@ npm install
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml                    # PR validation workflow
-│   │   └── cypress-tests.yml         # Main test execution workflow
+│   │   └── cypressTests.yml          # Main test execution workflow
 │   ├── CODEOWNERS
 │   └── dependabot.yml
 ├── cypress.config.js                 # Cypress configuration
-├── docker-compose.yml                # Docker services
+├── compose.yaml                      # Docker services
 ├── Dockerfile
 ├── eslint.config.js                  # ESLint configuration
 ├── jsconfig.json                     # JavaScript/IDE configuration
@@ -149,11 +149,11 @@ npm run docker:clean
 Responses are validated against JSON Schema (draft-07) with Ajv. Every schema in
 `cypress/fixtures/schemas/` carries an `$id`, and all of them are registered against a single
 Ajv instance in `commands.js`. That is what lets an array schema `$ref` its item schema
-(`posts-array` → `post`) instead of duplicating the item shape, and lets specs validate by
+(`postsArray` → `post`) instead of duplicating the item shape, and lets specs validate by
 name rather than by import:
 
 ```javascript
-cy.validateSchema(response.body, "posts-array");
+cy.validateSchema(response.body, "postsArray");
 ```
 
 Ajv runs with `allErrors: true`, so a failing assertion reports every violation with its
@@ -296,7 +296,7 @@ Runs on every PR to master:
 - Cypress verification
 - Smoke tests
 
-### Scheduled Test Execution (`cypress-tests.yml`)
+### Scheduled Test Execution (`cypressTests.yml`)
 
 - **Schedule**: Monday-Friday at 07:00 UTC
 - **Triggers**: Push to master, manual dispatch
@@ -382,7 +382,7 @@ merge them together. Any version held back in the npm `ignore` list must be held
 the docker one too; `.github/dependabot.yml` keeps the two entries adjacent and cross-
 referenced for that reason.
 
-The six-line Dockerfile is deliberate. `docker-compose.yml` bind-mounts the working tree
+The six-line Dockerfile is deliberate. `compose.yaml` bind-mounts the working tree
 over `/app` and declares a per-service `command:`, so under compose the `COPY . .` and
 `CMD` are redundant — they exist so that a plain `docker build` + `docker run` also works.
 The anonymous `/app/node_modules` volume is what stops the bind mount from shadowing the
