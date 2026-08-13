@@ -2,6 +2,10 @@
 
 A production-ready Cypress testing framework demonstrating UI, API, and table interaction testing patterns against self-hosted helper pages at [adrianjiga.github.io/qa/helpers](https://adrianjiga.github.io/qa/helpers). Features Page Object Model architecture, test data factories, multi-browser support, responsive testing, and CI/CD integration.
 
+> **Architecture** — this repository is one of six that behave as a single system.
+> The [cross-repo architecture notes](https://adrianjiga.github.io/qa/architecture)
+> cover the `data-cy` contract, the coordinated-deploy problem, and the known gaps.
+
 ## Features
 
 - **Page Object Model** - Clean separation of test logic and page interactions
