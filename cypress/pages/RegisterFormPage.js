@@ -263,7 +263,9 @@ export const RegisterFormPage = {
     }
 
     if (data.subjects) {
-      data.subjects.forEach((subject) => this.addSubject(subject));
+      data.subjects.forEach((subject) => {
+        this.addSubject(subject);
+      });
     }
 
     if (data.hobbies) {

@@ -170,6 +170,5 @@ Cypress.Commands.add("logMessage", (message, data) => {
  */
 Cypress.Commands.add("takeScreenshot", (name, options = {}) => {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  // eslint-disable-next-line cypress/assertion-before-screenshot
   cy.screenshot(`${name}_${timestamp}`, options);
 });

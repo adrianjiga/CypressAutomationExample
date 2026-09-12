@@ -84,7 +84,7 @@ declare namespace Cypress {
       method: string,
       url: string,
       options?: Partial<Cypress.RequestOptions>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: Cypress Response is untyped
     ): Chainable<Cypress.Response<any>>;
 
     /**

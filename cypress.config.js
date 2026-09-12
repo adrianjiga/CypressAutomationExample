@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { defineConfig } from "cypress";
 import { plugin } from "@cypress/grep/plugin";
 import fs from "fs";
