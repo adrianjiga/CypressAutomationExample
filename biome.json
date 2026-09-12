@@ -26,11 +26,7 @@
       "context",
       "describe",
       "it",
-      "specify",
-      "module",
-      "process",
-      "require",
-      "__dirname"
+      "specify"
     ]
   },
   "linter": {
