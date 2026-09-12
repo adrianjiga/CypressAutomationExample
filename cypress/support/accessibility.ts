@@ -5,33 +5,32 @@
  * @see https://github.com/adrianjiga/WebQualityAnalyzer
  */
 
-/**
- * @typedef {Object} A11yIssue
- * @property {string} type - e.g. "Form Accessibility"
- * @property {string} message
- * @property {'high'|'medium'|'low'} severity
- * @property {string} [selector] - CSS path to the first offending element
- * @property {string} [htmlSnippet]
- */
+interface A11yIssue {
+  type: string;
+  message: string;
+  severity: "high" | "medium" | "low";
+  selector?: string;
+  htmlSnippet?: string;
+}
 
 /**
  * The bundle source, read once per spec run rather than once per audit. `cy.readFile` hits
  * the Node process on every call, and the file is the same on all of them.
- * @type {string | undefined}
  */
-let bundleSource;
+let bundleSource: string | undefined;
 
 /**
  * The bundle assigns its global at runtime, which static analysis cannot see. The cast
  * borrows the package's own emitted declarations rather than reaching for `any`, so the shape
  * of the analysis result stays checked.
- *
- * @param {Cypress.AUTWindow} win
- * @returns {typeof import("webqualityanalyzer") | undefined}
  */
-function analyzerIn(win) {
-  return /** @type {Cypress.AUTWindow & { WebQualityAnalyzer?: typeof import("webqualityanalyzer") }} */ (
-    win
+function analyzerIn(
+  win: Cypress.AUTWindow
+): typeof import("webqualityanalyzer") | undefined {
+  return (
+    win as Cypress.AUTWindow & {
+      WebQualityAnalyzer?: typeof import("webqualityanalyzer");
+    }
   ).WebQualityAnalyzer;
 }
 
@@ -43,10 +42,8 @@ function analyzerIn(win) {
  * global never appears. A `<script>` element is the unambiguous way to get global scope —
  * `cy.window().then(win => win.eval(src))` also works, because a method call on `win` is an
  * *indirect* eval, but that is a subtlety a reader has to know rather than see.
- *
- * @param {Cypress.AUTWindow} win
  */
-function injectAnalyzer(win) {
+function injectAnalyzer(win: Cypress.AUTWindow): void {
   if (analyzerIn(win)) {
     return;
   }
@@ -65,11 +62,6 @@ function injectAnalyzer(win) {
  * over things it has no opinion about.
  *
  * `analyzePage` is synchronous, so the result is available in the same tick as the call.
- *
- * @example
- * cy.auditAccessibility().then(({ issues }) => {
- *   expectAccessibilityBaseline(issues, []);
- * });
  */
 Cypress.Commands.add("auditAccessibility", () => {
   const withSource = bundleSource
@@ -84,7 +76,11 @@ Cypress.Commands.add("auditAccessibility", () => {
   return withSource.then(() =>
     cy.window({ log: false }).then((win) => {
       injectAnalyzer(win);
-      return analyzerIn(win).analyzePage({
+      const analyzer = analyzerIn(win);
+      if (!analyzer) {
+        throw new Error("WebQualityAnalyzer bundle did not become available");
+      }
+      return analyzer.analyzePage({
         seo: { enabled: false },
         performance: { enabled: false },
       }).categories.accessibility;
@@ -97,11 +93,8 @@ Cypress.Commands.add("auditAccessibility", () => {
  *
  * Deliberately the same format as the Playwright suite's, so a finding can be compared across
  * repositories by eye without translating between two notations.
- *
- * @param {A11yIssue} issue
- * @returns {string}
  */
-function fingerprint(issue) {
+function fingerprint(issue: A11yIssue): string {
   return `${issue.type} @ ${issue.selector ?? "(page)"} — ${issue.message}`;
 }
 
@@ -119,11 +112,11 @@ function fingerprint(issue) {
  * shrink, so the file stays an accurate record of known debt rather than a graveyard.
  *
  * A page with no known issues passes `[]` and is held at zero from then on.
- *
- * @param {A11yIssue[]} issues - what the analyzer found
- * @param {string[]} baseline - fingerprints of accepted, documented issues
  */
-export function expectAccessibilityBaseline(issues, baseline) {
+export function expectAccessibilityBaseline(
+  issues: A11yIssue[],
+  baseline: string[]
+): void {
   const found = issues.map(fingerprint);
 
   const regressions = found.filter((f) => !baseline.includes(f));
