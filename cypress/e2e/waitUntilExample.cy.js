@@ -1,22 +1,16 @@
-describe("Test Cypress Docs with waitUntil", () => {
+import { WebTablesPage } from "../pages";
+
+describe("WebTables with waitUntil", () => {
   it(
-    "Waits for the search button to be visible and clicks it",
+    "waits for the registration modal to become visible after opening it",
     { tags: ["@ui"] },
     () => {
-      cy.visit("https://docs.cypress.io");
+      WebTablesPage.visit();
 
-      cy.get('button:contains("Search")', { timeout: 10000 });
-      cy.get("body").then(($body) => {
-        if ($body.find(".osano-cm-accept-all").length) {
-          cy.get(".osano-cm-accept-all").click();
-        }
-      });
+      cy.waitAndClick(WebTablesPage.selectors.addNewRecordButton);
 
       cy.waitUntil(
-        () =>
-          cy
-            .get('button:contains("Search ⌘K")', { timeout: 10000 })
-            .should("be.visible"),
+        () => cy.get(WebTablesPage.selectors.modal).should("be.visible"),
         {
           timeout: 15000,
           interval: 500,
@@ -24,8 +18,10 @@ describe("Test Cypress Docs with waitUntil", () => {
         }
       );
 
-      cy.get('button:contains("Search ⌘K")', { timeout: 10000 }).click();
-      cy.get("#docsearch-input", { timeout: 10000 }).should("be.visible");
+      cy.get(WebTablesPage.selectors.modalTitle).should(
+        "contain",
+        "Registration Form"
+      );
     }
   );
 });
