@@ -28,7 +28,7 @@ describe("Register Form", () => {
 
     RegisterFormPage.submit().verifySubmissionSuccess();
 
-    const expectedData = {
+    const expectedData: Record<string, string> = {
       "Student Name": `${testUser.firstName} ${testUser.lastName}`,
       "Student Email": testUser.email,
       Gender: "Male",

@@ -30,7 +30,7 @@ import { expectAccessibilityBaseline } from "../support/accessibility";
  * Adding an entry here is a deliberate act. Do it only with a comment saying why the issue is
  * acceptable, and treat it as debt to remove rather than a permanent exception.
  */
-const BASELINE = {
+const BASELINE: Record<string, string[]> = {
   buttons: [],
   webTables: [],
   registerForm: [],

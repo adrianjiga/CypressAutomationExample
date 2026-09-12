@@ -74,10 +74,10 @@ declare global {
       auditAccessibility(): Chainable<CategoryResult>;
 
       /**
-       * Make an API request with default headers.
+       * Make an API request with default headers. The response body is typed
+       * via the generic when the shape is known, e.g. `apiRequest<Post[]>("GET", ...)`.
        */
-      // biome-ignore lint/suspicious/noExplicitAny: defaults to unknown once every spec is migrated to typescript
-      apiRequest<T = any>(
+      apiRequest<T = unknown>(
         method: string,
         url: string,
         options?: Partial<Cypress.RequestOptions>

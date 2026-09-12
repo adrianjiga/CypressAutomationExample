@@ -1,10 +1,12 @@
+import type { Comment, Post } from "../types/models";
+
 describe("JSONPlaceholder API Tests", () => {
   const BASE_URL = "https://jsonplaceholder.typicode.com";
 
   it("should list all posts with correct structure", {
     tags: ["@api", "@smoke"],
   }, () => {
-    cy.apiRequest("GET", `${BASE_URL}/posts`).then((response) => {
+    cy.apiRequest<Post[]>("GET", `${BASE_URL}/posts`).then((response) => {
       expect(response.status).to.eq(200);
       expect(response.headers["content-type"]).to.include("application/json");
       expect(response.body).to.be.an("array").and.not.be.empty;
@@ -16,8 +18,8 @@ describe("JSONPlaceholder API Tests", () => {
   it("should fetch a specific post by ID and match fixture", {
     tags: ["@api"],
   }, () => {
-    cy.fixture("post").then((expectedPost) => {
-      cy.apiRequest("GET", `${BASE_URL}/posts/${expectedPost.id}`).then(
+    cy.fixture<Post>("post").then((expectedPost) => {
+      cy.apiRequest<Post>("GET", `${BASE_URL}/posts/${expectedPost.id}`).then(
         (response) => {
           expect(response.status).to.eq(200);
           expect(response.headers["content-type"]).to.include(
@@ -34,7 +36,7 @@ describe("JSONPlaceholder API Tests", () => {
     tags: ["@api"],
   }, () => {
     const targetPostId = 1;
-    cy.apiRequest("GET", `${BASE_URL}/comments`, {
+    cy.apiRequest<Comment[]>("GET", `${BASE_URL}/comments`, {
       qs: { postId: targetPostId },
     }).then((response) => {
       expect(response.status).to.eq(200);
@@ -56,13 +58,15 @@ describe("JSONPlaceholder API Tests", () => {
     tags: ["@api"],
   }, () => {
     const newPost = { title: "test title", body: "test body", userId: 1 };
-    cy.apiRequest("POST", `${BASE_URL}/posts`, { body: newPost }).then(
-      (response) => {
-        expect(response.status).to.eq(201);
-        expect(response.body).to.include(newPost);
-        expect(response.body).to.have.property("id").and.be.a("number");
-      }
-    );
+    cy.apiRequest<typeof newPost & { id: number }>(
+      "POST",
+      `${BASE_URL}/posts`,
+      { body: newPost }
+    ).then((response) => {
+      expect(response.status).to.eq(201);
+      expect(response.body).to.include(newPost);
+      expect(response.body).to.have.property("id").and.be.a("number");
+    });
   });
 
   it("should delete a post and return 200", { tags: ["@api"] }, () => {
