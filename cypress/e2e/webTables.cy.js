@@ -77,29 +77,27 @@ describe("WebTables", () => {
     });
   });
 
-  it(
-    "pagination when more than 5 records exist",
-    { tags: ["@webTables"] },
-    () => {
-      for (let i = 0; i < 3; i++) {
-        const user = userFactory.generate({
-          firstName: `User${i}`,
-          lastName: "Test",
-        });
-        WebTablesPage.openAddModal().fillForm(user).submitForm();
-      }
-
-      WebTablesPage.setRowsPerPage(5).verifyTotalPages("2");
-
-      WebTablesPage.goToNextPage();
-      cy.get(WebTablesPage.selectors.rows).should("have.length.at.least", 1);
-      cy.contains(WebTablesPage.selectors.rows, "User2").should("be.visible");
-
-      WebTablesPage.verifyPreviousEnabled();
-      WebTablesPage.goToPreviousPage();
-
-      cy.contains(WebTablesPage.selectors.rows, "Cierra").should("be.visible");
-      WebTablesPage.verifyNextEnabled();
+  it("pagination when more than 5 records exist", {
+    tags: ["@webTables"],
+  }, () => {
+    for (let i = 0; i < 3; i++) {
+      const user = userFactory.generate({
+        firstName: `User${i}`,
+        lastName: "Test",
+      });
+      WebTablesPage.openAddModal().fillForm(user).submitForm();
     }
-  );
+
+    WebTablesPage.setRowsPerPage(5).verifyTotalPages("2");
+
+    WebTablesPage.goToNextPage();
+    cy.get(WebTablesPage.selectors.rows).should("have.length.at.least", 1);
+    cy.contains(WebTablesPage.selectors.rows, "User2").should("be.visible");
+
+    WebTablesPage.verifyPreviousEnabled();
+    WebTablesPage.goToPreviousPage();
+
+    cy.contains(WebTablesPage.selectors.rows, "Cierra").should("be.visible");
+    WebTablesPage.verifyNextEnabled();
+  });
 });

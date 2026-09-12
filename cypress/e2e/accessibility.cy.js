@@ -46,55 +46,49 @@ describe("Accessibility", () => {
     });
   });
 
-  it(
-    "web tables page matches its accessibility baseline",
-    { tags: ["@a11y"] },
-    () => {
-      WebTablesPage.visit();
+  it("web tables page matches its accessibility baseline", {
+    tags: ["@a11y"],
+  }, () => {
+    WebTablesPage.visit();
 
-      cy.auditAccessibility().then(({ issues }) => {
-        expectAccessibilityBaseline(issues, BASELINE.webTables);
-      });
-    }
-  );
+    cy.auditAccessibility().then(({ issues }) => {
+      expectAccessibilityBaseline(issues, BASELINE.webTables);
+    });
+  });
 
-  it(
-    "register form matches its accessibility baseline",
-    { tags: ["@a11y"] },
-    () => {
-      RegisterFormPage.visit();
+  it("register form matches its accessibility baseline", {
+    tags: ["@a11y"],
+  }, () => {
+    RegisterFormPage.visit();
 
-      cy.auditAccessibility().then(({ issues }) => {
-        expectAccessibilityBaseline(issues, BASELINE.registerForm);
-      });
-    }
-  );
+    cy.auditAccessibility().then(({ issues }) => {
+      expectAccessibilityBaseline(issues, BASELINE.registerForm);
+    });
+  });
 
-  it(
-    "submitted-state register form reports no new issues",
-    { tags: ["@a11y"] },
-    () => {
-      // Auditing only the initial render misses whatever a page reveals at runtime — the
-      // confirmation modal is hidden until submit, and it is where the heading-hierarchy
-      // defect used to live.
-      //
-      // Date of birth is required for submission alongside first name, last name, mobile and
-      // gender, and it cannot be typed — it must be picked. Omitting it leaves the form
-      // blocked by validation and the modal shut.
-      RegisterFormPage.visit();
-      RegisterFormPage.fillCompleteForm({
-        firstName: "Ada",
-        lastName: "Lovelace",
-        mobile: "1234567890",
-        gender: "male",
-        dateOfBirth: { month: "January", year: "1990", day: "01" },
-      });
-      RegisterFormPage.submit();
-      RegisterFormPage.verifySubmissionSuccess();
+  it("submitted-state register form reports no new issues", {
+    tags: ["@a11y"],
+  }, () => {
+    // Auditing only the initial render misses whatever a page reveals at runtime — the
+    // confirmation modal is hidden until submit, and it is where the heading-hierarchy
+    // defect used to live.
+    //
+    // Date of birth is required for submission alongside first name, last name, mobile and
+    // gender, and it cannot be typed — it must be picked. Omitting it leaves the form
+    // blocked by validation and the modal shut.
+    RegisterFormPage.visit();
+    RegisterFormPage.fillCompleteForm({
+      firstName: "Ada",
+      lastName: "Lovelace",
+      mobile: "1234567890",
+      gender: "male",
+      dateOfBirth: { month: "January", year: "1990", day: "01" },
+    });
+    RegisterFormPage.submit();
+    RegisterFormPage.verifySubmissionSuccess();
 
-      cy.auditAccessibility().then(({ issues }) => {
-        expectAccessibilityBaseline(issues, BASELINE.registerForm);
-      });
-    }
-  );
+    cy.auditAccessibility().then(({ issues }) => {
+      expectAccessibilityBaseline(issues, BASELINE.registerForm);
+    });
+  });
 });

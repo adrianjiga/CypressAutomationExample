@@ -1,10 +1,10 @@
 import "cypress-wait-until";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
-import postSchema from "../fixtures/schemas/postSchema.json";
-import postsArraySchema from "../fixtures/schemas/postsArraySchema.json";
 import commentSchema from "../fixtures/schemas/commentSchema.json";
 import commentsArraySchema from "../fixtures/schemas/commentsArraySchema.json";
+import postSchema from "../fixtures/schemas/postSchema.json";
+import postsArraySchema from "../fixtures/schemas/postsArraySchema.json";
 
 // Single Ajv instance with every schema registered by $id, so array schemas can
 // $ref their item schema (e.g. "postsArray" → "post") and specs can validate by id.

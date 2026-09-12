@@ -1,7 +1,7 @@
-import { defineConfig } from "cypress";
-import { plugin } from "@cypress/grep/plugin";
-import fs from "fs";
 import { createRequire } from "node:module";
+import { plugin } from "@cypress/grep/plugin";
+import { defineConfig } from "cypress";
+import fs from "fs";
 
 const viewports = {
   mobile: { width: 375, height: 667 },

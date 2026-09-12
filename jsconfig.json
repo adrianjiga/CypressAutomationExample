@@ -5,10 +5,6 @@
     "moduleResolution": "bundler",
     "types": ["cypress"]
   },
-  "include": [
-    "cypress/**/*.js",
-    "cypress/**/*.d.ts",
-    "cypress.config.js"
-  ],
+  "include": ["cypress/**/*.js", "cypress/**/*.d.ts", "cypress.config.js"],
   "exclude": ["node_modules"]
 }
