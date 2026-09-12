@@ -377,9 +377,7 @@ resolves. **These must be the same version.** If they diverge, the npm package l
 binary that isn't in the cache and the container dies before a single spec runs.
 
 Dependabot watches both, on the same weekly schedule, but raises them as separate PRs —
-merge them together. Any version held back in the npm `ignore` list must be held back in
-the docker one too; `.github/dependabot.yml` keeps the two entries adjacent and cross-
-referenced for that reason.
+merge them together.
 
 The six-line Dockerfile is deliberate. `compose.yaml` bind-mounts the working tree
 over `/app` and declares a per-service `command:`, so under compose the `COPY . .` and
@@ -395,11 +393,6 @@ Dependabot monitors and updates:
 - GitHub Actions (weekly, Mondays)
 
 Updates are grouped per ecosystem, so a week's bumps arrive as one PR rather than six.
-
-**Held-back versions** are recorded in `.github/dependabot.yml` with the reason inline.
-Currently: `cypress@15.19.0`, which ships `@babel/preset-typescript` without a
-`package.json`, so the bundled preprocessor cannot resolve it and every spec dies at 0ms
-(see PR #162). Remove the entry once a fixed release is out.
 
 ## Cleanup
 
