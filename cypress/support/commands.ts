@@ -91,22 +91,6 @@ declare global {
         data: unknown,
         schema: string | Record<string, unknown>
       ): Chainable<void>;
-
-      /**
-       * Log a message to both the Cypress log and the console.
-       */
-      logMessage(
-        message: string,
-        data?: Record<string, unknown>
-      ): Chainable<void>;
-
-      /**
-       * Take a screenshot with a descriptive, timestamped name.
-       */
-      takeScreenshot(
-        name: string,
-        options?: Partial<Cypress.ScreenshotOptions>
-      ): Chainable<void>;
     }
   }
 }
@@ -223,37 +207,5 @@ Cypress.Commands.add(
       .map((e) => `${e.instancePath || "(root)"} ${e.message}`)
       .join("; ");
     expect(valid, errors || "response matches JSON schema").to.eq(true);
-  }
-);
-
-// ============================================================
-// UTILITY COMMANDS
-// ============================================================
-
-/**
- * Log a message to both the Cypress log and the console.
- * @example
- * cy.logMessage('Test step completed', { userId: 123 })
- */
-Cypress.Commands.add("logMessage", (message, data?) => {
-  const logEntry = data ? `${message}: ${JSON.stringify(data)}` : message;
-  cy.log(logEntry);
-  Cypress.log({
-    name: "INFO",
-    message: logEntry,
-    consoleProps: () => ({ message, data }),
-  });
-});
-
-/**
- * Take a screenshot with a descriptive, timestamped name.
- * @example
- * cy.takeScreenshot('form-validation-errors')
- */
-Cypress.Commands.add(
-  "takeScreenshot",
-  (name, options: Partial<Cypress.ScreenshotOptions> = {}) => {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    cy.screenshot(`${name}_${timestamp}`, options);
   }
 );

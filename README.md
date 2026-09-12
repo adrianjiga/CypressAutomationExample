@@ -255,10 +255,6 @@ Defined and typed in `cypress/support/commands.ts`.
 - `cy.apiRequest(method, url, options)` - Request with default headers, `failOnStatusCode: false`
 - `cy.validateSchema(data, schema)` - Ajv draft-07 validation, reporting every violation at once
 
-### Utilities
-- `cy.logMessage(message, data?)` - Log to both the Cypress runner and the console
-- `cy.takeScreenshot(name, options?)` - Timestamped screenshot
-
 Form-filling is **not** a custom command. Each page object owns its own form logic
 (`RegisterFormPage.fillCompleteForm()`, `WebTablesPage.fillForm()`) because the two forms
 have different field sets and different validation semantics — a shared `fillForm` command
