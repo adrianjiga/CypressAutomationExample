@@ -153,30 +153,31 @@ export const WebTablesPage = {
    * Verify a record exists with specific data.
    */
   verifyRecordExists(data: Partial<UserData>) {
-    cy.contains(this.selectors.rows, data.firstName).within(() => {
-      if (data.firstName) {
-        cy.get(this.selectors.tableCell)
-          .eq(0)
-          .should("contain", data.firstName);
-      }
-      if (data.lastName) {
-        cy.get(this.selectors.tableCell).eq(1).should("contain", data.lastName);
-      }
-      if (data.age) {
-        cy.get(this.selectors.tableCell).eq(2).should("contain", data.age);
-      }
-      if (data.email) {
-        cy.get(this.selectors.tableCell).eq(3).should("contain", data.email);
-      }
-      if (data.salary) {
-        cy.get(this.selectors.tableCell).eq(4).should("contain", data.salary);
-      }
-      if (data.department) {
-        cy.get(this.selectors.tableCell)
-          .eq(5)
-          .should("contain", data.department);
-      }
-    });
+    const firstName = data.firstName;
+    if (firstName) {
+      cy.contains(this.selectors.rows, firstName).within(() => {
+        cy.get(this.selectors.tableCell).eq(0).should("contain", firstName);
+        if (data.lastName) {
+          cy.get(this.selectors.tableCell)
+            .eq(1)
+            .should("contain", data.lastName);
+        }
+        if (data.age) {
+          cy.get(this.selectors.tableCell).eq(2).should("contain", data.age);
+        }
+        if (data.email) {
+          cy.get(this.selectors.tableCell).eq(3).should("contain", data.email);
+        }
+        if (data.salary) {
+          cy.get(this.selectors.tableCell).eq(4).should("contain", data.salary);
+        }
+        if (data.department) {
+          cy.get(this.selectors.tableCell)
+            .eq(5)
+            .should("contain", data.department);
+        }
+      });
+    }
     return this;
   },
 

@@ -1,12 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/latest/schema.json",
   "files": {
-    "includes": [
-      "cypress/**/*.js",
-      "cypress/**/*.ts",
-      "cypress.config.ts",
-      "jsconfig.json"
-    ]
+    "includes": ["cypress/**/*.ts", "cypress.config.ts"]
   },
   "formatter": {
     "indentStyle": "space",

@@ -48,7 +48,7 @@ function injectAnalyzer(win: Cypress.AUTWindow): void {
     return;
   }
   const script = win.document.createElement("script");
-  script.textContent = bundleSource;
+  script.textContent = bundleSource ?? null;
   win.document.head.appendChild(script);
 }
 
@@ -64,11 +64,11 @@ function injectAnalyzer(win: Cypress.AUTWindow): void {
  * `analyzePage` is synchronous, so the result is available in the same tick as the call.
  */
 Cypress.Commands.add("auditAccessibility", () => {
-  const withSource = bundleSource
+  const withSource: Cypress.Chainable<string> = bundleSource
     ? cy.wrap(bundleSource, { log: false })
     : cy
         .readFile(Cypress.expose("wqaBundlePath"), { log: false })
-        .then((src) => {
+        .then((src: string) => {
           bundleSource = src;
           return src;
         });

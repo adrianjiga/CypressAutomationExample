@@ -52,7 +52,11 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       plugin(config);
 
-      const viewportName = config.expose?.viewport;
+      const viewportName = config.expose?.viewport as
+        | "mobile"
+        | "tablet"
+        | "desktop"
+        | undefined;
       if (
         viewportName === "mobile" ||
         viewportName === "tablet" ||

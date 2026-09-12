@@ -7,20 +7,13 @@
     "types": ["cypress", "node"],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": false,
+    "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "allowJs": true,
-    "checkJs": true
+    "noEmit": true
   },
-  "include": [
-    "cypress/**/*.js",
-    "cypress/**/*.ts",
-    "cypress/**/*.d.ts",
-    "cypress.config.ts"
-  ],
+  "include": ["cypress/**/*.ts", "cypress/**/*.d.ts", "cypress.config.ts"],
   "exclude": ["node_modules"]
 }
