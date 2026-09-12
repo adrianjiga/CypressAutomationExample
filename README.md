@@ -72,11 +72,10 @@ npm install
 ├── cypress.config.js                 # Cypress configuration
 ├── compose.yaml                      # Docker services
 ├── Dockerfile
-├── eslint.config.js                  # ESLint configuration
+├── biome.json                         # Biome lint/format configuration
 ├── jsconfig.json                     # JavaScript/IDE configuration
 ├── tsconfig.json                     # TypeScript configuration
 ├── .nvmrc                            # Node version pin (22), matches CI
-├── .prettierrc
 ├── LICENSE
 └── package.json
 ```
