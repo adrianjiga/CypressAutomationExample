@@ -4,5 +4,5 @@
  */
 
 export { ButtonsPage } from "./ButtonsPage";
-export { WebTablesPage } from "./WebTablesPage";
 export { RegisterFormPage } from "./RegisterFormPage";
+export { WebTablesPage } from "./WebTablesPage";

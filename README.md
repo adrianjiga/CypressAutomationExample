@@ -38,12 +38,12 @@ npm install
 ```
 ├── cypress/
 │   ├── e2e/                          # Test specifications
-│   │   ├── accessibility.cy.js       # Per-page accessibility baselines
-│   │   ├── api.cy.js                 # JSONPlaceholder API tests
-│   │   ├── buttons.cy.js             # Button interaction tests
-│   │   ├── registerForm.cy.js        # Form validation tests
-│   │   ├── waitUntilExample.cy.js    # Custom wait patterns
-│   │   └── webTables.cy.js           # Table CRUD operations
+│   │   ├── accessibility.cy.ts       # Per-page accessibility baselines
+│   │   ├── api.cy.ts                 # JSONPlaceholder API tests
+│   │   ├── buttons.cy.ts             # Button interaction tests
+│   │   ├── registerForm.cy.ts        # Form validation tests
+│   │   ├── waitUntilExample.cy.ts    # Custom wait patterns
+│   │   └── webTables.cy.ts           # Table CRUD operations
 │   ├── fixtures/                     # Test data files
 │   │   ├── book.json                 # Upload payload for the register form
 │   │   ├── post.json                 # Expected body for the get-by-id API test
@@ -53,30 +53,29 @@ npm install
 │   │       ├── postSchema.json
 │   │       └── postsArraySchema.json
 │   ├── pages/                        # Page Object Models
-│   │   ├── ButtonsPage.js
-│   │   ├── RegisterFormPage.js
-│   │   ├── WebTablesPage.js
-│   │   └── index.js
-│   └── support/
-│       ├── accessibility.js          # Analyzer injection + two-way baseline assertion
-│       ├── commands.js               # Custom Cypress commands
-│       ├── e2e.js                    # Global configuration
-│       ├── factories.js              # Test data factories
-│       └── index.d.ts                # TypeScript definitions
+│   │   ├── ButtonsPage.ts
+│   │   ├── RegisterFormPage.ts
+│   │   ├── WebTablesPage.ts
+│   │   └── index.ts
+│   ├── support/
+│   │   ├── accessibility.ts          # Analyzer injection + two-way baseline assertion
+│   │   ├── commands.ts               # Custom Cypress commands + their type declarations
+│   │   ├── e2e.ts                    # Global configuration
+│   │   ├── factories.ts              # Test data factories
+│   └── types/
+│       └── models.ts                 # Shared test-data model types
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml                    # PR validation workflow
 │   │   └── cypressTests.yml          # Main test execution workflow
 │   ├── CODEOWNERS
 │   └── dependabot.yml
-├── cypress.config.js                 # Cypress configuration
+├── cypress.config.ts                 # Cypress configuration
 ├── compose.yaml                      # Docker services
 ├── Dockerfile
-├── eslint.config.js                  # ESLint configuration
-├── jsconfig.json                     # JavaScript/IDE configuration
-├── tsconfig.json                     # TypeScript configuration
+├── biome.json                         # Biome lint/format configuration
+├── tsconfig.json                     # TypeScript configuration (strict)
 ├── .nvmrc                            # Node version pin (22), matches CI
-├── .prettierrc
 ├── LICENSE
 └── package.json
 ```
@@ -140,19 +139,19 @@ npm run docker:clean
 
 | Test File | Coverage |
 |-----------|----------|
-| `buttons.cy.js` | Double click, right click, dynamic click interactions |
-| `registerForm.cy.js` | Form validation, field errors, complete submission |
-| `waitUntilExample.cy.js` | Custom wait patterns with cypress-wait-until |
+| `buttons.cy.ts` | Double click, right click, dynamic click interactions |
+| `registerForm.cy.ts` | Form validation, field errors, complete submission |
+| `waitUntilExample.cy.ts` | Custom wait patterns with cypress-wait-until |
 
 ### API Tests (`@api`)
 
 | Test File | Coverage |
 |-----------|----------|
-| `api.cy.js` | JSONPlaceholder API - list posts, fetch by ID, filter comments, error handling, create, delete |
+| `api.cy.ts` | JSONPlaceholder API - list posts, fetch by ID, filter comments, error handling, create, delete |
 
 Responses are validated against JSON Schema (draft-07) with Ajv. Every schema in
 `cypress/fixtures/schemas/` carries an `$id`, and all of them are registered against a single
-Ajv instance in `commands.js`. That is what lets an array schema `$ref` its item schema
+Ajv instance in `commands.ts`. That is what lets an array schema `$ref` its item schema
 (`postsArray` → `post`) instead of duplicating the item shape, and lets specs validate by
 name rather than by import:
 
@@ -167,13 +166,13 @@ JSON path — not just the first one it hits.
 
 | Test File | Coverage |
 |-----------|----------|
-| `webTables.cy.js` | Search, edit, add, delete records, pagination, rows per page |
+| `webTables.cy.ts` | Search, edit, add, delete records, pagination, rows per page |
 
 ### Accessibility Tests (`@a11y`)
 
 | Test File | Coverage |
 |-----------|----------|
-| `accessibility.cy.js` | Buttons, Web Tables, Register Form, and the Register Form's submitted state |
+| `accessibility.cy.ts` | Buttons, Web Tables, Register Form, and the Register Form's submitted state |
 
 Auditing is powered by [WebQualityAnalyzer](https://github.com/adrianjiga/WebQualityAnalyzer)
 — the same engine that drives its browser extension, published as a browser bundle for exactly
@@ -237,7 +236,7 @@ const age = userFactory.generateAge();
 
 ## Custom Commands
 
-Defined in `cypress/support/commands.js`, typed in `cypress/support/index.d.ts`.
+Defined and typed in `cypress/support/commands.ts`.
 
 ### UI Interactions
 - `cy.waitAndClick(selector, options)` - Wait for visibility then click
@@ -249,16 +248,12 @@ Defined in `cypress/support/commands.js`, typed in `cypress/support/index.d.ts`.
 
 ### Accessibility
 - `cy.auditAccessibility()` - Inject WebQualityAnalyzer and yield the page's accessibility findings.
-  Registered in `cypress/support/accessibility.js`, which also exports
+  Registered in `cypress/support/accessibility.ts`, which also exports
   `expectAccessibilityBaseline(issues, baseline)`
 
 ### API Helpers
 - `cy.apiRequest(method, url, options)` - Request with default headers, `failOnStatusCode: false`
 - `cy.validateSchema(data, schema)` - Ajv draft-07 validation, reporting every violation at once
-
-### Utilities
-- `cy.logMessage(message, data?)` - Log to both the Cypress runner and the console
-- `cy.takeScreenshot(name, options?)` - Timestamped screenshot
 
 Form-filling is **not** a custom command. Each page object owns its own form logic
 (`RegisterFormPage.fillCompleteForm()`, `WebTablesPage.fillForm()`) because the two forms
@@ -269,7 +264,7 @@ collapsed into a lowest-common-denominator helper that neither page could use cl
 
 ### Base URL
 
-The helper pages live at `https://adrianjiga.github.io` and are wired in `cypress.config.js`:
+The helper pages live at `https://adrianjiga.github.io` and are wired in `cypress.config.ts`:
 
 ```javascript
 e2e: {
@@ -322,7 +317,7 @@ Dependabot recognises the pattern and bumps the SHA and the comment together.
 Test artifacts are retained for 30 days:
 - Screenshots (on failure)
 - Videos — recorded for every spec, then deleted for passing specs by the `after:spec`
-  hook in `cypress.config.js`, so only failures survive
+  hook in `cypress.config.ts`, so only failures survive
 - Mochawesome reports
 
 ## Reports
@@ -382,9 +377,7 @@ resolves. **These must be the same version.** If they diverge, the npm package l
 binary that isn't in the cache and the container dies before a single spec runs.
 
 Dependabot watches both, on the same weekly schedule, but raises them as separate PRs —
-merge them together. Any version held back in the npm `ignore` list must be held back in
-the docker one too; `.github/dependabot.yml` keeps the two entries adjacent and cross-
-referenced for that reason.
+merge them together.
 
 The six-line Dockerfile is deliberate. `compose.yaml` bind-mounts the working tree
 over `/app` and declares a per-service `command:`, so under compose the `COPY . .` and
@@ -400,11 +393,6 @@ Dependabot monitors and updates:
 - GitHub Actions (weekly, Mondays)
 
 Updates are grouped per ecosystem, so a week's bumps arrive as one PR rather than six.
-
-**Held-back versions** are recorded in `.github/dependabot.yml` with the reason inline.
-Currently: `cypress@15.19.0`, which ships `@babel/preset-typescript` without a
-`package.json`, so the bundled preprocessor cannot resolve it and every spec dies at 0ms
-(see PR #162). Remove the entry once a fixed release is out.
 
 ## Cleanup
 

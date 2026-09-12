@@ -1,16 +1,16 @@
 import { faker } from "@faker-js/faker";
+import type { FormUserData, UserData } from "../types/models";
 
 /**
- * Factory for generating test user data
- * Provides randomized but valid test data for forms and tables
+ * Factory for generating test user data.
+ * Provides randomized but valid test data for forms and tables.
  */
 export const userFactory = {
   /**
-   * Generate a complete user object for WebTables
-   * @param {Object} overrides - Fields to override with specific values
-   * @returns {Object} User data object
+   * Generate a complete user object for WebTables, with specific fields
+   * optionally overridden.
    */
-  generate(overrides = {}) {
+  generate(overrides: Partial<UserData> = {}): UserData {
     return {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
@@ -23,11 +23,10 @@ export const userFactory = {
   },
 
   /**
-   * Generate user data for the practice registration form
-   * @param {Object} overrides - Fields to override
-   * @returns {Object} Form user data
+   * Generate user data for the practice registration form, with specific
+   * fields optionally overridden.
    */
-  generateFormUser(overrides = {}) {
+  generateFormUser(overrides: Partial<FormUserData> = {}): FormUserData {
     return {
       firstName: faker.person.firstName(),
       lastName: faker.person.lastName(),
@@ -39,12 +38,9 @@ export const userFactory = {
   },
 
   /**
-   * Generate a random age within working range
-   * @param {number} min - Minimum age (default: 18)
-   * @param {number} max - Maximum age (default: 65)
-   * @returns {number} Random age
+   * Generate a random age within the given range.
    */
-  generateAge(min = 18, max = 65) {
+  generateAge(min = 18, max = 65): number {
     return faker.number.int({ min, max });
   },
 };

@@ -28,6 +28,9 @@ jobs:
             - name: Format Code
               run: npm run format:check
 
+            - name: Run Typecheck
+              run: npm run typecheck
+
             - name: Verify Cypress setup
               run: npx cypress verify
 

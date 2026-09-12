@@ -1,5 +1,7 @@
+import type { RowData, UserData } from "../types/models";
+
 /**
- * Page Object for the Web Tables helper page
+ * Page Object for the Web Tables helper page.
  * @see https://adrianjiga.github.io/qa/helpers/webtables
  */
 export const WebTablesPage = {
@@ -20,8 +22,8 @@ export const WebTablesPage = {
     salary: '[data-cy="modalSalary"]',
     department: '[data-cy="modalDepartment"]',
     submitButton: '[data-cy="modalSubmitBtn"]',
-    editRecord: (id) => `[data-cy="editBtn${id}"]`,
-    deleteRecord: (id) => `[data-cy="deleteBtn${id}"]`,
+    editRecord: (id: number) => `[data-cy="editBtn${id}"]`,
+    deleteRecord: (id: number) => `[data-cy="deleteBtn${id}"]`,
     rowsPerPageSelect: '[data-cy="rowsPerPageSelect"]',
     totalPages: '[data-cy="totalPages"]',
     nextButton: '[data-cy="nextPageBtn"]',
@@ -29,7 +31,7 @@ export const WebTablesPage = {
   },
 
   /**
-   * Navigate to the Web Tables page
+   * Navigate to the Web Tables page.
    */
   visit() {
     cy.intercept("GET", "/qa/helpers/webtables").as("pageLoad");
@@ -39,10 +41,9 @@ export const WebTablesPage = {
   },
 
   /**
-   * Search for a record in the table
-   * @param {string} searchText - Text to search for
+   * Search for a record in the table.
    */
-  search(searchText) {
+  search(searchText: string) {
     cy.get(this.selectors.searchBox).clear();
     cy.get(this.selectors.searchBox).type(searchText);
     cy.get(this.selectors.searchBox).should("have.value", searchText);
@@ -50,7 +51,7 @@ export const WebTablesPage = {
   },
 
   /**
-   * Clear the search box
+   * Clear the search box.
    */
   clearSearch() {
     cy.get(this.selectors.searchBox).clear();
@@ -59,32 +60,30 @@ export const WebTablesPage = {
   },
 
   /**
-   * Get all visible (non-empty) rows
+   * Get all visible (non-empty) rows.
    */
-  getVisibleRows() {
+  getVisibleRows(): Cypress.Chainable<JQuery<HTMLElement>> {
     return cy.get(this.selectors.rows);
   },
 
   /**
-   * Verify the number of visible rows
-   * @param {number} count - Expected number of rows
+   * Verify the number of visible rows.
    */
-  verifyRowCount(count) {
+  verifyRowCount(count: number) {
     this.getVisibleRows().should("have.length", count);
     return this;
   },
 
   /**
-   * Verify row count is at least a certain number
-   * @param {number} minCount - Minimum expected rows
+   * Verify the row count is at least a certain number.
    */
-  verifyMinRowCount(minCount) {
+  verifyMinRowCount(minCount: number) {
     this.getVisibleRows().should("not.have.length.below", minCount);
     return this;
   },
 
   /**
-   * Click the Add New Record button and wait for modal
+   * Click the Add New Record button and wait for the modal.
    */
   openAddModal() {
     cy.waitAndClick(this.selectors.addNewRecordButton);
@@ -94,29 +93,26 @@ export const WebTablesPage = {
   },
 
   /**
-   * Click the edit button for a specific record
-   * @param {number} recordId - Record ID to edit
+   * Click the edit button for a specific record.
    */
-  openEditModal(recordId) {
+  openEditModal(recordId: number) {
     cy.get(this.selectors.editRecord(recordId)).should("be.visible").click();
     cy.get(this.selectors.modal).should("be.visible");
     return this;
   },
 
   /**
-   * Delete a specific record
-   * @param {number} recordId - Record ID to delete
+   * Delete a specific record.
    */
-  deleteRecord(recordId) {
+  deleteRecord(recordId: number) {
     cy.get(this.selectors.deleteRecord(recordId)).click();
     return this;
   },
 
   /**
-   * Fill the registration/edit form
-   * @param {Object} data - Form data object
+   * Fill the registration/edit form.
    */
-  fillForm(data) {
+  fillForm(data: Partial<UserData>) {
     if (data.firstName) {
       cy.get(this.selectors.firstName).clear();
       cy.get(this.selectors.firstName).type(data.firstName);
@@ -145,7 +141,7 @@ export const WebTablesPage = {
   },
 
   /**
-   * Submit the form and wait for modal to close
+   * Submit the form and wait for the modal to close.
    */
   submitForm() {
     cy.waitAndClick(this.selectors.submitButton);
@@ -154,42 +150,41 @@ export const WebTablesPage = {
   },
 
   /**
-   * Verify a record exists with specific data
-   * @param {Object} data - Expected data in the row
+   * Verify a record exists with specific data.
    */
-  verifyRecordExists(data) {
-    cy.contains(this.selectors.rows, data.firstName).within(() => {
-      if (data.firstName) {
-        cy.get(this.selectors.tableCell)
-          .eq(0)
-          .should("contain", data.firstName);
-      }
-      if (data.lastName) {
-        cy.get(this.selectors.tableCell).eq(1).should("contain", data.lastName);
-      }
-      if (data.age) {
-        cy.get(this.selectors.tableCell).eq(2).should("contain", data.age);
-      }
-      if (data.email) {
-        cy.get(this.selectors.tableCell).eq(3).should("contain", data.email);
-      }
-      if (data.salary) {
-        cy.get(this.selectors.tableCell).eq(4).should("contain", data.salary);
-      }
-      if (data.department) {
-        cy.get(this.selectors.tableCell)
-          .eq(5)
-          .should("contain", data.department);
-      }
-    });
+  verifyRecordExists(data: Partial<UserData>) {
+    const firstName = data.firstName;
+    if (firstName) {
+      cy.contains(this.selectors.rows, firstName).within(() => {
+        cy.get(this.selectors.tableCell).eq(0).should("contain", firstName);
+        if (data.lastName) {
+          cy.get(this.selectors.tableCell)
+            .eq(1)
+            .should("contain", data.lastName);
+        }
+        if (data.age) {
+          cy.get(this.selectors.tableCell).eq(2).should("contain", data.age);
+        }
+        if (data.email) {
+          cy.get(this.selectors.tableCell).eq(3).should("contain", data.email);
+        }
+        if (data.salary) {
+          cy.get(this.selectors.tableCell).eq(4).should("contain", data.salary);
+        }
+        if (data.department) {
+          cy.get(this.selectors.tableCell)
+            .eq(5)
+            .should("contain", data.department);
+        }
+      });
+    }
     return this;
   },
 
   /**
-   * Verify record has edit and delete buttons
-   * @param {string} identifier - Text to identify the row
+   * Verify a record has edit and delete buttons.
    */
-  verifyRecordActions(identifier) {
+  verifyRecordActions(identifier: string) {
     cy.contains(this.selectors.rows, identifier).within(() => {
       cy.get(this.selectors.tableCell)
         .eq(6)
@@ -204,25 +199,23 @@ export const WebTablesPage = {
   },
 
   /**
-   * Change the number of rows displayed per page
-   * @param {number} rowsPerPage - Number of rows (5, 10, 20, 25, 50, 100)
+   * Change the number of rows displayed per page.
    */
-  setRowsPerPage(rowsPerPage) {
+  setRowsPerPage(rowsPerPage: number) {
     cy.get(this.selectors.rowsPerPageSelect).select(`${rowsPerPage} rows`);
     return this;
   },
 
   /**
-   * Verify the total number of pages
-   * @param {string} expectedPages - Expected page count as string
+   * Verify the total number of pages.
    */
-  verifyTotalPages(expectedPages) {
+  verifyTotalPages(expectedPages: string) {
     cy.get(this.selectors.totalPages).should("contain", expectedPages);
     return this;
   },
 
   /**
-   * Navigate to next page
+   * Navigate to the next page.
    */
   goToNextPage() {
     cy.get(this.selectors.nextButton).click();
@@ -230,7 +223,7 @@ export const WebTablesPage = {
   },
 
   /**
-   * Navigate to previous page
+   * Navigate to the previous page.
    */
   goToPreviousPage() {
     cy.get(this.selectors.previousButton).click();
@@ -238,7 +231,7 @@ export const WebTablesPage = {
   },
 
   /**
-   * Verify next button is enabled
+   * Verify the next button is enabled.
    */
   verifyNextEnabled() {
     cy.get(this.selectors.nextButton).should("not.be.disabled");
@@ -246,7 +239,7 @@ export const WebTablesPage = {
   },
 
   /**
-   * Verify previous button is enabled
+   * Verify the previous button is enabled.
    */
   verifyPreviousEnabled() {
     cy.get(this.selectors.previousButton).should("not.be.disabled");
@@ -254,10 +247,9 @@ export const WebTablesPage = {
   },
 
   /**
-   * Get data from the first row
-   * @returns {Cypress.Chainable<Object>}
+   * Get data from the first row.
    */
-  getFirstRowData() {
+  getFirstRowData(): Cypress.Chainable<RowData> {
     return this.getVisibleRows()
       .first()
       .then(($row) => {
@@ -273,11 +265,10 @@ export const WebTablesPage = {
   },
 
   /**
-   * Get data from a specific row by index
-   * @param {number} index - Row index (0-based)
-   * @returns {Cypress.Chainable<Object>}
+   * Get data from a specific row by index.
+   * @param index - Row index (0-based)
    */
-  getRowData(index) {
+  getRowData(index: number): Cypress.Chainable<RowData> {
     return this.getVisibleRows()
       .eq(index)
       .then(($row) => {
