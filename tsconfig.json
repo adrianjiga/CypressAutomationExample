@@ -20,7 +20,7 @@
     "cypress/**/*.js",
     "cypress/**/*.ts",
     "cypress/**/*.d.ts",
-    "cypress.config.js"
+    "cypress.config.ts"
   ],
   "exclude": ["node_modules"]
 }

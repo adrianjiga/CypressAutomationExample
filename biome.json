@@ -4,7 +4,7 @@
     "includes": [
       "cypress/**/*.js",
       "cypress/**/*.ts",
-      "cypress.config.js",
+      "cypress.config.ts",
       "jsconfig.json"
     ]
   },

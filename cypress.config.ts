@@ -1,7 +1,7 @@
+import fs from "node:fs";
 import { createRequire } from "node:module";
 import { plugin } from "@cypress/grep/plugin";
 import { defineConfig } from "cypress";
-import fs from "fs";
 
 const viewports = {
   mobile: { width: 375, height: 667 },
@@ -52,8 +52,12 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       plugin(config);
 
-      const viewportName = config.expose && config.expose.viewport;
-      if (viewportName && viewports[viewportName]) {
+      const viewportName = config.expose?.viewport;
+      if (
+        viewportName === "mobile" ||
+        viewportName === "tablet" ||
+        viewportName === "desktop"
+      ) {
         config.viewportWidth = viewports[viewportName].width;
         config.viewportHeight = viewports[viewportName].height;
         console.log(`Using viewport: ${viewportName}`);
@@ -62,10 +66,14 @@ export default defineConfig({
       on("after:spec", (spec, results) => {
         if (results && results.stats.failures === 0 && results.video) {
           try {
-            fs.unlinkSync(results.video);
+            fs.unlinkSync(String(results.video));
             console.log(`Deleted video for passing spec: ${spec.name}`);
           } catch (err) {
-            console.warn(`Could not delete video: ${err.message}`);
+            console.warn(
+              `Could not delete video: ${
+                err instanceof Error ? err.message : String(err)
+              }`
+            );
           }
         }
       });
