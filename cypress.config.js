@@ -23,7 +23,6 @@ const wqaBundlePath = createRequire(import.meta.url).resolve(
 );
 
 export default defineConfig({
-  allowCypressEnv: false,
   viewportHeight: 1080,
   viewportWidth: 1920,
   retries: {
