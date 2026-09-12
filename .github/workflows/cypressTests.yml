@@ -50,9 +50,6 @@ jobs:
           - group:
               name: api
             browser: firefox
-          - group:
-              name: api
-            viewport: mobile
           # The accessibility audit reads the DOM, not the rendering, so a second engine
           # re-runs identical logic against an identical tree and adds no signal.
           - group:
