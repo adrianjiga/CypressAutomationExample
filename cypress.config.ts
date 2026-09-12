@@ -43,7 +43,6 @@ export default defineConfig({
   expose: {
     grepFilterSpecs: true,
     grepOmitFiltered: true,
-    viewports: viewports,
     wqaBundlePath,
   },
   e2e: {
