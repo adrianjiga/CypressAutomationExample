@@ -1,5 +1,5 @@
 /**
- * Page Object for the Buttons helper page
+ * Page Object for the Buttons helper page.
  * @see https://adrianjiga.github.io/qa/helpers/buttons
  */
 export const ButtonsPage = {
@@ -21,7 +21,7 @@ export const ButtonsPage = {
   },
 
   /**
-   * Navigate to the Buttons page
+   * Navigate to the Buttons page.
    */
   visit() {
     cy.visit(this.url);
@@ -29,7 +29,7 @@ export const ButtonsPage = {
   },
 
   /**
-   * Perform double click on the double click button
+   * Perform a double click on the double click button.
    */
   performDoubleClick() {
     cy.get(this.selectors.doubleClickButton).dblclick();
@@ -37,7 +37,7 @@ export const ButtonsPage = {
   },
 
   /**
-   * Perform right click on the right click button
+   * Perform a right click on the right click button.
    */
   performRightClick() {
     cy.get(this.selectors.rightClickButton).rightclick();
@@ -45,16 +45,17 @@ export const ButtonsPage = {
   },
 
   /**
-   * Perform dynamic click on the dynamic button
-   * @param {Object} options - Click options
+   * Perform a dynamic click on the dynamic button.
    */
-  performDynamicClick(options = { force: true }) {
+  performDynamicClick(
+    options: Partial<Cypress.ClickOptions> = { force: true }
+  ) {
     cy.waitAndClick(this.selectors.dynamicClickButton, options);
     return this;
   },
 
   /**
-   * Verify double click message is displayed
+   * Verify the double click message is displayed.
    */
   verifyDoubleClickMessage() {
     cy.get(this.selectors.doubleClickMessage).should(
@@ -65,7 +66,7 @@ export const ButtonsPage = {
   },
 
   /**
-   * Verify right click message is displayed
+   * Verify the right click message is displayed.
    */
   verifyRightClickMessage() {
     cy.get(this.selectors.rightClickMessage).should(
@@ -76,7 +77,7 @@ export const ButtonsPage = {
   },
 
   /**
-   * Verify dynamic click message is displayed
+   * Verify the dynamic click message is displayed.
    */
   verifyDynamicClickMessage() {
     cy.get(this.selectors.dynamicClickMessage).should(

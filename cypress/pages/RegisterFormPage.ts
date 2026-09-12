@@ -1,5 +1,12 @@
+import type {
+  Gender,
+  Hobby,
+  RegisterFormData,
+  StateName,
+} from "../types/models";
+
 /**
- * Page Object for the Practice Form helper page
+ * Page Object for the Practice Form helper page.
  * @see https://adrianjiga.github.io/qa/helpers/automation-practice-form
  */
 export const RegisterFormPage = {
@@ -13,8 +20,8 @@ export const RegisterFormPage = {
     genderMale: '[data-cy="genderMale"]',
     genderFemale: '[data-cy="genderFemale"]',
     genderOther: '[data-cy="genderOther"]',
-    genderLabel: (id) => {
-      const map = {
+    genderLabel: (id: number) => {
+      const map: Record<number, string> = {
         1: '[data-cy="genderMaleLabel"]',
         2: '[data-cy="genderFemaleLabel"]',
         3: '[data-cy="genderOtherLabel"]',
@@ -24,7 +31,7 @@ export const RegisterFormPage = {
     dateOfBirthInput: '[data-cy="dateOfBirthInput"]',
     monthSelect: '[data-cy="monthSelect"]',
     yearSelect: '[data-cy="yearSelect"]',
-    daySelector: (day) => `[data-cy="day${day}"]`,
+    daySelector: (day: string) => `[data-cy="day${day}"]`,
     subjectsInput: '[data-cy="subjectsInput"]',
     hobbySports: '[data-cy="hobbySports"]',
     hobbyReading: '[data-cy="hobbyReading"]',
@@ -32,10 +39,11 @@ export const RegisterFormPage = {
     uploadPicture: '[data-cy="uploadPicture"]',
     currentAddress: '[data-cy="addressInput"]',
     stateDropdown: '[data-cy="stateDropdown"]',
-    stateOption: (country) =>
+    stateOption: (country: string) =>
       `[data-cy="stateOption${country.replace(/\s+/g, "")}"]`,
     cityDropdown: '[data-cy="cityDropdown"]',
-    cityOption: (city) => `[data-cy="cityOption${city.replace(/\s+/g, "")}"]`,
+    cityOption: (city: string) =>
+      `[data-cy="cityOption${city.replace(/\s+/g, "")}"]`,
     submitButton: '[data-cy="submitBtn"]',
     closeModalButton: '[data-cy="closeModalBtn"]',
     modalTitle: '[data-cy="modalTitle"]',
@@ -49,7 +57,7 @@ export const RegisterFormPage = {
   validationColor: "rgb(220, 53, 69)",
 
   /**
-   * Navigate to the Practice Form page
+   * Navigate to the Practice Form page.
    */
   visit() {
     cy.visit(this.url);
@@ -57,10 +65,9 @@ export const RegisterFormPage = {
   },
 
   /**
-   * Fill basic text fields
-   * @param {Object} data - Form data
+   * Fill basic text fields.
    */
-  fillBasicInfo(data) {
+  fillBasicInfo(data: RegisterFormData) {
     if (data.firstName) {
       cy.get(this.selectors.firstName).type(data.firstName);
     }
@@ -80,11 +87,10 @@ export const RegisterFormPage = {
   },
 
   /**
-   * Select gender
-   * @param {'male'|'female'|'other'} gender - Gender to select
+   * Select a gender.
    */
-  selectGender(gender) {
-    const genderMap = {
+  selectGender(gender: Gender) {
+    const genderMap: Record<Gender, string> = {
       male: this.selectors.genderMale,
       female: this.selectors.genderFemale,
       other: this.selectors.genderOther,
@@ -94,31 +100,29 @@ export const RegisterFormPage = {
   },
 
   /**
-   * Select date of birth
-   * @param {string} month - Month name (e.g., "January")
-   * @param {string} year - Year (e.g., "1990")
-   * @param {string} day - Day with leading zero (e.g., "01")
+   * Select a date of birth.
+   * @param month - Month name (e.g., "January")
+   * @param year - Year (e.g., "1990")
+   * @param day - Day with leading zero (e.g., "01")
    */
-  selectDateOfBirth(month, year, day) {
+  selectDateOfBirth(month: string, year: string, day: string) {
     cy.selectDate(this.selectors.dateOfBirthInput, month, year, day);
     return this;
   },
 
   /**
-   * Add a subject
-   * @param {string} subject - Subject to add
+   * Add a subject.
    */
-  addSubject(subject) {
+  addSubject(subject: string) {
     cy.get(this.selectors.subjectsInput).type(`${subject}{enter}`);
     return this;
   },
 
   /**
-   * Select hobbies
-   * @param {Array<'sports'|'reading'|'music'>} hobbies - Hobbies to select
+   * Select hobbies.
    */
-  selectHobbies(hobbies) {
-    const hobbyMap = {
+  selectHobbies(hobbies: Hobby[]) {
+    const hobbyMap: Record<Hobby, string> = {
       sports: this.selectors.hobbySports,
       reading: this.selectors.hobbyReading,
       music: this.selectors.hobbyMusic,
@@ -130,10 +134,10 @@ export const RegisterFormPage = {
   },
 
   /**
-   * Upload a picture file
-   * @param {string} filePath - Path to the file (relative to fixtures)
+   * Upload a picture file.
+   * @param filePath - Path to the file (relative to fixtures)
    */
-  uploadPicture(filePath) {
+  uploadPicture(filePath: string) {
     cy.get(this.selectors.uploadPicture).selectFile(filePath);
     return this;
   },
@@ -145,9 +149,9 @@ export const RegisterFormPage = {
    * ordering the spec had to know but never stated, so `selectState(0)` silently meant
    * Germany.
    *
-   * @param {'Germany'|'France'|'Spain'|'Italy'|'Netherlands'} country - the visible name
+   * @param country - the visible name
    */
-  selectState(country = "Germany") {
+  selectState(country: StateName = "Germany") {
     cy.get(this.selectors.stateDropdown).click();
     cy.get(this.selectors.stateOption(country)).click();
     return this;
@@ -161,16 +165,16 @@ export const RegisterFormPage = {
    * how the page builds the attribute, so "Frankfurt" is `cityOptionFrankfurt` and "The
    * Hague" is `cityOptionTheHague`.
    *
-   * @param {string} city - the visible name, e.g. "Berlin"
+   * @param city - the visible name, e.g. "Berlin"
    */
-  selectCity(city = "Berlin") {
+  selectCity(city: string = "Berlin") {
     cy.get(this.selectors.cityDropdown).click();
     cy.get(this.selectors.cityOption(city)).click();
     return this;
   },
 
   /**
-   * Submit the form
+   * Submit the form.
    */
   submit() {
     cy.waitAndClick(this.selectors.submitButton, { force: true });
@@ -178,7 +182,7 @@ export const RegisterFormPage = {
   },
 
   /**
-   * Close the confirmation modal
+   * Close the confirmation modal.
    */
   closeModal() {
     cy.get(this.selectors.closeModalButton).click({ force: true });
@@ -186,7 +190,7 @@ export const RegisterFormPage = {
   },
 
   /**
-   * Verify the confirmation modal is displayed
+   * Verify the confirmation modal is displayed.
    */
   verifySubmissionSuccess() {
     cy.get(this.selectors.modalTitle)
@@ -196,10 +200,10 @@ export const RegisterFormPage = {
   },
 
   /**
-   * Verify form data in the confirmation modal
-   * @param {Object} expectedData - Key-value pairs of label and expected value
+   * Verify form data in the confirmation modal.
+   * @param expectedData - Key-value pairs of label and expected value
    */
-  verifySubmittedData(expectedData) {
+  verifySubmittedData(expectedData: Record<string, string>) {
     Object.entries(expectedData).forEach(([label, value]) => {
       cy.get(this.selectors.resultTable)
         .contains("td", label)
@@ -210,16 +214,15 @@ export const RegisterFormPage = {
   },
 
   /**
-   * Verify validation error on a field
-   * @param {string} selector - Field selector
+   * Verify validation error styling on a field.
    */
-  verifyFieldValidationError(selector) {
+  verifyFieldValidationError(selector: string) {
     cy.verifyValidationError(selector, this.validationColor);
     return this;
   },
 
   /**
-   * Verify all required field validation errors
+   * Verify all required field validation errors.
    */
   verifyRequiredFieldErrors() {
     this.verifyFieldValidationError(this.selectors.firstName);
@@ -238,10 +241,9 @@ export const RegisterFormPage = {
   },
 
   /**
-   * Fill complete form with all fields
-   * @param {Object} data - Complete form data
+   * Fill the complete form with all fields.
    */
-  fillCompleteForm(data) {
+  fillCompleteForm(data: RegisterFormData) {
     this.fillBasicInfo({
       firstName: data.firstName,
       lastName: data.lastName,
