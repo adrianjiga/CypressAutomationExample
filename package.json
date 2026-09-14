@@ -70,11 +70,11 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.13",
-    "@types/node": "^26.5.0",
+    "@types/node": "^26.5.1",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "cypress-wait-until": "^3.0.2",
-    "mochawesome": "^8.0.1",
+    "mochawesome": "^8.1.0",
     "mochawesome-merge": "^5.1.1",
     "mochawesome-report-generator": "^6.3.2",
     "typescript": "^7.0.2",
